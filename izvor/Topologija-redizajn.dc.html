@@ -744,8 +744,8 @@
       <div id="nadzorFs" style="{{ nadzorFsStyle }}">
         <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap">
           <div style="flex:1;min-width:220px">
-            <div style="font-size:14px;font-weight:700">Uređaji pod nadzorom <span style="font:600 11px var(--mono);color:var(--muted);background:var(--surface-3);padding:2px 8px;border-radius:20px;margin-left:6px">{{ watchCount }}</span></div>
-            <div style="font-size:11.5px;color:var(--muted);margin-top:3px">Označi uređaje okom u modulu <b>Uređaji</b>, pa pokreni ručni sken. Radi offline preko lokalnog agenta.</div>
+            <div style="font-size:14px;font-weight:700">Nadzor lokacija <span style="font:600 11px var(--mono);color:var(--muted);background:var(--surface-3);padding:2px 8px;border-radius:20px;margin-left:6px">{{ watchCount }} provjera</span></div>
+            <div style="font-size:11.5px;color:var(--muted);margin-top:3px">Po lokaciji se provjeravaju <b>Transport A i B</b> i <b>svi opsezi</b> (gateway svakog opsega). Pokreni ručni sken (offline agent). Ostale uređaje dodaješ okom u modulu <b>Uređaji</b>.</div>
           </div>
           <div style="font:500 11px var(--mono);color:var(--faint)">agent: {{ agentUrl }}</div>
           <sc-if value="{{ scanAt }}" hint-placeholder-val="{{ false }}"><div style="font:500 11px var(--mono);color:var(--muted)">zadnji sken {{ scanAt }}</div></sc-if>
@@ -767,37 +767,43 @@
 
         <sc-if value="{{ watchEmpty }}" hint-placeholder-val="{{ false }}">
           <div style="background:var(--surface);border:1px dashed var(--line);border-radius:14px;padding:44px;text-align:center;color:var(--muted)">
-            <div style="font-size:14px;font-weight:600;color:var(--ink-2);margin-bottom:6px">Lista nadzora je prazna</div>
-            <div style="font-size:12.5px">U modulu <b>Uređaji</b> klikni ikonu oka u koloni <b>Nadzor</b> da dodaš uređaje (npr. kamere) ovdje.</div>
+            <div style="font-size:14px;font-weight:600;color:var(--ink-2);margin-bottom:6px">Nema lokacija za nadzor</div>
+            <div style="font-size:12.5px">Dodaj lokacije i opsege (sa upisanim gateway IP-om) da bi se pojavile ovdje.</div>
           </div>
         </sc-if>
 
         <sc-if value="{{ hasWatch }}" hint-placeholder-val="{{ true }}">
-        <div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm);overflow:hidden">
-          <div class="scroll" style="overflow:auto">
-            <table style="width:100%;border-collapse:separate;border-spacing:0;font-size:13px;min-width:760px">
-              <thead><tr>
-                <th style="{{ thStyle }}">Stanje</th>
-                <th style="{{ thStyle }}">Naziv</th>
-                <th style="{{ thStyle }}">Tip</th>
-                <th style="{{ thStyle }}">IP adresa</th>
-                <th style="{{ thStyle }}">Lokacija</th>
-                <th style="{{ thStyle }}text-align:center">Akcije</th>
-              </tr></thead>
-              <tbody>
-                <sc-for list="{{ watchList }}" as="w" hint-placeholder-count="4">
-                  <tr>
-                    <td style="{{ tdStyle }}"><span style="display:inline-flex;align-items:center;gap:7px;font:600 11px var(--mono);color:{{ w.stColor }}"><span style="width:9px;height:9px;border-radius:50%;background:{{ w.stColor }};flex:none"></span>{{ w.stLabel }}</span></td>
-                    <td style="{{ tdStyle }}font-weight:600">{{ w.name }}</td>
-                    <td style="{{ tdStyle }}color:var(--ink-2)">{{ w.dtype }}</td>
-                    <td style="{{ tdStyle }}font-family:var(--mono);font-size:12px">{{ w.ip }}</td>
-                    <td style="{{ tdStyle }}color:var(--ink-2)">{{ w.loc }}</td>
-                    <td style="{{ tdStyle }}"><div style="display:flex;gap:6px;justify-content:center"><button onClick="{{ w.onDiag }}" title="Ping / traceroute" style="width:26px;height:26px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:7px;display:grid;place-items:center;cursor:pointer" style-hover="border-color:var(--accent);color:var(--accent)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></button><button onClick="{{ w.onRemove }}" title="Ukloni iz nadzora" style="width:26px;height:26px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:7px;display:grid;place-items:center;cursor:pointer" style-hover="border-color:var(--down);color:var(--down);background:var(--down-soft)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg></button></div></td>
-                  </tr>
-                </sc-for>
-              </tbody>
-            </table>
-          </div>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <sc-for list="{{ watchGroups }}" as="g" hint-placeholder-count="2">
+            <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);overflow:hidden">
+              <div style="display:flex;align-items:center;gap:12px;padding:13px 18px;border-bottom:1px solid var(--line);background:var(--surface-2)">
+                <span style="width:30px;height:30px;border-radius:9px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span>
+                <div style="flex:1;min-width:0">
+                  <div style="font-weight:700;font-size:14px">{{ g.name }}</div>
+                  <div style="font:500 11px var(--mono);color:var(--muted);margin-top:2px">{{ g.addr }}</div>
+                </div>
+                <span style="font:600 10.5px var(--mono);color:var(--muted);background:var(--surface-3);padding:4px 10px;border-radius:20px;flex:none">{{ g.count }} provjera</span>
+              </div>
+              <sc-for list="{{ g.items }}" as="w" hint-placeholder-count="3">
+                <div style="display:flex;align-items:center;gap:13px;padding:12px 18px;border-bottom:1px solid var(--line-2)" style-hover="background:var(--surface-2)">
+                  <span style="width:10px;height:10px;border-radius:50%;flex:none;background:{{ w.dotColor }}"></span>
+                  <div style="flex:1;min-width:0">
+                    <div style="font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px">
+                      <span>{{ w.name }}</span>
+                      <sc-if value="{{ w.hasTag }}" hint-placeholder-val="{{ true }}"><span style="font:700 9.5px var(--mono);padding:2px 7px;border-radius:6px;background:{{ w.tagBg }};color:{{ w.tagCol }}">{{ w.tag }}</span></sc-if>
+                    </div>
+                    <div style="font:500 10.5px var(--mono);color:var(--muted);margin-top:3px">{{ w.meta }}</div>
+                  </div>
+                  <div style="font-family:var(--mono);font-size:12.5px;color:var(--ink-2);width:140px;flex:none">{{ w.ip }}</div>
+                  <span style="font:600 11px var(--mono);padding:5px 11px;border-radius:20px;background:{{ w.stSoft }};color:{{ w.stColor }};min-width:104px;text-align:center;flex:none">{{ w.stLabel }}</span>
+                  <div style="display:flex;gap:6px;flex:none">
+                    <button onClick="{{ w.onDiag }}" title="Ping / traceroute" style="width:28px;height:28px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:8px;display:grid;place-items:center;cursor:pointer" style-hover="border-color:var(--accent);color:var(--accent)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></button>
+                    <sc-if value="{{ w.isDev }}" hint-placeholder-val="{{ false }}"><button onClick="{{ w.onRemove }}" title="Ukloni iz nadzora" style="width:28px;height:28px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:8px;display:grid;place-items:center;cursor:pointer" style-hover="border-color:var(--down);color:var(--down);background:var(--down-soft)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg></button></sc-if>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-for>
         </div>
         </sc-if>
       </div>
@@ -938,12 +944,47 @@ class Component extends DCLogic {
     dev.mon = !dev.mon; this.forceUpdate(); this.persist();
   }
   watchDevices(){
+    // Sve tačke nadzora, po lokaciji: Transport A, Transport B, svaki opseg (gateway opsega), pa ručno označeni uređaji.
     const out = [];
-    // po defaultu: firewall-i lokacija (svaki čvor = firewall lokacije)
-    this.nodeList().forEach(n=>{ out.push({ id:'fw:'+n.id, nodeId:n.id, name:n.name, ip:n.gwMpls||n.gwSdh||'', dtype:'Firewall', loc:n.name, fw:true }); });
-    // zatim ručno označeni uređaji (oko u koloni Nadzor)
-    this.nodeList().forEach(n=>(n.devices||[]).forEach(dv=>{ if(dv.mon) out.push({ id:dv.id, nodeId:n.id, name:dv.name||'(bez naziva)', ip:dv.ip||'', dtype:dv.dtype||'—', loc:n.name }); }));
+    this.nodeList().forEach(n=>{
+      if(n.gwMpls) out.push({ id:'ta:'+n.id, nodeId:n.id, name:'Transport A', ip:n.gwMpls, kind:'transA', tag:'A', cidr:'', vlan:'', dtype:'Transport A', loc:n.name });
+      if(n.gwSdh)  out.push({ id:'tb:'+n.id, nodeId:n.id, name:'Transport B', ip:n.gwSdh, kind:'transB', tag:'B', cidr:'', vlan:'', dtype:'Transport B', loc:n.name });
+      (n.nets||[]).forEach(net=> out.push({ id:'net:'+n.id+':'+net.id, nodeId:n.id, name:net.name||'Opseg', ip:net.gw||'', kind:'net', tag:(net.primary==='sdh'?'B':'A'), color:net.color||'var(--muted)', cidr:net.range||'', vlan:net.vlan||'', dtype:'Opseg', loc:n.name }));
+      (n.devices||[]).forEach(dv=>{ if(dv.mon) out.push({ id:dv.id, nodeId:n.id, name:dv.name||'(bez naziva)', ip:dv.ip||'', kind:'dev', tag:'', cidr:'', vlan:'', dtype:dv.dtype||'—', loc:n.name, mon:true }); });
+    });
     return out;
+  }
+  // Grupisano po lokaciji, sa statusom iz skena i filterom — za prikaz u Nadzoru.
+  buildWatchGroups(){
+    const res = this.state.scanRes||{};
+    const q = (this.state.nadzorQ||'').toLowerCase().trim();
+    const qs = q?q.split(/\s+/):[];
+    const statusOf = (r)=>{
+      if(!r) return { lbl:'—', col:'var(--muted)', soft:'var(--surface-3)', dot:'var(--faint)' };
+      if(r.state==='online') return { lbl:'online'+(r.rtt!=null?' · '+r.rtt+' ms':''), col:'var(--ok)', soft:'var(--ok-soft)', dot:'var(--ok)' };
+      if(r.state==='offline') return { lbl:'offline', col:'var(--down)', soft:'var(--down-soft)', dot:'var(--down)' };
+      return { lbl:'agent?', col:'var(--warn)', soft:'var(--warn-soft)', dot:'var(--warn)' };
+    };
+    const byNode = {};
+    this.watchDevices().forEach(w=>{ (byNode[w.nodeId]=byNode[w.nodeId]||[]).push(w); });
+    return this.nodeList().map(n=>{
+      const items = (byNode[n.id]||[]).map(w=>{
+        const s = statusOf(res[w.id]);
+        const isB = w.tag==='B';
+        const tagBg = w.tag ? (isB?'var(--transB-soft)':'var(--transA-soft)') : 'transparent';
+        const tagCol = w.tag ? (isB?'var(--transB)':'var(--transA)') : 'transparent';
+        const dot = w.kind==='net' ? (w.color||'var(--muted)') : (w.kind==='transA'?'var(--transA)': w.kind==='transB'?'var(--transB)':'var(--faint)');
+        const meta = [w.dtype, w.cidr, (w.vlan?('VLAN '+w.vlan):'')].filter(Boolean).join(' · ');
+        return {
+          id:w.id, name:w.name, ip:w.ip||'—', meta, tag:w.tag, hasTag:!!w.tag, tagBg, tagCol, dotColor:dot, isDev:w.kind==='dev',
+          stLabel:s.lbl, stColor:s.col, stSoft:s.soft, stDot:s.dot,
+          onDiag:()=>this.openDiag(w.ip, w.name+' · '+n.name),
+          onRemove:()=>this.toggleMon(n.id, w.id),
+          _hay:[w.name,w.ip,w.cidr,w.dtype,n.name,w.tag,s.lbl].join(' ').toLowerCase()
+        };
+      }).filter(x=> !qs.length || qs.every(t=>x._hay.includes(t)));
+      return { id:n.id, name:n.name, addr:n.address||(n.type==='hq'?'Centrala':'—'), count:String(items.length), items };
+    }).filter(g=> g.items.length>0);
   }
   toggleFs(){
     const next = !this.state.fs;
@@ -1572,6 +1613,10 @@ class Component extends DCLogic {
       {x1:hqR.x,y1:hqR.y,x2:srvL.x,y2:srvL.y,stroke:'var(--faint)',dash:''},
     ];
 
+    // ===== nadzor: grupe po lokaciji (transporti + opsezi + ručni uređaji) =====
+    const watchGroups = this.buildWatchGroups();
+    const watchTotal = this.watchDevices().filter(w=>w.ip).length;
+
     return {
       theme, isDark: theme==='dark', isLight: theme!=='dark',
       toggleTheme: () => this.setState({ theme: theme==='dark'?'light':'dark' }),
@@ -1594,14 +1639,14 @@ class Component extends DCLogic {
       onCloseDiag:()=>this.closeDiag(), onRunPing:()=>this.runDiag('ping'), onRunTrace:()=>this.runDiag('trace'),
       // nadzor
       onRunScan:()=>this.runScan(), scanRunning:!!this.state.scanRunning, scanAt:this.state.scanAt||'',
-      watchList:(()=>{ const res=this.state.scanRes||{}; const q=(this.state.nadzorQ||'').toLowerCase().trim(); const qs=q?q.split(/\s+/):[]; return this.watchDevices().map(w=>{ const r=res[w.id]; let lbl='—',col='var(--muted)',soft='var(--surface-3)'; if(r){ if(r.state==='online'){lbl='online'+(r.rtt!=null?' · '+r.rtt+' ms':'');col='var(--ok)';soft='var(--ok-soft)';} else if(r.state==='offline'){lbl='offline';col='var(--down)';soft='var(--down-soft)';} else {lbl='agent?';col='var(--warn)';soft='var(--warn-soft)';} } return { name:w.name, ip:w.ip||'—', dtype:w.dtype, loc:w.loc, stLabel:lbl, stColor:col, stSoft:soft, _hay:[w.name,w.ip,w.dtype,w.loc,lbl].join(' ').toLowerCase(), onDiag:()=>this.openDiag(w.ip,w.name), onRemove:()=>this.toggleMon(w.nodeId,w.id) }; }).filter(x=> !qs.length || qs.every(t=>x._hay.includes(t))); })(),
+      watchGroups: watchGroups,
       onToggleFs:()=>this.toggleFs(), isFs:!!this.state.fs, notFs:!this.state.fs, fsLabel:this.state.fs?'Skupi':'Cijeli ekran',
       nadzorFsStyle: (this.state.fs
         ? 'position:fixed;inset:0;z-index:200;padding:22px 30px;overflow:auto'
         : 'padding:22px 26px 40px;min-height:100%;overflow:auto')+';background:var(--bg);animation:fadein .2s ease',
       nadzorQ:this.state.nadzorQ||'', setNadzorQ:(e)=>this.setState({nadzorQ:e.target.value}),
-      watchEmpty:this.watchDevices().length===0, watchCount:String(this.watchDevices().length),
-      hasWatch:this.watchDevices().length>0,
+      watchEmpty:watchGroups.length===0, watchCount:String(watchTotal),
+      hasWatch:watchGroups.length>0,
       notScanning:!this.state.scanRunning,
       scanBtnLabel:this.state.scanRunning?'Skeniram…':'Pokreni sken',
       stop:(e)=>{ e && e.stopPropagation && e.stopPropagation(); },
