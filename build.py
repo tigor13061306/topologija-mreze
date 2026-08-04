@@ -54,6 +54,22 @@ BACKEND_GLOBAL = (
     '\nreturn {' + ','.join(_exports) + '};\n})();\n</script>'
 )
 
+# --- Zakrpa dc-runtime za file:// ---
+# Runtime na startu radi fetch(location.href) da ponovo pročita ISPRAVAN <x-dc> šablon
+# (HTML parser izbaci <sc-for> iz <table>). Na file:// fetch je blokiran -> liste se ne
+# iscrtaju. Zato ugrađujemo sirovi <x-dc> (base64) i patchujemo runtime da ga čita odatle.
+_m = re.search(r'<x-dc[\s\S]*?</x-dc>', SRC)
+assert _m, "nisam našao <x-dc> blok u izvoru"
+_raw_xdc_b64 = __import__('base64').b64encode(_m.group(0).encode('utf-8')).decode('ascii')
+_needle = 'fetch(location.href).then((res) => res.ok ? res.text() : "")'
+assert _needle in SUPPORT, "nisam našao fetch(location.href) u support.js — provjeri verziju runtime-a"
+_read_raw = ('Promise.resolve((function(){var el=document.getElementById("__dc_raw_b64");if(!el)return"";'
+             'try{var b=atob(el.textContent.trim());var u=new Uint8Array(b.length);'
+             'for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);'
+             'return new TextDecoder("utf-8").decode(u);}catch(e){return"";}})())')
+SUPPORT = SUPPORT.replace(_needle, _read_raw)
+DC_RAW = '<script type="text/plain" id="__dc_raw_b64">' + _raw_xdc_b64 + '</script>'
+
 # --- BOOT blok koji zamjenjuje <script src="./support.js"> ---
 # Redoslijed je bitan: React -> ReactDOM -> Babel -> backend(global) -> support(auto-boot).
 # support.js sam preskače CDN kad su window.React/ReactDOM/Babel već prisutni.
@@ -62,6 +78,7 @@ BOOT = (
     '<script>/* ReactDOM 18.3.1 UMD (vendored, offline) */\n' + esc_script(REACTDOM) + '\n</script>\n'
     '<script>/* @babel/standalone 7.29.0 (vendored, offline) */\n' + esc_script(BABEL) + '\n</script>\n'
     + BACKEND_GLOBAL + '\n'
+    + DC_RAW + '\n'
     '<script>/* dc-runtime (support.js, vendored) — auto-boot */\n' + esc_script(SUPPORT) + '\n</script>'
 )
 
