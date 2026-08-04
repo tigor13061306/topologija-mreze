@@ -1,0 +1,16 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*~
+.vscode/
+.idea/
+
+# privremeni izvozi koje app generiše
+*.doc
+*.xls
+*.pdf
+uredjaji-*.xls
+dokumentacija-*.doc
+
+# napomena: Topologija-mreze-offline.html se NE ignoriše —
+# generisani offline fajl namjerno ide u git da ga offline računar preuzme.

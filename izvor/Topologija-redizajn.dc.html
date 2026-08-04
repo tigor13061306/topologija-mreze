@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<rect width="100" height="100" fill="#0f172a"/>
+<circle cx="50" cy="28" r="8" fill="#38bdf8"/>
+<circle cx="26" cy="70" r="7" fill="#818cf8"/>
+<circle cx="74" cy="70" r="7" fill="#818cf8"/>
+<path d="M50 36 L26 63 M50 36 L74 63" stroke="#475569" stroke-width="3"/>
+</svg>
+</template>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="prototype">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{background:#f3f3f0;font-family:'Albert Sans',system-ui,sans-serif}
+  :root{
+    --bg:#f3f3f0; --surface:#ffffff; --surface-2:#faf9f6; --surface-3:#f4f3ee;
+    --ink:#1b1b18; --ink-2:#3d3d38; --muted:#76756d; --faint:#a3a299;
+    --line:#e7e5dd; --line-2:#eeece5;
+    --accent:#0f6e56; --accent-ink:#0b5743; --accent-soft:#e8f3ef; --accent-ring:rgba(15,110,86,.16);
+    --hq:#1f2a37; --hq-ink:#eef1f5;
+    --transA:#2563a8; --transA-soft:#e9f0f8;
+    --transB:#c07817; --transB-soft:#fbf1e3;
+    --vid:#5b57cf;
+    --ok:#15915f; --ok-soft:#e6f4ec; --warn:#c07817; --warn-soft:#fbf1e3; --down:#c8483c; --down-soft:#fbecea;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --shadow:0 1px 2px rgba(26,26,20,.04),0 8px 24px -12px rgba(26,26,20,.10);
+    --shadow-sm:0 1px 2px rgba(26,26,20,.05);
+  }
+  [data-theme="dark"]{
+    --bg:#0d1014; --surface:#151a21; --surface-2:#1a2029; --surface-3:#1f2631;
+    --ink:#e9ecf0; --ink-2:#c2c8d0; --muted:#8b93a0; --faint:#5c6470;
+    --line:#242c37; --line-2:#2b3440;
+    --accent:#2fd7a6; --accent-ink:#7fecca; --accent-soft:#11291f; --accent-ring:rgba(47,215,166,.22);
+    --hq:#cdd6e2; --hq-ink:#0d1014;
+    --transA:#5aa2ec; --transA-soft:#12233a;
+    --transB:#e0a24a; --transB-soft:#2e2210;
+    --vid:#8f8bف2; --vid:#8f8bf2;
+    --ok:#39c088; --ok-soft:#0f2a20; --warn:#e0a24a; --warn-soft:#2e2210; --down:#e46c60; --down-soft:#2f1512;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px -14px rgba(0,0,0,.5);
+    --shadow-sm:0 1px 2px rgba(0,0,0,.35);
+  }
+  .scroll{scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+  .scroll::-webkit-scrollbar{width:10px;height:10px}
+  .scroll::-webkit-scrollbar-track{background:transparent}
+  .scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;border:2px solid var(--surface)}
+  .scroll::-webkit-scrollbar-thumb:hover{background:var(--faint)}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  @keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</helmet>
+
+<div data-theme="{{ theme }}" style="display:flex;height:100vh;width:100vw;background:var(--bg);color:var(--ink);overflow:hidden;font-family:'Albert Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased">
+
+  <aside style="width:244px;flex:none;background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;height:100%">
+    <div style="padding:20px 20px 16px;display:flex;align-items:center;gap:11px;border-bottom:1px solid var(--line)">
+      <div style="width:34px;height:34px;border-radius:9px;background:var(--accent);display:grid;place-items:center;flex:none;box-shadow:var(--shadow-sm)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.4"/><circle cx="5" cy="19" r="2.4"/><circle cx="19" cy="19" r="2.4"/><path d="M12 7.4v4.6M12 12l-5.2 4.8M12 12l5.2 4.8"/></svg>
+      </div>
+      <div style="min-width:0">
+        <div style="font-weight:700;font-size:14.5px;letter-spacing:-.2px;line-height:1.1">Topologija mreže</div>
+        <div style="font:600 10px/1 var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;margin-top:4px">builder · v2</div>
+      </div>
+    </div>
+
+    <nav class="scroll" style="flex:1;overflow:auto;padding:14px 12px">
+      <div style="font:700 10px/1 var(--mono);letter-spacing:1.3px;text-transform:uppercase;color:var(--faint);padding:6px 10px 8px">Radni prostor</div>
+      <button onClick="{{ goDash }}" style="{{ navDash }}">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        <span>Pregled</span>
+      </button>
+      <button onClick="{{ goTopo }}" style="{{ navTopo }}">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="19" r="2.2"/><circle cx="19" cy="19" r="2.2"/><path d="M12 7.2v3M12 10.2l-5 6.6M12 10.2l5 6.6"/></svg>
+        <span>Topologija</span>
+      </button>
+      <button onClick="{{ goDevices }}" style="{{ navDevices }}">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg>
+        <span>Uređaji</span>
+      </button>
+      <button onClick="{{ goDetail }}" style="{{ navDetail }}">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        <span>Detalji lokacije</span>
+      </button>
+      <button onClick="{{ goDocs }}" style="{{ navDocs }}">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg>
+        <span>Dokumentacija</span>
+      </button>
+      <button onClick="{{ goNadzor }}" style="{{ navNadzor }}">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="2.6"/></svg>
+        <span>Nadzor</span>
+      </button>
+
+      <div style="font:700 10px/1 var(--mono);letter-spacing:1.3px;text-transform:uppercase;color:var(--faint);padding:20px 10px 8px">Snimanje / prenos</div>
+      <button onClick="{{ onExportJson }}" style="{{ navGhost }}" style-hover="background:var(--surface-3);color:var(--ink)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11M8 10l4 4 4-4M5 20h14"/></svg><span>Izvezi JSON</span>
+      </button>
+      <button onClick="{{ onImportClick }}" style="{{ navGhost }}" style-hover="background:var(--surface-3);color:var(--ink)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14V3M8 7l4-4 4 4M5 20h14"/></svg><span>Uvezi JSON</span>
+      </button>
+      <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}"><div style="{{ toastStyle }}">{{ toastMsg }}</div></sc-if>
+      <button onClick="{{ onExportWord }}" style="{{ navGhost }}" style-hover="background:var(--surface-3);color:var(--ink)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z"/><path d="M9 13l2 2 4-4"/></svg><span>Word dokument</span>
+      </button>
+      <button onClick="{{ onExportExcel }}" style="{{ navGhost }}" style-hover="background:var(--surface-3);color:var(--ink)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 8l6 8M15 8l-6 8"/></svg><span>Izvezi Excel</span>
+      </button>
+    </nav>
+
+    <div style="padding:12px;border-top:1px solid var(--line);display:flex;align-items:center;gap:8px">
+      <div style="width:34px;height:34px;border-radius:9px;background:var(--surface-3);display:grid;place-items:center;flex:none;font:700 12px var(--mono);color:var(--accent)">MI</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:12.5px;font-weight:600;line-height:1.1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Mrežni inženjer</div>
+        <div style="font:500 10px var(--mono);color:var(--muted);margin-top:2px">lokalno · auto-snimanje</div>
+      </div>
+    </div>
+  </aside>
+
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column;height:100%">
+    <header style="height:64px;flex:none;border-bottom:1px solid var(--line);background:var(--surface);display:flex;align-items:center;gap:16px;padding:0 22px">
+      <div style="min-width:0">
+        <div style="font-size:16px;font-weight:700;letter-spacing:-.3px;line-height:1.1">{{ title }}</div>
+        <div style="font:500 11.5px var(--mono);color:var(--muted);margin-top:3px">{{ subtitle }}</div>
+      </div>
+      <div style="flex:1"></div>
+      <div style="position:relative;display:flex;align-items:center">
+        <svg style="position:absolute;left:11px;pointer-events:none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--faint)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+        <input value="{{ q }}" onInput="{{ setQ }}" placeholder="Pretraži uređaje, IP, opseg…" style="width:250px;height:38px;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:0 12px 0 33px;font:500 13px 'Albert Sans';color:var(--ink);outline:none">
+      </div>
+      <button onClick="{{ toggleTheme }}" title="Svijetla / tamna tema" style="width:38px;height:38px;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;display:grid;place-items:center;cursor:pointer;color:var(--ink-2)">
+        <sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/></svg>
+        </sc-if>
+        <sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a7 7 0 1 0 10.5 10.5z"/></svg>
+        </sc-if>
+      </button>
+      <button onClick="{{ onAddLoc }}" style="height:38px;border:none;background:var(--accent);color:#fff;border-radius:10px;padding:0 15px;font:600 13px 'Albert Sans';cursor:pointer;display:flex;align-items:center;gap:7px;box-shadow:var(--shadow-sm)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        Dodaj lokaciju
+      </button>
+    </header>
+
+    <main class="scroll" style="flex:1;overflow:auto;position:relative">
+
+      <!-- ===== DASHBOARD ===== -->
+      <sc-if value="{{ isDash }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:24px 26px 40px;animation:fadein .25s ease">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px">
+          <div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 17px;box-shadow:var(--shadow-sm)">
+            <div style="display:flex;align-items:center;gap:9px;color:var(--muted)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span style="font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.8px">Lokacije</span></div>
+            <div style="font:700 32px/1 var(--mono);margin-top:12px;letter-spacing:-1px">{{ locTotal }}</div>
+            <div style="font-size:11.5px;color:var(--muted);margin-top:6px">{{ locSub }}</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 17px;box-shadow:var(--shadow-sm)">
+            <div style="display:flex;align-items:center;gap:9px;color:var(--muted)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 20h8"/></svg><span style="font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.8px">Uređaji</span></div>
+            <div style="font:700 32px/1 var(--mono);margin-top:12px;letter-spacing:-1px">{{ devTotal }}</div>
+            <div style="font-size:11.5px;color:var(--ok);margin-top:6px;font-weight:600">↑ svi inventarisani</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 17px;box-shadow:var(--shadow-sm)">
+            <div style="display:flex;align-items:center;gap:9px;color:var(--muted)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg><span style="font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.8px">Opsezi</span></div>
+            <div style="font:700 32px/1 var(--mono);margin-top:12px;letter-spacing:-1px">{{ netTotal }}</div>
+            <div style="font-size:11.5px;color:var(--muted);margin-top:6px">Trust · Video · LILD</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 17px;box-shadow:var(--shadow-sm)">
+            <div style="display:flex;align-items:center;gap:9px;color:var(--muted)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="7" rx="1.5"/><rect x="4" y="13" width="16" height="7" rx="1.5"/><path d="M8 7.5h.01M8 16.5h.01"/></svg><span style="font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.8px">Oprema</span></div>
+            <div style="font:700 32px/1 var(--mono);margin-top:12px;letter-spacing:-1px">14</div>
+            <div style="font-size:11.5px;color:var(--muted);margin-top:6px">firewall · svič · AP</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-bottom:16px">
+          <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);max-height:420px;display:flex;flex-direction:column;overflow:hidden">
+            <div style="padding:15px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:3;background:var(--surface);flex:none">
+              <span style="font-weight:700;font-size:14px;flex:none">Stanje lokacija</span>
+              <div style="position:relative;display:flex;align-items:center;flex:1;min-width:0">
+                <svg style="position:absolute;left:9px;pointer-events:none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--faint)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+                <input value="{{ locQ }}" onInput="{{ setLocQ }}" placeholder="Filtriraj lokacije…" style="width:100%;height:30px;border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:0 9px 0 28px;font:500 12px 'Albert Sans';color:var(--ink);outline:none" style-focus="border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-ring)">
+              </div>
+              <span style="font:600 10.5px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.8px;flex:none">uživo</span>
+            </div>
+            <div class="scroll" style="overflow:auto;flex:1">
+              <sc-if value="{{ locEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:24px 18px;text-align:center;font-size:12.5px;color:var(--muted)">Nema lokacija za filter.</div></sc-if>
+              <sc-for list="{{ locHealth }}" as="loc" hint-placeholder-count="3">
+                <div onClick="{{ loc.onClick }}" style="display:flex;align-items:center;gap:13px;padding:13px 18px;border-bottom:1px solid var(--line-2);cursor:pointer" style-hover="background:var(--surface-2)">
+                  <span style="width:9px;height:9px;border-radius:50%;flex:none;background:{{ loc.color }}"></span>
+                  <div style="flex:1;min-width:0">
+                    <div style="font-size:13.5px;font-weight:600">{{ loc.name }}</div>
+                    <div style="font:500 11px var(--mono);color:var(--muted);margin-top:2px">{{ loc.addr }}</div>
+                  </div>
+                  <div style="display:flex;gap:6px">
+                    <span style="font:600 10px var(--mono);padding:3px 8px;border-radius:20px;background:var(--transA-soft);color:var(--transA)">A {{ loc.a }}</span>
+                    <span style="font:600 10px var(--mono);padding:3px 8px;border-radius:20px;background:var(--transB-soft);color:var(--transB)">B {{ loc.b }}</span>
+                  </div>
+                  <div style="width:112px;text-align:right">
+                    <span style="font:600 11px var(--mono);padding:4px 9px;border-radius:20px;background:{{ loc.stSoft }};color:{{ loc.stColor }}">{{ loc.stLabel }}</span>
+                  </div>
+                  <div style="font:600 12px var(--mono);color:var(--muted);width:44px;text-align:right">{{ loc.dev }} ⌨</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);padding:15px 18px">
+            <div style="font-weight:700;font-size:14px;margin-bottom:4px">Transport (WAN)</div>
+            <div style="font-size:11.5px;color:var(--muted);margin-bottom:16px">Auto-failover po opsegu</div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="border:1px solid var(--line);border-radius:12px;padding:13px 14px;background:var(--surface-2)">
+                <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px">
+                  <span style="width:22px;height:3px;border-radius:2px;background:var(--transA);flex:none"></span>
+                  <span style="font-weight:700;font-size:13px">Transport A</span>
+                  <span style="margin-left:auto;font:600 10px var(--mono);color:var(--ok);background:var(--ok-soft);padding:3px 8px;border-radius:20px">AKTIVAN</span>
+                </div>
+                <div style="font:500 11px var(--mono);color:var(--muted)">Primarni: Trust · Video</div>
+                <div style="height:6px;border-radius:4px;background:var(--line-2);margin-top:10px;overflow:hidden"><div style="height:100%;width:100%;background:var(--transA)"></div></div>
+              </div>
+              <div style="border:1px solid var(--line);border-radius:12px;padding:13px 14px;background:var(--surface-2)">
+                <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px">
+                  <span style="width:22px;height:0;border-top:3px dashed var(--transB);flex:none"></span>
+                  <span style="font-weight:700;font-size:13px">Transport B</span>
+                  <span style="margin-left:auto;font:600 10px var(--mono);color:var(--warn);background:var(--warn-soft);padding:3px 8px;border-radius:20px">BACKUP</span>
+                </div>
+                <div style="font:500 11px var(--mono);color:var(--muted)">Primarni: LILD</div>
+                <div style="height:6px;border-radius:4px;background:var(--line-2);margin-top:10px;overflow:hidden"><div style="height:100%;width:64%;background:var(--transB)"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <sc-if value="{{ showActivity }}" hint-placeholder-val="{{ true }}">
+        <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);padding:15px 18px">
+          <div style="font-weight:700;font-size:14px;margin-bottom:14px">Nedavne izmjene</div>
+          <sc-for list="{{ activity }}" as="a" hint-placeholder-count="3">
+            <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--line-2)">
+              <span style="width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none"></span>
+              <span style="font-size:13px;flex:1">{{ a.text }}</span>
+              <span style="font:500 11px var(--mono);color:var(--muted)">{{ a.when }}</span>
+            </div>
+          </sc-for>
+        </div>
+        </sc-if>
+      </div>
+      </sc-if>
+
+      <!-- ===== TOPOLOGY ===== -->
+      <sc-if value="{{ isTopo }}" hint-placeholder-val="{{ false }}">
+      <div style="height:100%;display:flex">
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+          <div style="padding:14px 22px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line);background:var(--surface)">
+            <div style="display:inline-flex;background:var(--surface-3);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px">
+              <button onClick="{{ setGraf }}" style="{{ segGraf }}">Graf</button>
+              <button onClick="{{ setSlojevi }}" style="{{ segSlojevi }}">Slojevi</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:16px;margin-left:8px;font:500 11.5px var(--mono);color:var(--muted)">
+              <span style="display:flex;align-items:center;gap:7px"><span style="width:20px;height:3px;border-radius:2px;background:var(--transA)"></span>Transport A</span>
+              <span style="display:flex;align-items:center;gap:7px"><span style="width:20px;height:0;border-top:3px dashed var(--transB)"></span>Transport B</span>
+            </div>
+            <div style="flex:1"></div>
+            <span style="font:500 10.5px var(--mono);color:var(--faint);margin-right:4px">povuci čvor · točkić = zoom · povuci pozadinu = pomak</span>
+            <div style="display:inline-flex;align-items:center;gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:3px;box-shadow:var(--shadow-sm)">
+              <button onClick="{{ zoomOut }}" style="width:30px;height:30px;border:none;background:none;border-radius:7px;cursor:pointer;color:var(--ink);font:600 17px var(--mono)">−</button>
+              <span style="font:600 11px var(--mono);color:var(--muted);width:44px;text-align:center">{{ zoomPct }}</span>
+              <button onClick="{{ onReset }}" title="Centriraj prikaz" style="width:30px;height:30px;border:none;background:none;border-radius:7px;cursor:pointer;color:var(--ink);display:grid;place-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9V5a2 2 0 0 1 2-2h4M21 9V5a2 2 0 0 0-2-2h-4M3 15v4a2 2 0 0 0 2 2h4M21 15v4a2 2 0 0 1-2 2h-4"/></svg></button>
+              <button onClick="{{ zoomIn }}" style="width:30px;height:30px;border:none;background:none;border-radius:7px;cursor:pointer;color:var(--ink);font:600 17px var(--mono)">＋</button>
+            </div>
+          </div>
+
+          <div class="scroll" ref="{{ canvasRef }}" onMouseDown="{{ onPan }}" style="flex:1;overflow:hidden;background-color:var(--bg);background-image:radial-gradient(var(--line) 1.2px,transparent 1.2px);background-size:24px 24px;position:relative;cursor:grab">
+            <!-- GRAF -->
+            <sc-if value="{{ isGraf }}" hint-placeholder-val="{{ true }}">
+            <div style="transform:translate({{ viewX }}px,{{ viewY }}px) scale({{ zoom }});transform-origin:0 0;width:900px;height:560px;position:relative">
+              <svg style="position:absolute;inset:0;width:900px;height:560px;pointer-events:none;z-index:1;overflow:visible">
+                <sc-for list="{{ lines }}" as="ln" hint-placeholder-count="5">
+                  <line x1="{{ ln.x1 }}" y1="{{ ln.y1 }}" x2="{{ ln.x2 }}" y2="{{ ln.y2 }}" stroke="{{ ln.stroke }}" stroke-width="2.4" stroke-dasharray="{{ ln.dash }}"></line>
+                </sc-for>
+              </svg>
+
+              <!-- HQ -->
+              <div data-node="hq" onMouseDown="{{ dragHq }}" onClick="{{ pickHq }}" style="position:absolute;left:{{ hqX }}px;top:{{ hqY }}px;width:260px;z-index:5;background:var(--hq);border-radius:15px;box-shadow:var(--shadow);cursor:grab;overflow:hidden">
+                <div style="padding:12px 14px;display:flex;align-items:center;gap:10px">
+                  <div style="width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.14);display:grid;place-items:center;flex:none;font:700 11px var(--mono);color:#fff">FW</div>
+                  <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14px;color:var(--hq-ink)">Centralni firewall</div><div style="font:600 9.5px var(--mono);color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:1px;margin-top:2px">HQ · centrala</div></div>
+                  <span style="font:600 10px var(--mono);color:#fff;background:rgba(255,255,255,.16);padding:3px 8px;border-radius:20px">HQ</span>
+                </div>
+                <div style="background:var(--surface);padding:11px 13px;display:flex;flex-direction:column;gap:6px">
+                  <div style="display:flex;align-items:center;gap:7px;font:500 11px var(--mono);border:1px solid var(--line);border-radius:7px;padding:5px 8px"><span style="width:8px;height:8px;border-radius:2px;background:var(--transA)"></span>GW A 10.255.0.1</div>
+                  <div style="display:flex;align-items:center;gap:7px;font:500 11px var(--mono);border:1px solid var(--line);border-radius:7px;padding:5px 8px"><span style="width:8px;height:8px;border-radius:2px;background:var(--transB)"></span>GW B 10.255.9.1</div>
+                </div>
+              </div>
+
+              <!-- L1 -->
+              <div data-node="l1" onMouseDown="{{ dragL1 }}" onClick="{{ pickL1 }}" style="position:absolute;left:{{ l1X }}px;top:{{ l1Y }}px;width:240px;z-index:5;background:var(--surface);border:1.5px solid var(--line);border-radius:15px;box-shadow:var(--shadow);cursor:grab;overflow:hidden">
+                <sc-if value="{{ selL1 }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:-2px;border:2px solid var(--accent);border-radius:16px;pointer-events:none;box-shadow:0 0 0 4px var(--accent-ring)"></div></sc-if>
+                <div style="padding:11px 13px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--line)">
+                  <div style="width:28px;height:28px;border-radius:8px;background:var(--surface-3);display:grid;place-items:center;flex:none;font:700 10px var(--mono);color:var(--hq)">FW</div>
+                  <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13.5px">Lokacija 1</div><div style="font:500 10px var(--mono);color:var(--muted);margin-top:1px">Vuka Karadžića 1</div></div>
+                  <span style="font:600 10px var(--mono);color:var(--accent);background:var(--accent-soft);padding:3px 7px;border-radius:20px">8 ⌨</span>
+                </div>
+                <div style="padding:10px 13px;display:flex;flex-direction:column;gap:5px">
+                  <div style="display:flex;align-items:center;gap:7px;font:500 11px var(--mono);border:1px solid var(--line);border-radius:7px;padding:5px 8px"><span style="width:8px;height:8px;border-radius:2px;background:var(--transA)"></span>Trust<span style="margin-left:auto;color:var(--muted)">10.20.1.0/24</span></div>
+                  <div style="display:flex;align-items:center;gap:7px;font:500 11px var(--mono);border:1px solid var(--line);border-radius:7px;padding:5px 8px"><span style="width:8px;height:8px;border-radius:2px;background:var(--vid)"></span>Video<span style="margin-left:auto;color:var(--muted)">10.20.9.0/24</span></div>
+                </div>
+              </div>
+
+              <!-- SRV -->
+              <div data-node="srv" onMouseDown="{{ dragSrv }}" onClick="{{ pickSrv }}" style="position:absolute;left:{{ srvX }}px;top:{{ srvY }}px;width:230px;z-index:5;background:var(--surface);border:1.5px solid var(--line);border-radius:15px;box-shadow:var(--shadow);cursor:grab;overflow:hidden">
+                <sc-if value="{{ selSrv }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:-2px;border:2px solid var(--accent);border-radius:16px;pointer-events:none;box-shadow:0 0 0 4px var(--accent-ring)"></div></sc-if>
+                <div style="padding:11px 13px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--line);background:var(--surface-3)">
+                  <div style="width:28px;height:28px;border-radius:8px;background:var(--hq);display:grid;place-items:center;flex:none;color:#fff;font-size:14px">⛁</div>
+                  <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13.5px">Server soba</div><div style="font:500 10px var(--mono);color:var(--muted);margin-top:1px">oprema i linkovi</div></div>
+                  <span style="font:600 10px var(--mono);color:var(--muted);background:var(--surface);border:1px solid var(--line);padding:3px 7px;border-radius:20px">6 ⛁</span>
+                </div>
+                <div style="padding:10px 13px;display:flex;flex-wrap:wrap;gap:5px">
+                  <span style="font:500 10.5px var(--mono);border:1px solid var(--line);border-radius:7px;padding:4px 8px;color:var(--muted)">Master svič <b style="color:var(--ink)">2</b></span>
+                  <span style="font:500 10.5px var(--mono);border:1px solid var(--line);border-radius:7px;padding:4px 8px;color:var(--muted)">Svič <b style="color:var(--ink)">3</b></span>
+                  <span style="font:500 10.5px var(--mono);border:1px solid var(--line);border-radius:7px;padding:4px 8px;color:var(--muted)">UPS <b style="color:var(--ink)">1</b></span>
+                </div>
+              </div>
+
+              <!-- L2 -->
+              <div data-node="l2" onMouseDown="{{ dragL2 }}" onClick="{{ pickL2 }}" style="position:absolute;left:{{ l2X }}px;top:{{ l2Y }}px;width:240px;z-index:5;background:var(--surface);border:1.5px solid var(--line);border-radius:15px;box-shadow:var(--shadow);cursor:grab;overflow:hidden">
+                <sc-if value="{{ selL2 }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:-2px;border:2px solid var(--accent);border-radius:16px;pointer-events:none;box-shadow:0 0 0 4px var(--accent-ring)"></div></sc-if>
+                <div style="padding:11px 13px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--line)">
+                  <div style="width:28px;height:28px;border-radius:8px;background:var(--surface-3);display:grid;place-items:center;flex:none;font:700 10px var(--mono);color:var(--hq)">FW</div>
+                  <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13.5px">Lokacija 2</div><div style="font:500 10px var(--mono);color:var(--muted);margin-top:1px">Kralja Petra 12</div></div>
+                  <span style="font:600 10px var(--mono);color:var(--accent);background:var(--accent-soft);padding:3px 7px;border-radius:20px">5 ⌨</span>
+                </div>
+                <div style="padding:10px 13px;display:flex;flex-direction:column;gap:5px">
+                  <div style="display:flex;align-items:center;gap:7px;font:500 11px var(--mono);border:1px solid var(--line);border-radius:7px;padding:5px 8px"><span style="width:8px;height:8px;border-radius:2px;background:var(--transA)"></span>Trust<span style="margin-left:auto;color:var(--muted)">10.30.1.0/24</span></div>
+                  <div style="display:flex;align-items:center;gap:7px;font:500 11px var(--mono);border:1px solid var(--line);border-radius:7px;padding:5px 8px"><span style="width:8px;height:8px;border-radius:2px;background:var(--lild-c);background:#0f6e56"></span>LILD<span style="margin-left:auto;color:var(--muted)">172.16.24.0/24</span></div>
+                </div>
+              </div>
+            </div>
+            </sc-if>
+
+            <!-- SLOJEVI -->
+            <sc-if value="{{ isSlojevi }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:28px 40px;display:flex;flex-direction:column;gap:22px;min-width:720px">
+              <div>
+                <div style="font:700 10px var(--mono);letter-spacing:1.3px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Core</div>
+                <div style="display:flex;justify-content:center">
+                  <div style="width:280px;background:var(--hq);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)"><div style="font-weight:700;color:var(--hq-ink);font-size:14px">Centralni firewall (HQ)</div><div style="font:500 11px var(--mono);color:rgba(255,255,255,.55);margin-top:4px">GW A 10.255.0.1 · GW B 10.255.9.1</div></div>
+                </div>
+              </div>
+              <div style="height:1px;background:var(--line);position:relative"><span style="position:absolute;left:50%;top:-8px;transform:translateX(-50%);background:var(--bg);padding:0 10px;font:500 10px var(--mono);color:var(--muted)">Transport A / B</span></div>
+              <div>
+                <div style="font:700 10px var(--mono);letter-spacing:1.3px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Lokacije (access)</div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+                  <div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:13px 15px;box-shadow:var(--shadow-sm)"><div style="font-weight:700;font-size:13.5px">Lokacija 1</div><div style="font:500 11px var(--mono);color:var(--muted);margin-top:4px">10.20.1.0/24 · 8 uređaja</div></div>
+                  <div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:13px 15px;box-shadow:var(--shadow-sm)"><div style="font-weight:700;font-size:13.5px">Lokacija 2</div><div style="font:500 11px var(--mono);color:var(--muted);margin-top:4px">10.30.1.0/24 · 5 uređaja</div></div>
+                  <div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:13px 15px;box-shadow:var(--shadow-sm)"><div style="font-weight:700;font-size:13.5px">Server soba</div><div style="font:500 11px var(--mono);color:var(--muted);margin-top:4px">6 komada opreme</div></div>
+                </div>
+              </div>
+            </div>
+            </sc-if>
+          </div>
+        </div>
+
+        <!-- inspector -->
+        <aside class="scroll" style="width:300px;flex:none;border-left:1px solid var(--line);background:var(--surface);overflow:auto;padding:18px">
+          <div style="font:700 10px var(--mono);letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px">Detalji čvora</div>
+          <div style="font-size:16px;font-weight:700;letter-spacing:-.2px">{{ insName }}</div>
+          <div style="font:500 11.5px var(--mono);color:var(--muted);margin-top:3px">{{ insAddr }}</div>
+          <div style="display:flex;gap:7px;margin:14px 0">
+            <div style="flex:1;border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:var(--surface-2)"><div style="font:700 18px var(--mono);letter-spacing:-.5px">{{ insDev }}</div><div style="font-size:10.5px;color:var(--muted);margin-top:2px">uređaja</div></div>
+            <div style="flex:1;border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:var(--surface-2)"><div style="font:700 18px var(--mono);letter-spacing:-.5px">{{ insNets }}</div><div style="font-size:10.5px;color:var(--muted);margin-top:2px">opsega</div></div>
+          </div>
+          <div style="font:700 10px var(--mono);letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin:16px 0 9px">Opsezi</div>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <sc-for list="{{ insNetList }}" as="net" hint-placeholder-count="2">
+              <div style="border:1px solid var(--line);border-radius:10px;padding:9px 11px">
+                <div style="display:flex;align-items:center;gap:8px"><span style="width:9px;height:9px;border-radius:3px;background:{{ net.color }};flex:none"></span><span style="font-weight:600;font-size:12.5px">{{ net.name }}</span><span style="margin-left:auto;font:600 10.5px var(--mono);color:var(--muted)">{{ net.range }}</span></div>
+                <div style="font:500 10px var(--mono);color:var(--faint);margin-top:6px">{{ net.derived }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font:700 10px var(--mono);letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin:18px 0 9px">Transport</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;align-items:center;gap:8px;font:500 11.5px var(--mono);border:1px solid var(--line);border-radius:9px;padding:8px 10px"><span style="width:16px;height:3px;border-radius:2px;background:var(--transA)"></span>Transport A<span style="margin-left:auto;color:var(--transA);font-weight:600">{{ insGwA }}</span></div>
+            <div style="display:flex;align-items:center;gap:8px;font:500 11.5px var(--mono);border:1px solid var(--line);border-radius:9px;padding:8px 10px"><span style="width:16px;height:0;border-top:3px dashed var(--transB)"></span>Transport B<span style="margin-left:auto;color:var(--transB);font-weight:600">{{ insGwB }}</span></div>
+          </div>
+          <button onClick="{{ goDetail }}" style="width:100%;margin-top:18px;height:38px;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;font:600 12.5px 'Albert Sans';color:var(--ink);cursor:pointer">Otvori puni detalj →</button>
+        </aside>
+      </div>
+      </sc-if>
+
+      <!-- ===== DEVICES ===== -->
+      <sc-if value="{{ isDevices }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:20px 26px 40px;animation:fadein .25s ease">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+          <span style="font:600 11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-right:4px">Lokacija:</span>
+          <select value="{{ devLoc }}" onChange="{{ onDevLoc }}" style="height:30px;border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:0 10px;font:600 12px var(--mono);color:var(--ink);outline:none;cursor:pointer;margin-right:6px">
+            <option value="">Sve lokacije</option>
+            <sc-for list="{{ locFilterOptions }}" as="lo" hint-placeholder-count="3"><option value="{{ lo.id }}">{{ lo.name }}</option></sc-for>
+          </select>
+          <span style="font:600 11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-right:4px">Tip:</span>
+          <button onClick="{{ clearType }}" style="{{ chipAll }}">Svi</button>
+          <sc-for list="{{ typeChips }}" as="c" hint-placeholder-count="5">
+            <button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button>
+          </sc-for>
+          <div style="flex:1"></div>
+          <span style="font:600 12px var(--mono);color:var(--muted)">{{ devCount }}</span>
+        </div>
+
+        <div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm);overflow:hidden">
+          <div class="scroll" style="overflow:auto">
+            <table style="width:100%;border-collapse:separate;border-spacing:0;font-size:13px;min-width:1160px">
+              <thead>
+                <tr>
+                  <th style="{{ thStyle }}width:40px;text-align:center">#</th>
+                  <th style="{{ thStyle }}">Tip</th>
+                  <th style="{{ thStyle }}">Lokacija</th>
+                  <th style="{{ thStyle }}">Sprat</th>
+                  <th style="{{ thStyle }}">Kancelarija</th>
+                  <th style="{{ thStyle }}">Naziv / oznaka</th>
+                  <th style="{{ thStyle }}">Barkod</th>
+                  <th style="{{ thStyle }}">IP adresa</th>
+                  <th style="{{ thStyle }}">Opseg</th>
+                  <th style="{{ thStyle }}">Povezan na</th>
+                  <th style="{{ thStyle }}">Status</th>
+                  <th style="{{ thStyle }}text-align:center">Nadzor</th>
+                </tr>
+              </thead>
+              <tbody>
+                <sc-for list="{{ devices }}" as="d" hint-placeholder-count="8">
+                  <tr style="{{ d.rowStyle }}">
+                    <td style="{{ tdStyle }}text-align:center;color:var(--faint);font:600 11px var(--mono)">{{ d.n }}</td>
+                    <td style="{{ tdStyle }}"><span style="display:inline-flex;align-items:center;gap:7px;font-weight:600"><span style="width:7px;height:7px;border-radius:50%;background:{{ d.typeColor }};flex:none"></span>{{ d.dtype }}</span></td>
+                    <td style="{{ tdStyle }}font-weight:600">{{ d.loc }}</td>
+                    <td style="{{ tdStyle }}color:var(--ink-2)">{{ d.floor }}</td>
+                    <td style="{{ tdStyle }}color:var(--ink-2)">{{ d.office }}</td>
+                    <td style="{{ tdStyle }}font-weight:600">{{ d.name }}</td>
+                    <td style="{{ tdStyle }}font-family:var(--mono);font-size:12px;color:var(--muted)">{{ d.barcode }}</td>
+                    <td style="{{ tdStyle }}font-family:var(--mono);font-size:12px">{{ d.ip }}</td>
+                    <td style="{{ tdStyle }}"><span style="display:inline-flex;align-items:center;gap:6px;font:500 11px var(--mono);color:var(--muted)"><span style="width:8px;height:8px;border-radius:2px;background:{{ d.netColor }};flex:none"></span>{{ d.netName }}</span></td>
+                    <td style="{{ tdStyle }}font-family:var(--mono);font-size:12px;color:var(--muted)">{{ d.uplink }}</td>
+                    <td style="{{ tdStyle }}"><span style="font:600 10.5px var(--mono);padding:3px 9px;border-radius:20px;background:{{ d.stSoft }};color:{{ d.stColor }}">{{ d.stLabel }}</span></td>
+                    <td style="{{ tdStyle }}"><div style="display:flex;gap:6px;justify-content:center"><button onClick="{{ d.onMon }}" title="Dodaj/ukloni iz nadzora" style="{{ d.monStyle }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="2.6"/></svg></button><button onClick="{{ d.onDiag }}" title="Ping / traceroute" style="width:26px;height:26px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:7px;display:grid;place-items:center;cursor:pointer" style-hover="border-color:var(--accent);color:var(--accent)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></button></div></td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+          <sc-if value="{{ devEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:40px;text-align:center;color:var(--muted);font-size:13px">Nema uređaja za zadati filter.</div>
+          </sc-if>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ===== DETAIL ===== -->
+      <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:24px 26px 40px;max-width:920px;animation:fadein .25s ease">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px">
+          <div style="width:46px;height:46px;border-radius:12px;background:var(--surface-3);display:grid;place-items:center;flex:none;font:700 13px var(--mono);color:var(--hq)">FW</div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:9px">
+              <div style="font-size:19px;font-weight:700;letter-spacing:-.3px">{{ detName }}</div>
+              <select value="{{ locSel }}" onChange="{{ onPickLoc }}" title="Izaberi lokaciju" style="height:30px;border:1px solid var(--line);background:var(--surface-2);border-radius:9px;padding:0 9px;font:600 12px var(--mono);color:var(--ink);outline:none;cursor:pointer" style-focus="border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-ring)"><sc-for list="{{ locPickerOptions }}" as="lp" hint-placeholder-count="3"><option value="{{ lp.id }}">{{ lp.name }}</option></sc-for></select>
+            </div>
+            <div style="font:500 12px var(--mono);color:var(--muted);margin-top:3px">{{ detSub }}</div>
+          </div>
+          <span style="font:600 11px var(--mono);color:var(--ok);background:var(--ok-soft);padding:5px 12px;border-radius:20px">● online</span>
+          <sc-if value="{{ detCanDelete }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ onDetDelete }}" style="height:34px;border:1px solid var(--line);background:var(--surface-2);border-radius:9px;padding:0 13px;font:600 12px 'Albert Sans';color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:7px" style-hover="border-color:var(--down);color:var(--down);background:var(--down-soft)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"/></svg>Obriši lokaciju</button>
+          </sc-if>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
+          <div style="background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:14px 16px;box-shadow:var(--shadow-sm)">
+            <label style="display:block;font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:7px">Naziv</label>
+            <input value="{{ detName }}" onInput="{{ onDetName }}" style="width:100%;border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:14px;font-weight:500;background:var(--surface-2);color:var(--ink);outline:none;font-family:'Albert Sans'" style-focus="border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-ring)">
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:14px 16px;box-shadow:var(--shadow-sm)">
+            <label style="display:block;font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:7px">Adresa objekta</label>
+            <input value="{{ detAddr }}" onInput="{{ onDetAddr }}" placeholder="npr. Vuka Karadžića 1, Banja Luka" style="width:100%;border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:14px;font-weight:500;background:var(--surface-2);color:var(--ink);outline:none;font-family:'Albert Sans'" style-focus="border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-ring)">
+          </div>
+        </div>
+
+        <sc-if value="{{ notServer }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;align-items:center;gap:9px;margin:22px 0 12px">
+          <span style="font:700 11px var(--mono);text-transform:uppercase;letter-spacing:1px;color:var(--ink-2)">Transport gateway-i</span>
+          <span style="height:1px;flex:1;background:var(--line)"></span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div style="background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:15px 16px;box-shadow:var(--shadow-sm)">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="width:20px;height:3px;border-radius:2px;background:var(--transA)"></span><input value="{{ taName }}" onInput="{{ onTaName }}" placeholder="Naziv transporta" style="font-weight:700;font-size:13px;color:var(--transA);border:1px solid transparent;border-radius:6px;padding:2px 6px;margin-left:-6px;background:none;outline:none;width:150px" style-hover="border-color:var(--line)" style-focus="border-color:var(--accent);background:var(--surface-2);box-shadow:0 0 0 3px var(--accent-ring)"></div>
+            <label style="display:block;font:600 9px var(--mono);text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin-bottom:4px">Gateway (IP)</label>
+            <input value="{{ detGwA }}" onInput="{{ onDetGwA }}" placeholder="npr. 10.255.0.1" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font:500 12.5px var(--mono);background:var(--surface-2);color:var(--ink);outline:none" style-focus="border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-ring)">
+            <input value="{{ taNote }}" onInput="{{ onTaNote }}" placeholder="kratak opis (npr. primarni za Trust / Video)" style="width:100%;font:500 11px var(--mono);color:var(--muted);margin-top:7px;border:1px solid transparent;border-radius:6px;padding:3px 5px;background:none;outline:none" style-hover="border-color:var(--line)" style-focus="border-color:var(--accent);background:var(--surface-2);color:var(--ink)">
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:15px 16px;box-shadow:var(--shadow-sm)">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="width:20px;height:0;border-top:3px dashed var(--transB)"></span><input value="{{ tbName }}" onInput="{{ onTbName }}" placeholder="Naziv transporta" style="font-weight:700;font-size:13px;color:var(--transB);border:1px solid transparent;border-radius:6px;padding:2px 6px;margin-left:-6px;background:none;outline:none;width:150px" style-hover="border-color:var(--line)" style-focus="border-color:var(--accent);background:var(--surface-2);box-shadow:0 0 0 3px var(--accent-ring)"></div>
+            <label style="display:block;font:600 9px var(--mono);text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin-bottom:4px">Gateway (IP)</label>
+            <input value="{{ detGwB }}" onInput="{{ onDetGwB }}" placeholder="npr. 10.255.9.1" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font:500 12.5px var(--mono);background:var(--surface-2);color:var(--ink);outline:none" style-focus="border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-ring)">
+            <input value="{{ tbNote }}" onInput="{{ onTbNote }}" placeholder="kratak opis (npr. primarni za LILD)" style="width:100%;font:500 11px var(--mono);color:var(--muted);margin-top:7px;border:1px solid transparent;border-radius:6px;padding:3px 5px;background:none;outline:none" style-hover="border-color:var(--line)" style-focus="border-color:var(--accent);background:var(--surface-2);color:var(--ink)">
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:9px;margin:26px 0 12px">
+          <span style="font:700 11px var(--mono);text-transform:uppercase;letter-spacing:1px;color:var(--ink-2)">Opsezi / mreže</span>
+          <span style="height:1px;flex:1;background:var(--line)"></span>
+          <button onClick="{{ onAddNet }}" style="height:32px;border:1px solid var(--line);background:var(--surface-2);border-radius:9px;padding:0 12px;font:600 12px 'Albert Sans';color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="border-color:var(--accent);color:var(--accent)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Dodaj opseg</button>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <sc-for list="{{ detailNets }}" as="net" hint-placeholder-count="3">
+            <div style="background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:15px 16px;box-shadow:var(--shadow-sm)">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+                <span style="width:12px;height:12px;border-radius:4px;background:{{ net.color }};flex:none"></span>
+                <input value="{{ net.name }}" onInput="{{ net.onName }}" placeholder="Naziv opsega" style="font-weight:700;font-size:14.5px;border:1px solid transparent;border-radius:7px;padding:3px 7px;margin-left:-4px;background:none;color:var(--ink);outline:none;width:150px" style-hover="border-color:var(--line)" style-focus="border-color:var(--accent);background:var(--surface-2);box-shadow:0 0 0 3px var(--accent-ring)">
+                <span style="font:600 10px var(--mono);color:{{ net.primColor }};background:{{ net.primSoft }};padding:3px 9px;border-radius:20px;margin-left:4px">{{ net.prim }}</span>
+                <button onClick="{{ net.onRemove }}" title="Ukloni opseg" style="margin-left:6px;width:26px;height:26px;border:1px solid var(--line);background:var(--surface-2);border-radius:7px;display:grid;place-items:center;cursor:pointer;color:var(--muted)" style-hover="border-color:var(--down);color:var(--down);background:var(--down-soft)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"/></svg></button>
+                <input value="{{ net.range }}" onInput="{{ net.onRange }}" placeholder="10.20.1.0/24 ili 10.20.1.0 255.255.255.0" title="Prihvata /24 ili punu masku 255.255.255.0" style="margin-left:auto;width:230px;text-align:right;border:1px solid var(--line);border-radius:8px;padding:5px 9px;font:600 12.5px var(--mono);color:var(--ink-2);background:var(--surface-2);outline:none" style-focus="border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-ring)">
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+                <div><div style="font:600 9px var(--mono);text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin-bottom:4px">Gateway</div><input value="{{ net.gw }}" onInput="{{ net.onGw }}" placeholder="auto" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:5px 8px;font:500 12px var(--mono);background:var(--surface-2);color:var(--ink);outline:none" style-focus="border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-ring)"></div>
+                <div><div style="font:600 9px var(--mono);text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin-bottom:4px">VLAN</div><input value="{{ net.vlan }}" onInput="{{ net.onVlan }}" placeholder="—" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:5px 8px;font:500 12px var(--mono);background:var(--surface-2);color:var(--ink);outline:none" style-focus="border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-ring)"></div>
+                <div><div style="font:600 9px var(--mono);text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin-bottom:4px">Port</div><input value="{{ net.port }}" onInput="{{ net.onPort }}" placeholder="—" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:5px 8px;font:500 12px var(--mono);background:var(--surface-2);color:var(--ink);outline:none" style-focus="border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-ring)"></div>
+                <div><div style="font:600 9px var(--mono);text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin-bottom:4px">Hostova</div><div style="font:500 12px var(--mono);padding:5px 0">{{ net.hosts }}</div></div>
+              </div>
+              <div style="font:500 10.5px/1.5 var(--mono);color:var(--muted);margin-top:12px;padding-top:11px;border-top:1px dashed var(--line)">{{ net.derived }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:9px;margin:26px 0 12px">
+          <span style="font:700 11px var(--mono);text-transform:uppercase;letter-spacing:1px;color:var(--ink-2)">Uređaji na lokaciji</span>
+          <span style="font:600 11px var(--mono);color:var(--muted);background:var(--surface-3);padding:3px 9px;border-radius:20px">{{ locDevShown }} / {{ locDevTotal }}</span>
+          <span style="height:1px;flex:1;background:var(--line)"></span>
+        </div>
+
+        <sc-if value="{{ devExpand }}" hint-placeholder-val="{{ false }}">
+          <div onClick="{{ onToggleExpand }}" style="position:fixed;inset:0;z-index:59;background:rgba(12,14,18,.45);backdrop-filter:blur(2px)"></div>
+        </sc-if>
+        <div id="locdev" style="{{ locdevStyle }}">
+          <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap;background:var(--surface)">
+            <span style="font:700 12.5px 'Albert Sans';color:var(--ink);margin-right:2px">{{ detName }}</span>
+            <span style="width:1px;height:20px;background:var(--line);margin-right:2px"></span>
+            <div style="position:relative;display:flex;align-items:center">
+              <svg style="position:absolute;left:10px;pointer-events:none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--faint)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+              <input value="{{ locQ }}" onInput="{{ onLocQ }}" placeholder="Filtriraj uređaje…" style="width:220px;height:34px;border:1px solid var(--line);background:var(--surface-2);border-radius:9px;padding:0 11px 0 31px;font:500 12.5px 'Albert Sans';color:var(--ink);outline:none" style-focus="border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-ring)">
+            </div>
+            <select value="{{ locNet }}" onChange="{{ onLocNet }}" style="height:34px;border:1px solid var(--line);background:var(--surface-2);border-radius:9px;padding:0 10px;font:600 12px var(--mono);color:var(--ink);outline:none;cursor:pointer">
+              <option value="">Svi opsezi</option>
+              <sc-for list="{{ netOptions }}" as="no" hint-placeholder-count="3"><option value="{{ no.id }}">{{ no.name }}</option></sc-for>
+            </select>
+            <span style="font:600 11px var(--mono);color:var(--muted)">{{ locDevShown }} / {{ locDevTotal }}</span>
+            <div style="flex:1"></div>
+            <button onClick="{{ onAddDev }}" style="height:34px;border:none;background:var(--accent);color:#fff;border-radius:9px;padding:0 14px;font:600 12.5px 'Albert Sans';cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:var(--shadow-sm)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Dodaj uređaj</button>
+            <button onClick="{{ onAddDev10 }}" title="Dodaj 10 redova odjednom" style="height:34px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:9px;padding:0 12px;font:600 12.5px var(--mono);cursor:pointer" style-hover="border-color:var(--accent);color:var(--accent)">+10</button>
+            <button onClick="{{ onToggleExpand }}" title="Proširi / skupi" style="width:34px;height:34px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2);border-radius:9px;display:grid;place-items:center;cursor:pointer" style-hover="border-color:var(--accent);color:var(--accent)">
+              <sc-if value="{{ devExpand }}" hint-placeholder-val="{{ false }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9L4 4M9 9V5M9 9H5M15 15l5 5M15 15v4M15 15h4M15 9l5-5M15 9V5M15 9h4M9 15l-5 5M9 15v4M9 15H5"/></svg></sc-if>
+              <sc-if value="{{ notExpand }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></sc-if>
+            </button>
+          </div>
+
+          <div class="scroll" style="max-height:{{ locdevMax }};overflow:auto;flex:1">
+            <table style="border-collapse:separate;border-spacing:0;font-size:12.5px;table-layout:fixed;width:{{ colTotal }}px;min-width:100%">
+              <thead>
+                <tr>
+                  <sc-for list="{{ cols }}" as="c" hint-placeholder-count="10">
+                    <th style="{{ dthStyle }}text-align:{{ c.align }};width:{{ c.w }}px">{{ c.label }}<span onMouseDown="{{ c.onResize }}" title="Povuci za širinu" style="position:absolute;top:0;right:-4px;width:9px;height:100%;cursor:col-resize;z-index:4"></span></th>
+                  </sc-for>
+                </tr>
+              </thead>
+              <tbody>
+                <sc-for list="{{ locDevices }}" as="d" hint-placeholder-count="6">
+                  <tr style="{{ d.rowStyle }}">
+                    <td style="{{ dtdStyle }}text-align:center;color:var(--faint);font:600 11px var(--mono)">{{ d.n }}</td>
+                    <td style="{{ dtdStyle }}"><select value="{{ d.dtype }}" onChange="{{ d.onType }}" style="{{ dcellSel }}" style-focus="{{ dcellFocus }}"><sc-for list="{{ typeOptions }}" as="t" hint-placeholder-count="8"><option value="{{ t }}">{{ t }}</option></sc-for></select></td>
+                    <td style="{{ dtdStyle }}"><input value="{{ d.name }}" onInput="{{ d.onName }}" placeholder="npr. PC-SALTER-01" style="{{ dcell }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></td>
+                    <td style="{{ dtdStyle }}"><input value="{{ d.barcode }}" onInput="{{ d.onBarcode }}" placeholder="—" style="{{ dcellMono }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></td>
+                    <td style="{{ dtdStyle }}"><div style="display:flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:50%;flex:none;background:{{ d.ipOk }}"></span><input value="{{ d.ip }}" onInput="{{ d.onIp }}" placeholder="auto" style="{{ dcellMono }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></div></td>
+                    <td style="{{ dtdStyle }}"><select value="{{ d.netId }}" onChange="{{ d.onNet }}" style="{{ dcellSel }}" style-focus="{{ dcellFocus }}"><option value="">—</option><sc-for list="{{ netOptions }}" as="no" hint-placeholder-count="3"><option value="{{ no.id }}">{{ no.name }}</option></sc-for></select></td>
+                    <td style="{{ dtdStyle }}"><input value="{{ d.floor }}" onInput="{{ d.onFloor }}" placeholder="—" style="{{ dcell }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></td>
+                    <td style="{{ dtdStyle }}"><input value="{{ d.office }}" onInput="{{ d.onOffice }}" placeholder="—" style="{{ dcell }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></td>
+                    <td style="{{ dtdStyle }}"><select value="{{ d.uplink }}" onChange="{{ d.onUplink }}" style="{{ dcellSel }}" style-focus="{{ dcellFocus }}"><option value="">—</option><sc-for list="{{ d.uplinkOpts }}" as="u" hint-placeholder-count="3"><option value="{{ u }}">{{ u }}</option></sc-for></select></td>
+                    <td style="{{ dtdStyle }}text-align:center"><button onClick="{{ d.onRemove }}" title="Obriši uređaj" style="width:26px;height:26px;border:1px solid var(--line);background:var(--surface-2);border-radius:7px;display:grid;place-items:center;cursor:pointer;color:var(--muted)" style-hover="border-color:var(--down);color:var(--down);background:var(--down-soft)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"/></svg></button></td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+          <sc-if value="{{ locDevEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:34px;text-align:center;color:var(--muted);font-size:13px">Nema uređaja za zadati filter. Klikni <b style="color:var(--ink)">Dodaj uređaj</b> da počneš unos.</div>
+          </sc-if>
+        </div>
+        </sc-if>
+
+        <sc-if value="{{ hasEquip }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:9px;margin:26px 0 12px">
+          <span style="font:700 11px var(--mono);text-transform:uppercase;letter-spacing:1px;color:var(--ink-2)">{{ equipTitle }}</span>
+          <span style="height:1px;flex:1;background:var(--line)"></span>
+          <button onClick="{{ onAddEquip }}" style="height:32px;border:none;background:var(--accent);color:#fff;border-radius:9px;padding:0 13px;font:600 12px 'Albert Sans';cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:var(--shadow-sm)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Dodaj opremu</button>
+          <button onClick="{{ onToggleEquip }}" title="Proširi / skupi" style="width:32px;height:32px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2);border-radius:9px;display:grid;place-items:center;cursor:pointer" style-hover="border-color:var(--accent);color:var(--accent)">
+            <sc-if value="{{ equipExpand }}" hint-placeholder-val="{{ false }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9L4 4M9 9V5M9 9H5M15 15l5 5M15 15v4M15 15h4M15 9l5-5M15 9V5M15 9h4M9 15l-5 5M9 15v4M9 15H5"/></svg></sc-if>
+            <sc-if value="{{ notEquipExpand }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></sc-if>
+          </button>
+        </div>
+        <sc-if value="{{ equipExpand }}" hint-placeholder-val="{{ false }}">
+          <div onClick="{{ onToggleEquip }}" style="position:fixed;inset:0;z-index:59;background:rgba(12,14,18,.45);backdrop-filter:blur(2px)"></div>
+        </sc-if>
+        <div style="{{ equipStyle }}">
+          <sc-if value="{{ equipExpand }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--surface)">
+              <span style="font:700 12.5px 'Albert Sans';color:var(--ink)">{{ equipTitle }}</span>
+              <span style="width:1px;height:18px;background:var(--line)"></span>
+              <span style="font:600 12px 'Albert Sans';color:var(--muted)">{{ detName }}</span>
+              <div style="flex:1"></div>
+              <button onClick="{{ onAddEquip }}" style="height:32px;border:none;background:var(--accent);color:#fff;border-radius:9px;padding:0 13px;font:600 12px 'Albert Sans';cursor:pointer;display:flex;align-items:center;gap:6px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Dodaj opremu</button>
+              <button onClick="{{ onToggleEquip }}" style="height:32px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:9px;padding:0 13px;font:600 12px 'Albert Sans';cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="border-color:var(--accent);color:var(--accent)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9L4 4M9 9V5M9 9H5M15 15l5 5M15 15v4M15 15h4M15 9l5-5M15 9V5M15 9h4M9 15l-5 5M9 15v4M9 15H5"/></svg>Skupi</button>
+            </div>
+          </sc-if>
+          <div class="scroll" style="overflow:auto;max-height:{{ equipMax }};flex:1">
+            <table style="border-collapse:separate;border-spacing:0;font-size:12.5px;min-width:1180px;width:100%">
+              <thead>
+                <tr>
+                  <th style="{{ dthStyle }}width:34px;text-align:center">#</th>
+                  <th style="{{ dthStyle }}width:150px">Tip</th>
+                  <th style="{{ dthStyle }}width:120px">Proizvođač</th>
+                  <th style="{{ dthStyle }}width:150px">Model</th>
+                  <th style="{{ dthStyle }}width:120px">Serijski br.</th>
+                  <th style="{{ dthStyle }}width:110px">Barkod</th>
+                  <th style="{{ dthStyle }}width:120px">IP adresa</th>
+                  <th style="{{ dthStyle }}width:100px">Firmver</th>
+                  <th style="{{ dthStyle }}width:110px">Rak pozicija</th>
+                  <th style="{{ dthStyle }}width:90px">Slika</th>
+                  <th style="{{ dthStyle }}width:160px">Povezan na</th>
+                  <th style="{{ dthStyle }}width:40px"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <sc-for list="{{ equipRows }}" as="e" hint-placeholder-count="4">
+                  <tr style="{{ e.rowStyle }}">
+                    <td style="{{ dtdStyle }}text-align:center;color:var(--faint);font:600 11px var(--mono)">{{ e.n }}</td>
+                    <td style="{{ dtdStyle }}"><select value="{{ e.etype }}" onChange="{{ e.onType }}" style="{{ dcellSel }}" style-focus="{{ dcellFocus }}"><sc-for list="{{ equipTypeOptions }}" as="t" hint-placeholder-count="8"><option value="{{ t }}">{{ t }}</option></sc-for></select></td>
+                    <td style="{{ dtdStyle }}"><select value="{{ e.vendor }}" onChange="{{ e.onVendor }}" style="{{ dcellSel }}" style-focus="{{ dcellFocus }}"><option value="">—</option><sc-for list="{{ vendorOptions }}" as="v" hint-placeholder-count="5"><option value="{{ v }}">{{ v }}</option></sc-for></select></td>
+                    <td style="{{ dtdStyle }}"><input value="{{ e.model }}" onInput="{{ e.onModel }}" placeholder="npr. Catalyst 2960" style="{{ dcell }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></td>
+                    <td style="{{ dtdStyle }}"><input value="{{ e.serial }}" onInput="{{ e.onSerial }}" placeholder="—" style="{{ dcellMono }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></td>
+                    <td style="{{ dtdStyle }}"><input value="{{ e.barcode }}" onInput="{{ e.onBarcode }}" placeholder="—" style="{{ dcellMono }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></td>
+                    <td style="{{ dtdStyle }}"><input value="{{ e.ip }}" onInput="{{ e.onIp }}" placeholder="opciono" style="{{ dcellMono }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></td>
+                    <td style="{{ dtdStyle }}"><input value="{{ e.firmware }}" onInput="{{ e.onFirmware }}" placeholder="opciono" style="{{ dcellMono }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></td>
+                    <td style="{{ dtdStyle }}"><input value="{{ e.rack }}" onInput="{{ e.onRack }}" placeholder="npr. R1 U3" style="{{ dcellMono }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></td>
+                    <td style="{{ dtdStyle }}">
+                      <div style="display:flex;align-items:center;gap:5px">
+                        <sc-if value="{{ e.hasPhoto }}" hint-placeholder-val="{{ false }}">
+                          <span>{{ e.photoEl }}</span>
+                          <button onClick="{{ e.onClearPhoto }}" title="Ukloni sliku" style="width:22px;height:22px;border:1px solid var(--line);background:var(--surface-2);border-radius:6px;cursor:pointer;color:var(--muted);font:600 12px var(--mono)">×</button>
+                        </sc-if>
+                        <label title="Dodaj / uslikaj" style="width:34px;height:34px;border:1px dashed var(--line);border-radius:7px;display:grid;place-items:center;cursor:pointer;color:var(--muted);flex:none" style-hover="border-color:var(--accent);color:var(--accent)">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                          <input type="file" accept="image/*" capture="environment" onChange="{{ e.onPhoto }}" style="display:none">
+                        </label>
+                      </div>
+                    </td>
+                    <td style="{{ dtdStyle }}"><select value="{{ e.upstream }}" onChange="{{ e.onUpstream }}" style="{{ dcellSel }}" style-focus="{{ dcellFocus }}"><option value="">—</option><sc-for list="{{ e.upstreamOpts }}" as="u" hint-placeholder-count="3"><option value="{{ u }}">{{ u }}</option></sc-for></select></td>
+                    <td style="{{ dtdStyle }}text-align:center"><button onClick="{{ e.onRemove }}" title="Obriši opremu" style="width:26px;height:26px;border:1px solid var(--line);background:var(--surface-2);border-radius:7px;display:grid;place-items:center;cursor:pointer;color:var(--muted)" style-hover="border-color:var(--down);color:var(--down);background:var(--down-soft)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"/></svg></button></td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+          <sc-if value="{{ equipEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:34px;text-align:center;color:var(--muted);font-size:13px">Nema opreme. Klikni <b style="color:var(--ink)">Dodaj opremu</b> (firewall, svič, DVR…).</div>
+          </sc-if>
+        </div>
+        </sc-if>
+      </div>
+      </sc-if>
+
+      <!-- ===== DOCS ===== -->
+      <sc-if value="{{ isDocs }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:24px 26px 40px;display:grid;grid-template-columns:320px 1fr;gap:20px;animation:fadein .25s ease">
+        <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);padding:18px;align-self:start">
+          <div style="font-weight:700;font-size:14px;margin-bottom:3px">Podaci dokumentacije</div>
+          <div style="font-size:11.5px;color:var(--muted);margin-bottom:16px">Idu u zaglavlje Word/PDF izvještaja.</div>
+          <sc-for list="{{ metaFields }}" as="f" hint-placeholder-count="6">
+            <div style="margin-bottom:12px">
+              <label style="display:block;font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:6px">{{ f.label }}</label>
+              <input value="{{ f.value }}" onInput="{{ f.onInput }}" style="width:100%;border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:13.5px;font-weight:500;background:var(--surface-2);color:var(--ink);outline:none;font-family:'Albert Sans'" style-focus="border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-ring)">
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden">
+          <div style="height:8px;background:var(--accent)"></div>
+          <div style="padding:32px 38px">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding-bottom:20px;border-bottom:2px solid var(--line)">
+              <div>
+                <div style="font:600 11px var(--mono);text-transform:uppercase;letter-spacing:1.5px;color:var(--accent)">Pošte Srpske a.d.</div>
+                <div style="font-size:24px;font-weight:700;letter-spacing:-.5px;margin-top:8px">Topologija mreže — WAN</div>
+                <div style="font-size:12.5px;color:var(--muted);margin-top:6px">Vuka Karadžića 1, Banja Luka</div>
+              </div>
+              <div style="text-align:right;font:500 11px var(--mono);color:var(--muted);line-height:1.9">
+                <div>Verzija <b style="color:var(--ink)">2.0</b></div>
+                <div>Ažurirano <b style="color:var(--ink)">31.07.2026.</b></div>
+                <div>Mrežni inženjer</div>
+              </div>
+            </div>
+
+            <div style="font:700 11px var(--mono);text-transform:uppercase;letter-spacing:1px;color:var(--ink-2);margin:24px 0 12px">Pregled lokacija</div>
+            <table style="width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px">
+              <thead><tr>
+                <th style="text-align:left;padding:9px 10px;font:700 10px var(--mono);text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1.5px solid var(--line)">Lokacija</th>
+                <th style="text-align:left;padding:9px 10px;font:700 10px var(--mono);text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1.5px solid var(--line)">Opseg (Trust)</th>
+                <th style="text-align:left;padding:9px 10px;font:700 10px var(--mono);text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1.5px solid var(--line)">Primarni</th>
+                <th style="text-align:right;padding:9px 10px;font:700 10px var(--mono);text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1.5px solid var(--line)">Uređaja</th>
+              </tr></thead>
+              <tbody>
+                <sc-for list="{{ docRows }}" as="r" hint-placeholder-count="3">
+                  <tr>
+                    <td style="padding:11px 10px;border-bottom:1px solid var(--line-2);font-weight:600">{{ r.name }}</td>
+                    <td style="padding:11px 10px;border-bottom:1px solid var(--line-2);font-family:var(--mono);color:var(--ink-2)">{{ r.range }}</td>
+                    <td style="padding:11px 10px;border-bottom:1px solid var(--line-2);font-family:var(--mono);color:var(--muted)">{{ r.prim }}</td>
+                    <td style="padding:11px 10px;border-bottom:1px solid var(--line-2);text-align:right;font-family:var(--mono)">{{ r.dev }}</td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+
+            <div style="font:500 12px/1.7 'Albert Sans';color:var(--muted);margin-top:22px;padding:14px 16px;background:var(--surface-2);border:1px solid var(--line);border-radius:11px">
+              Transporti: <b style="color:var(--ink)">Transport A</b> i <b style="color:var(--ink)">Transport B</b> rade u auto-failover režimu. Po opsegu bira se primarni: Trust ide A ▸ B, LILD ide B ▸ A. Uređaji ne mijenjaju IP — mijenja se polisa / transport.
+            </div>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ===== NADZOR ===== -->
+      <sc-if value="{{ isNadzor }}" hint-placeholder-val="{{ false }}">
+      <div id="nadzorFs" style="{{ nadzorFsStyle }}">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap">
+          <div style="flex:1;min-width:220px">
+            <div style="font-size:14px;font-weight:700">Uređaji pod nadzorom <span style="font:600 11px var(--mono);color:var(--muted);background:var(--surface-3);padding:2px 8px;border-radius:20px;margin-left:6px">{{ watchCount }}</span></div>
+            <div style="font-size:11.5px;color:var(--muted);margin-top:3px">Označi uređaje okom u modulu <b>Uređaji</b>, pa pokreni ručni sken. Radi offline preko lokalnog agenta.</div>
+          </div>
+          <div style="font:500 11px var(--mono);color:var(--faint)">agent: {{ agentUrl }}</div>
+          <sc-if value="{{ scanAt }}" hint-placeholder-val="{{ false }}"><div style="font:500 11px var(--mono);color:var(--muted)">zadnji sken {{ scanAt }}</div></sc-if>
+          <div style="position:relative;display:flex;align-items:center">
+            <svg style="position:absolute;left:10px;pointer-events:none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--faint)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+            <input value="{{ nadzorQ }}" onInput="{{ setNadzorQ }}" placeholder="Filtriraj po bilo čemu…" style="width:220px;height:38px;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:0 12px 0 32px;font:500 13px 'Albert Sans';color:var(--ink);outline:none" style-focus="border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-ring)">
+          </div>
+          <button onClick="{{ onToggleFs }}" title="Prikaz preko cijelog ekrana (za TV)" style="height:38px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:10px;padding:0 14px;font:600 12.5px 'Albert Sans';cursor:pointer;display:flex;align-items:center;gap:7px" style-hover="border-color:var(--accent);color:var(--accent)">
+            <sc-if value="{{ isFs }}" hint-placeholder-val="{{ false }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9L4 4M9 9V5M9 9H5M15 15l5 5M15 15v4M15 15h4M15 9l5-5M15 9V5M15 9h4M9 15l-5 5M9 15v4M9 15H5"/></svg></sc-if>
+            <sc-if value="{{ notFs }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></sc-if>
+            <span>{{ fsLabel }}</span>
+          </button>
+          <button onClick="{{ onRunScan }}" style="height:38px;border:none;background:var(--accent);color:#fff;border-radius:10px;padding:0 16px;font:600 13px 'Albert Sans';cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:var(--shadow-sm)">
+            <sc-if value="{{ scanRunning }}" hint-placeholder-val="{{ false }}"><span style="width:13px;height:13px;border:2px solid rgba(255,255,255,.5);border-top-color:#fff;border-radius:50%;display:inline-block;animation:spin .7s linear infinite"></span></sc-if>
+            <sc-if value="{{ notScanning }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></sc-if>
+            <span>{{ scanBtnLabel }}</span>
+          </button>
+        </div>
+
+        <sc-if value="{{ watchEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="background:var(--surface);border:1px dashed var(--line);border-radius:14px;padding:44px;text-align:center;color:var(--muted)">
+            <div style="font-size:14px;font-weight:600;color:var(--ink-2);margin-bottom:6px">Lista nadzora je prazna</div>
+            <div style="font-size:12.5px">U modulu <b>Uređaji</b> klikni ikonu oka u koloni <b>Nadzor</b> da dodaš uređaje (npr. kamere) ovdje.</div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ hasWatch }}" hint-placeholder-val="{{ true }}">
+        <div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm);overflow:hidden">
+          <div class="scroll" style="overflow:auto">
+            <table style="width:100%;border-collapse:separate;border-spacing:0;font-size:13px;min-width:760px">
+              <thead><tr>
+                <th style="{{ thStyle }}">Stanje</th>
+                <th style="{{ thStyle }}">Naziv</th>
+                <th style="{{ thStyle }}">Tip</th>
+                <th style="{{ thStyle }}">IP adresa</th>
+                <th style="{{ thStyle }}">Lokacija</th>
+                <th style="{{ thStyle }}text-align:center">Akcije</th>
+              </tr></thead>
+              <tbody>
+                <sc-for list="{{ watchList }}" as="w" hint-placeholder-count="4">
+                  <tr>
+                    <td style="{{ tdStyle }}"><span style="display:inline-flex;align-items:center;gap:7px;font:600 11px var(--mono);color:{{ w.stColor }}"><span style="width:9px;height:9px;border-radius:50%;background:{{ w.stColor }};flex:none"></span>{{ w.stLabel }}</span></td>
+                    <td style="{{ tdStyle }}font-weight:600">{{ w.name }}</td>
+                    <td style="{{ tdStyle }}color:var(--ink-2)">{{ w.dtype }}</td>
+                    <td style="{{ tdStyle }}font-family:var(--mono);font-size:12px">{{ w.ip }}</td>
+                    <td style="{{ tdStyle }}color:var(--ink-2)">{{ w.loc }}</td>
+                    <td style="{{ tdStyle }}"><div style="display:flex;gap:6px;justify-content:center"><button onClick="{{ w.onDiag }}" title="Ping / traceroute" style="width:26px;height:26px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:7px;display:grid;place-items:center;cursor:pointer" style-hover="border-color:var(--accent);color:var(--accent)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></button><button onClick="{{ w.onRemove }}" title="Ukloni iz nadzora" style="width:26px;height:26px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:7px;display:grid;place-items:center;cursor:pointer" style-hover="border-color:var(--down);color:var(--down);background:var(--down-soft)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg></button></div></td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        </sc-if>
+      </div>
+      </sc-if>
+
+    </main>
+  </div>
+
+  <!-- ===== DIJAGNOSTIKA (modal) ===== -->
+  <sc-if value="{{ diagOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ onCloseDiag }}" style="position:fixed;inset:0;z-index:80;background:rgba(12,14,18,.5);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;padding:24px">
+    <div onClick="{{ stop }}" style="width:620px;max-width:100%;max-height:86vh;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px">
+        <div style="width:34px;height:34px;border-radius:9px;background:var(--accent-soft);display:grid;place-items:center;flex:none;color:var(--accent)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></div>
+        <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:15px;letter-spacing:-.2px">Dijagnostika · {{ diagName }}</div><div style="font:500 11.5px var(--mono);color:var(--muted);margin-top:2px">{{ diagIp }}</div></div>
+        <button onClick="{{ onCloseDiag }}" style="width:32px;height:32px;border:1px solid var(--line);background:var(--surface-2);border-radius:9px;cursor:pointer;color:var(--muted);display:grid;place-items:center" style-hover="border-color:var(--down);color:var(--down)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <div style="padding:14px 20px;display:flex;gap:9px;align-items:center;border-bottom:1px solid var(--line)">
+        <button onClick="{{ onRunPing }}" style="{{ pingBtnStyle }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="3"/></svg>Ping</button>
+        <button onClick="{{ onRunTrace }}" style="{{ traceBtnStyle }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="6" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 6h4a2 2 0 0 1 2 2M12 14v0a2 2 0 0 0 2 2h3"/></svg>Traceroute</button>
+        <div style="flex:1"></div>
+        <sc-if value="{{ diagRunning }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:8px;font:500 11.5px var(--mono);color:var(--muted)"><span style="width:13px;height:13px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;display:inline-block;animation:spin .7s linear infinite"></span>izvršavam…</span></sc-if>
+      </div>
+      <pre class="scroll" style="margin:0;flex:1;overflow:auto;padding:16px 20px;background:var(--surface-2);font:500 12px/1.55 var(--mono);color:var(--ink);white-space:pre-wrap;word-break:break-word;min-height:200px">{{ diagOut }}</pre>
+    </div>
+  </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light'|'dark'&quot;,&quot;section&quot;:&quot;Izgled&quot;},&quot;defaultTopoView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;graf&quot;,&quot;slojevi&quot;],&quot;default&quot;:&quot;graf&quot;,&quot;tsType&quot;:&quot;'graf'|'slojevi'&quot;,&quot;section&quot;:&quot;Topologija&quot;},&quot;showActivity&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Pregled&quot;}}">
+class Component extends DCLogic {
+  state = { theme:null, screen:'dash', topoView:null, showActivity:null, zoom:1, sel:'l1', q:'', typeFilter:'', data:null, pos:null, view:{x:40,y:20} };
+
+  async componentDidMount(){
+    let pos = this.defaultPos();
+    try{ const raw=localStorage.getItem('topo_ui_pos'); if(raw) pos=Object.assign(pos, JSON.parse(raw)); }catch(e){}
+    let colW=this.defaultCols();
+    try{ const rc=localStorage.getItem('topo_ui_cols'); if(rc) colW=Object.assign(colW, JSON.parse(rc)); }catch(e){}
+    this.setState({ pos, colW });
+    try{
+      const be = await import('./backend.js');
+      this.be = be;
+      const data = await be.loadOrSeed();
+      this.setState({ data });
+      this._fsH = () => this.setState({ fs: !!document.fullscreenElement });
+      document.addEventListener('fullscreenchange', this._fsH);
+    }catch(e){ console.warn('backend load fail', e); }
+  }
+
+  defaultPos(){ return { hq:{x:300,y:22}, l1:{x:56,y:352}, l2:{x:556,y:352}, srv:{x:600,y:40} }; }
+  defaultCols(){ return { n:36, tip:150, name:180, barcode:120, ip:150, net:130, floor:100, office:120, uplink:170, act:46 }; }
+  startColResize(key, e){
+    e.preventDefault(); e.stopPropagation();
+    const w0=(this.state.colW&&this.state.colW[key])||this.defaultCols()[key];
+    const sx=e.clientX;
+    const mv=(ev)=>{ const w=Math.max(56, Math.round(w0+(ev.clientX-sx))); this.setState({ colW:{ ...(this.state.colW||this.defaultCols()), [key]:w } }); };
+    const up=()=>{ window.removeEventListener('mousemove',mv); window.removeEventListener('mouseup',up); try{ localStorage.setItem('topo_ui_cols', JSON.stringify(this.state.colW)); }catch(e){} };
+    window.addEventListener('mousemove',mv); window.addEventListener('mouseup',up);
+  }
+  savePos(){ try{ localStorage.setItem('topo_ui_pos', JSON.stringify(this.state.pos)); }catch(e){} }
+
+  // pomicanje čvora mišom
+  startDrag(id, e){
+    e.preventDefault(); e.stopPropagation();
+    const P = this.state.pos || this.defaultPos();
+    const o = { ...(P[id]||{x:0,y:0}) };
+    const sx = e.clientX, sy = e.clientY;
+    this._dragMoved = false;
+    const mv = (ev)=>{
+      const z = this.state.zoom || 1;
+      const dx = (ev.clientX-sx)/z, dy = (ev.clientY-sy)/z;
+      if(Math.abs(ev.clientX-sx)+Math.abs(ev.clientY-sy) > 3) this._dragMoved = true;
+      this.setState({ pos: { ...this.state.pos, [id]:{ x:Math.round(o.x+dx), y:Math.round(o.y+dy) } } });
+    };
+    const up = ()=>{ window.removeEventListener('mousemove',mv); window.removeEventListener('mouseup',up); this.savePos(); };
+    window.addEventListener('mousemove',mv); window.addEventListener('mouseup',up);
+  }
+  pick(id){ if(this._dragMoved){ this._dragMoved=false; return; } this.setState({ sel:id }); }
+
+  // slobodan pomak (pan) cijele slike povlačenjem praznog platna
+  startPan(e){
+    if(e.target.closest && e.target.closest('[data-node]')) return;
+    const V = this.state.view || {x:0,y:0};
+    const sx=e.clientX, sy=e.clientY, ox=V.x, oy=V.y;
+    if(this._canvas) this._canvas.style.cursor='grabbing';
+    const mv=(ev)=>{ this.setState({ view:{ x:ox+(ev.clientX-sx), y:oy+(ev.clientY-sy) } }); };
+    const up=()=>{ window.removeEventListener('mousemove',mv); window.removeEventListener('mouseup',up); if(this._canvas) this._canvas.style.cursor='grab'; };
+    window.addEventListener('mousemove',mv); window.addEventListener('mouseup',up);
+  }
+  // centriraj / resetuj prikaz
+  resetView(){ this.setState({ view:{x:40,y:20}, zoom:1 }); }
+
+  // zoom točkićem, ka poziciji kursora (translate-based)
+  onWheel = (e)=>{
+    e.preventDefault();
+    const sc=this._canvas; if(!sc) return;
+    const rect=sc.getBoundingClientRect();
+    const px=e.clientX-rect.left, py=e.clientY-rect.top;
+    const old=this.state.zoom||1;
+    let z=old + (e.deltaY<0?0.12:-0.12);
+    z=Math.min(1.8, Math.max(0.4, +z.toFixed(2)));
+    if(z===old) return;
+    const V=this.state.view||{x:0,y:0};
+    const nx = px - ((px - V.x)/old)*z;
+    const ny = py - ((py - V.y)/old)*z;
+    this.setState({ zoom:z, view:{x:nx,y:ny} });
+  };
+  setCanvas = (el)=>{
+    if(!el || el===this._canvas) return;
+    this._canvas = el;
+    el.addEventListener('wheel', this.onWheel, { passive:false });
+  };
+
+  nav(id){ return () => this.setState({ screen:id }); }
+
+  get AGENT(){ return (this.state.data && this.state.data.meta && this.state.data.meta.agentUrl) || 'http://localhost:8765'; }
+  async agentFetch(path){
+    const c = new AbortController(); const t = setTimeout(()=>c.abort(), 12000);
+    try{ const r = await fetch(this.AGENT+path, { signal:c.signal }); clearTimeout(t); if(!r.ok) throw new Error('http'); return await r.json(); }
+    catch(e){ clearTimeout(t); return { ok:false, offline:true }; }
+  }
+  openDiag(ip,name){ this.setState({ diag:{ open:true, ip:ip||'', name:name||'', tab:'ping', running:false, out:'' } }); }
+  closeDiag(){ this.setState({ diag:null }); }
+  async runDiag(kind){
+    const dg = this.state.diag; if(!dg || !dg.ip){ this.setState({ diag:{ ...(dg||{}), out:'Uređaj nema IP adresu.' } }); return; }
+    this.setState({ diag:{ ...dg, tab:kind, running:true, out:(kind==='ping'?'Pinganje ':'Traceroute za ')+dg.ip+' …' } });
+    const res = await this.agentFetch('/'+kind+'?ip='+encodeURIComponent(dg.ip));
+    const cur = this.state.diag; if(!cur) return;
+    let out;
+    if(res.offline) out = '⚠ Agent nije dostupan na '+this.AGENT+'.\n\nPokreni Python agent (agent.py) na računaru koji ima pristup mreži:\n  pip install fastapi uvicorn icmplib\n  uvicorn agent:app --port 8765\n\nZatim pokušaj ponovo.';
+    else if(res.ok===false) out = 'Greška: '+(res.error||'nepoznato');
+    else out = res.output || JSON.stringify(res, null, 2);
+    this.setState({ diag:{ ...cur, running:false, out } });
+  }
+  toggleMon(nodeId, devId){
+    const d = this.state.data; const nd = d && d.nodes && d.nodes[nodeId]; if(!nd) return;
+    const dev = (nd.devices||[]).find(x=>x.id===devId); if(!dev) return;
+    dev.mon = !dev.mon; this.forceUpdate(); this.persist();
+  }
+  watchDevices(){
+    const out = [];
+    // po defaultu: firewall-i lokacija (svaki čvor = firewall lokacije)
+    this.nodeList().forEach(n=>{ out.push({ id:'fw:'+n.id, nodeId:n.id, name:n.name, ip:n.gwMpls||n.gwSdh||'', dtype:'Firewall', loc:n.name, fw:true }); });
+    // zatim ručno označeni uređaji (oko u koloni Nadzor)
+    this.nodeList().forEach(n=>(n.devices||[]).forEach(dv=>{ if(dv.mon) out.push({ id:dv.id, nodeId:n.id, name:dv.name||'(bez naziva)', ip:dv.ip||'', dtype:dv.dtype||'—', loc:n.name }); }));
+    return out;
+  }
+  toggleFs(){
+    const next = !this.state.fs;
+    this.setState({ fs: next });
+    const el = document.getElementById('nadzorFs');
+    try{
+      if(next){ el && el.requestFullscreen && el.requestFullscreen().catch(()=>{}); }
+      else if(document.fullscreenElement){ document.exitFullscreen && document.exitFullscreen(); }
+    }catch(e){}
+  }
+  async runScan(){
+    const watch = this.watchDevices().filter(w=>w.ip);
+    if(!watch.length){ this.flash('Nema uređaja pod nadzorom (dodaj ih okom u koloni Nadzor).', true); return; }
+    this.setState({ scanRunning:true, scanRes:{ ...(this.state.scanRes||{}) } });
+    for(const w of watch){
+      const res = await this.agentFetch('/ping?ip='+encodeURIComponent(w.ip));
+      const cur = { ...(this.state.scanRes||{}) };
+      cur[w.id] = res.offline ? { state:'agent' } : (res.alive ? { state:'online', rtt:res.rtt_ms } : { state:'offline' });
+      this.setState({ scanRes:cur });
+    }
+    this.setState({ scanRunning:false, scanAt:new Date().toLocaleTimeString('sr-Latn-RS') });
+  }
+  exportJson(){
+    const d = this.state.data; if(!d) return;
+    try{
+      const blob = new Blob([JSON.stringify(d, null, 2)], { type:'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const ts = new Date().toISOString().slice(0,10);
+      a.href = url; a.download = 'topologija-mreze-' + ts + '.json';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url), 1000);
+      this.flash('Izvezeno: ' + a.download);
+    }catch(e){ this.flash('Greška pri izvozu.', true); }
+  }
+  exportWord(){
+    const d = this.state.data; if(!d){ this.flash('Nema podataka.', true); return; }
+    const be = this.be || {};
+    const cn = be.computeNet ? (r)=>be.computeNet(r) : ()=>({});
+    const esc = (s)=> String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const meta = d.meta || {};
+    const nodes = Object.values(d.nodes||{}).sort((a,b)=> (a.type==='hq'?-1:0)-(b.type==='hq'?-1:0));
+    const taName = meta.taName||'Transport A', tbName = meta.tbName||'Transport B';
+    const primLbl = (p)=> p==='sdh' ? tbName+' ▸ '+taName : taName+' ▸ '+tbName;
+
+    const totDev = nodes.reduce((s,n)=>s+((n.devices||[]).length),0);
+    const totEq = nodes.reduce((s,n)=>s+((n.equipment||[]).length),0);
+    const totNet = nodes.reduce((s,n)=>s+((n.nets||[]).length),0);
+    const locCount = nodes.filter(n=>n.type!=='hq').length;
+    const today = new Date().toLocaleDateString('sr-Latn-RS');
+
+    const C = { ink:'#1b1b18', muted:'#6b6a63', line:'#d8d6ce', head:'#0f6e56', soft:'#eef4f1', zebra:'#f7f6f2' };
+    const th = 'style="border:1px solid '+C.line+';background:'+C.soft+';padding:5px 8px;font-size:9pt;text-align:left;font-weight:bold;color:'+C.ink+'"';
+    const td = 'style="border:1px solid '+C.line+';padding:5px 8px;font-size:9pt;color:'+C.ink+';vertical-align:top"';
+    const tdm = 'style="border:1px solid '+C.line+';padding:5px 8px;font-size:8.5pt;color:'+C.ink+';font-family:Consolas,monospace;vertical-align:top"';
+
+    let b = '';
+    // ---- naslovna ----
+    b += '<div style="border-bottom:3px solid '+C.head+';padding-bottom:12px;margin-bottom:6px">';
+    b += '<div style="font-size:9pt;letter-spacing:1pt;color:'+C.head+';font-weight:bold;text-transform:uppercase">'+esc(meta.company||'—')+'</div>';
+    b += '<div style="font-size:22pt;font-weight:bold;color:'+C.ink+';margin-top:4px">'+esc(meta.docTitle||'Topologija mreže')+'</div>';
+    b += '<div style="font-size:10pt;color:'+C.muted+';margin-top:4px">'+esc(meta.hq||'')+'</div>';
+    b += '</div>';
+    b += '<table style="width:100%;border-collapse:collapse;margin-bottom:18px"><tr>';
+    const infoCell = (k,v)=> '<td style="padding:3px 10px 3px 0;font-size:9pt;color:'+C.ink+'"><span style="color:'+C.muted+'">'+k+':</span> <b>'+esc(v||'—')+'</b></td>';
+    b += infoCell('Izradio', meta.author||meta.role) + infoCell('Verzija', meta.version) + infoCell('Ažurirano', meta.updated||today);
+    b += '</tr><tr>';
+    b += infoCell('Kontakt', meta.contact) + infoCell('Lokacija', locCount+' + HQ') + infoCell('Datum izvoza', today);
+    b += '</tr></table>';
+
+    // ---- rezime ----
+    b += '<h2 style="font-size:13pt;color:'+C.head+';border-bottom:1px solid '+C.line+';padding-bottom:3px">1. Rezime mreže</h2>';
+    b += '<table style="width:100%;border-collapse:collapse;margin:8px 0 14px"><tr>';
+    const sum = (lbl,val)=> '<td style="border:1px solid '+C.line+';padding:8px 10px;text-align:center"><div style="font-size:18pt;font-weight:bold;color:'+C.head+'">'+val+'</div><div style="font-size:8.5pt;color:'+C.muted+';text-transform:uppercase;letter-spacing:.5pt">'+lbl+'</div></td>';
+    b += sum('Čvorova', nodes.length) + sum('Lokacija', locCount) + sum('Opsega', totNet) + sum('Uređaja', totDev) + sum('Opreme', totEq);
+    b += '</tr></table>';
+    b += '<p style="font-size:9.5pt;color:'+C.ink+';line-height:1.5">Mreža je povezana preko dva transporta: <b>'+esc(taName)+'</b>'+(meta.taNote?' ('+esc(meta.taNote)+')':'')+' i <b>'+esc(tbName)+'</b>'+(meta.tbNote?' ('+esc(meta.tbNote)+')':'')+'. Po opsegu se bira primarni transport uz automatski failover na rezervni.</p>';
+
+    // ---- pregled lokacija ----
+    b += '<h2 style="font-size:13pt;color:'+C.head+';border-bottom:1px solid '+C.line+';padding-bottom:3px">2. Pregled lokacija</h2>';
+    b += '<table style="width:100%;border-collapse:collapse;margin:8px 0 16px">';
+    b += '<tr><th '+th+'>Lokacija</th><th '+th+'>Adresa</th><th '+th+'>GW '+esc(taName)+'</th><th '+th+'>GW '+esc(tbName)+'</th><th '+th+'>Opsega</th><th '+th+'>Uređaja</th></tr>';
+    nodes.forEach((n,i)=>{ const z = i%2? ' background:'+C.zebra : '';
+      b += '<tr><td '+td.replace('">','">'+'').replace('vertical-align:top','vertical-align:top;'+z)+'><b>'+esc(n.name)+'</b></td>'
+        + '<td '+td+'>'+esc(n.address)+'</td>'
+        + '<td '+tdm+'>'+esc(n.gwMpls)+'</td><td '+tdm+'>'+esc(n.gwSdh)+'</td>'
+        + '<td '+td+'>'+((n.nets||[]).length)+'</td><td '+td+'>'+((n.devices||[]).length)+'</td></tr>';
+    });
+    b += '</table>';
+
+    // ---- po lokaciji detaljno ----
+    b += '<h2 style="font-size:13pt;color:'+C.head+';border-bottom:1px solid '+C.line+';padding-bottom:3px">3. Detalji po lokaciji</h2>';
+    nodes.forEach((n, idx)=>{
+      b += '<div style="page-break-inside:avoid;margin-top:14px">';
+      b += '<h3 style="font-size:11.5pt;color:'+C.ink+';margin-bottom:2px">3.'+(idx+1)+'  '+esc(n.name)+(n.type==='hq'?' <span style="font-size:8pt;color:#fff;background:'+C.head+';padding:1px 6px;border-radius:3px">HQ</span>':'')+'</h3>';
+      if(n.address) b += '<div style="font-size:9pt;color:'+C.muted+';margin-bottom:6px">'+esc(n.address)+'</div>';
+      b += '<div style="font-size:9pt;margin-bottom:8px"><span style="color:'+C.muted+'">'+esc(taName)+' GW:</span> <b style="font-family:Consolas,monospace">'+esc(n.gwMpls||'—')+'</b> &nbsp;&nbsp; <span style="color:'+C.muted+'">'+esc(tbName)+' GW:</span> <b style="font-family:Consolas,monospace">'+esc(n.gwSdh||'—')+'</b></div>';
+
+      // opsezi
+      if((n.nets||[]).length){
+        b += '<div style="font-size:9pt;font-weight:bold;color:'+C.head+';margin:6px 0 3px">Opsezi / mreže</div>';
+        b += '<table style="width:100%;border-collapse:collapse;margin-bottom:8px">';
+        b += '<tr><th '+th+'>Naziv</th><th '+th+'>CIDR</th><th '+th+'>Mreža</th><th '+th+'>Broadcast</th><th '+th+'>Host.</th><th '+th+'>Gateway</th><th '+th+'>VLAN</th><th '+th+'>Port</th><th '+th+'>Primarni</th></tr>';
+        n.nets.forEach((net,j)=>{ const c=cn(net.range); const z=j%2?';background:'+C.zebra:'';
+          b += '<tr><td '+tdm.slice(0,-1)+z+'"><b>'+esc(net.name)+'</b></td>'
+            + '<td '+tdm.slice(0,-1)+z+'">'+esc(net.range||'—')+'</td>'
+            + '<td '+tdm.slice(0,-1)+z+'">'+esc(c.ok?c.network:'—')+'</td>'
+            + '<td '+tdm.slice(0,-1)+z+'">'+esc(c.ok?c.broadcast:'—')+'</td>'
+            + '<td '+tdm.slice(0,-1)+z+'">'+esc(c.ok?c.hosts:'—')+'</td>'
+            + '<td '+tdm.slice(0,-1)+z+'">'+esc(net.gw||'—')+'</td>'
+            + '<td '+tdm.slice(0,-1)+z+'">'+esc(net.vlan||'—')+'</td>'
+            + '<td '+tdm.slice(0,-1)+z+'">'+esc(net.port||'—')+'</td>'
+            + '<td '+td.slice(0,-1)+z+'">'+esc(primLbl(net.primary))+'</td></tr>';
+        });
+        b += '</table>';
+      }
+
+      // oprema
+      if((n.equipment||[]).length){
+        b += '<div style="font-size:9pt;font-weight:bold;color:'+C.head+';margin:6px 0 3px">Oprema</div>';
+        b += '<table style="width:100%;border-collapse:collapse;margin-bottom:8px">';
+        b += '<tr><th '+th+'>Tip</th><th '+th+'>Proizvođač</th><th '+th+'>Model</th><th '+th+'>Serijski / barkod</th><th '+th+'>IP</th><th '+th+'>Rack</th><th '+th+'>Povezan na</th></tr>';
+        n.equipment.forEach((e,j)=>{ const z=j%2?';background:'+C.zebra:'';
+          b += '<tr><td '+td.slice(0,-1)+z+'">'+esc(e.etype)+'</td>'
+            + '<td '+td.slice(0,-1)+z+'">'+esc(e.vendor)+'</td>'
+            + '<td '+td.slice(0,-1)+z+'">'+esc(e.model)+'</td>'
+            + '<td '+tdm.slice(0,-1)+z+'">'+esc(e.serial||e.barcode||'—')+'</td>'
+            + '<td '+tdm.slice(0,-1)+z+'">'+esc(e.ip||'—')+'</td>'
+            + '<td '+td.slice(0,-1)+z+'">'+esc(e.rack||'—')+'</td>'
+            + '<td '+td.slice(0,-1)+z+'">'+esc(e.upstream||'—')+'</td></tr>';
+        });
+        b += '</table>';
+      }
+
+      // uređaji
+      if((n.devices||[]).length){
+        b += '<div style="font-size:9pt;font-weight:bold;color:'+C.head+';margin:6px 0 3px">Uređaji ('+n.devices.length+')</div>';
+        b += '<table style="width:100%;border-collapse:collapse;margin-bottom:6px">';
+        b += '<tr><th '+th+'>#</th><th '+th+'>Tip</th><th '+th+'>Naziv</th><th '+th+'>Barkod</th><th '+th+'>IP</th><th '+th+'>Opseg</th><th '+th+'>Sprat</th><th '+th+'>Kancelarija</th><th '+th+'>Povezan na</th></tr>';
+        n.devices.forEach((dv,j)=>{ const net=(n.nets||[]).find(x=>x.id===dv.netId); const z=j%2?';background:'+C.zebra:'';
+          b += '<tr><td '+td.slice(0,-1)+z+'">'+(j+1)+'</td>'
+            + '<td '+td.slice(0,-1)+z+'">'+esc(dv.dtype)+'</td>'
+            + '<td '+td.slice(0,-1)+z+'"><b>'+esc(dv.name)+'</b></td>'
+            + '<td '+tdm.slice(0,-1)+z+'">'+esc(dv.barcode||'—')+'</td>'
+            + '<td '+tdm.slice(0,-1)+z+'">'+esc(dv.ip||'—')+'</td>'
+            + '<td '+td.slice(0,-1)+z+'">'+esc(net?net.name:'—')+'</td>'
+            + '<td '+td.slice(0,-1)+z+'">'+esc(dv.floor||'—')+'</td>'
+            + '<td '+td.slice(0,-1)+z+'">'+esc(dv.office||'—')+'</td>'
+            + '<td '+td.slice(0,-1)+z+'">'+esc(dv.uplink||'—')+'</td></tr>';
+        });
+        b += '</table>';
+      }
+      b += '</div>';
+    });
+
+    if(meta.notes){
+      b += '<h2 style="font-size:13pt;color:'+C.head+';border-bottom:1px solid '+C.line+';padding-bottom:3px;margin-top:14px">4. Napomene</h2>';
+      b += '<p style="font-size:9.5pt;color:'+C.ink+';line-height:1.5">'+esc(meta.notes)+'</p>';
+    }
+    b += '<div style="margin-top:22px;padding-top:8px;border-top:1px solid '+C.line+';font-size:8pt;color:'+C.muted+'">Generisano automatski · '+esc(meta.company||'')+' · '+today+'</div>';
+
+    const html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">'
+      + '<head><meta charset="utf-8"><title>'+esc(meta.docTitle||'Topologija')+'</title>'
+      + '<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml><![endif]-->'
+      + '<style>@page{size:A4 landscape;margin:1.4cm 1.4cm auto 1.4cm} body{font-family:"Segoe UI",Arial,sans-serif;color:'+C.ink+'} table{mso-table-lspace:0;mso-table-rspace:0}</style></head>'
+      + '<body>'+b+'</body></html>';
+
+    try{
+      const blob = new Blob(['\ufeff'+html], { type:'application/msword' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'topologija-mreze-' + new Date().toISOString().slice(0,10) + '.doc';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url), 1000);
+      this.flash('Word dokument preuzet: ' + a.download);
+    }catch(e){ this.flash('Greška pri kreiranju dokumenta.', true); }
+  }
+  exportWord2(){
+    const d = this.state.data; if(!d){ this.flash('Nema podataka.', true); return; }
+    const be = this.be || {};
+    const cn = be.computeNet ? (r)=>be.computeNet(r) : ()=>({});
+    const esc = (s)=> String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const meta = d.meta || {};
+    const nodes = Object.values(d.nodes||{}).sort((a,b)=> (a.type==='hq'?-1:0)-(b.type==='hq'?-1:0));
+    const taName = meta.taName||'Transport A', tbName = meta.tbName||'Transport B';
+    const primLbl = (p)=> p==='sdh' ? tbName : taName;
+    const totDev = nodes.reduce((s,n)=>s+((n.devices||[]).length),0);
+    const totEq = nodes.reduce((s,n)=>s+((n.equipment||[]).length),0);
+    const totNet = nodes.reduce((s,n)=>s+((n.nets||[]).length),0);
+    const locCount = nodes.filter(n=>n.type!=='hq').length;
+    const today = new Date().toLocaleDateString('sr-Latn-RS');
+
+    // tamnija, formalna paleta (portret)
+    const C = { ink:'#14181d', muted:'#5a6068', line:'#c9ccd1', band:'#14181d', accent:'#0f6e56', soft:'#eef2f1', label:'#8a9097' };
+    const kv = (k,v)=> '<tr><td style="padding:4px 14px 4px 0;font-size:9.5pt;color:'+C.label+';white-space:nowrap;vertical-align:top">'+k+'</td><td style="padding:4px 0;font-size:9.5pt;color:'+C.ink+';font-weight:bold">'+esc(v||'—')+'</td></tr>';
+    const th = 'style="border-bottom:1.5px solid '+C.ink+';padding:5px 7px;font-size:8.5pt;text-align:left;color:'+C.muted+';text-transform:uppercase;letter-spacing:.4pt"';
+    const td = 'style="border-bottom:1px solid '+C.line+';padding:5px 7px;font-size:9pt;color:'+C.ink+';vertical-align:top"';
+    const tdm = 'style="border-bottom:1px solid '+C.line+';padding:5px 7px;font-size:8.5pt;color:'+C.ink+';font-family:Consolas,monospace;vertical-align:top"';
+
+    let b = '';
+    // ---- korica ----
+    b += '<div style="background:'+C.band+';color:#fff;padding:34px 30px;margin-bottom:26px">';
+    b += '<div style="font-size:9pt;letter-spacing:3pt;text-transform:uppercase;color:#8fb9ac">Tehnička dokumentacija</div>';
+    b += '<div style="font-size:26pt;font-weight:bold;line-height:1.15;margin-top:10px">'+esc(meta.docTitle||'Topologija mreže')+'</div>';
+    b += '<div style="height:3px;width:64px;background:'+C.accent+';margin:16px 0"></div>';
+    b += '<div style="font-size:12pt;font-weight:bold">'+esc(meta.company||'—')+'</div>';
+    b += '<div style="font-size:10pt;color:#c4ccd2;margin-top:2px">'+esc(meta.hq||'')+'</div>';
+    b += '</div>';
+
+    b += '<table style="border-collapse:collapse;margin:0 4px 24px">';
+    b += kv('Izradio', meta.author||meta.role) + kv('Uloga', meta.role) + kv('Kontakt', meta.contact);
+    b += kv('Verzija dokumenta', meta.version) + kv('Datum ažuriranja', meta.updated||today) + kv('Datum izvoza', today);
+    b += '</table>';
+
+    // ---- sadržaj/uvod ----
+    b += '<h2 style="font-size:12pt;color:'+C.ink+';margin:0 0 6px"><span style="color:'+C.accent+'">1</span>&nbsp;&nbsp;Uvod</h2>';
+    b += '<p style="font-size:10pt;color:'+C.ink+';line-height:1.6;margin:0 0 8px">Ovaj dokument opisuje topologiju mreže organizacije <b>'+esc(meta.company||'')+'</b>. Mreža obuhvata <b>'+nodes.length+'</b> čvorova ('+locCount+' lokacij'+(locCount===1?'a':'e')+' + centralni čvor), ukupno <b>'+totNet+'</b> definisanih opsega, <b>'+totDev+'</b> uređaja i <b>'+totEq+'</b> komada mrežne opreme.</p>';
+    b += '<p style="font-size:10pt;color:'+C.ink+';line-height:1.6;margin:0 0 14px">Povezivanje lokacija realizovano je preko dva nezavisna transporta u režimu automatskog failover-a:</p>';
+    b += '<table style="border-collapse:collapse;margin:0 0 18px;width:100%">';
+    b += '<tr><td style="width:14px;padding:4px 0"><span style="display:inline-block;width:11px;height:11px;background:#2563a8"></span></td><td style="font-size:9.5pt;padding:4px 6px"><b>'+esc(taName)+'</b> — '+esc(meta.taNote||'primarni transport')+'</td></tr>';
+    b += '<tr><td style="width:14px;padding:4px 0"><span style="display:inline-block;width:11px;height:11px;background:#c07817"></span></td><td style="font-size:9.5pt;padding:4px 6px"><b>'+esc(tbName)+'</b> — '+esc(meta.tbNote||'rezervni transport')+'</td></tr>';
+    b += '</table>';
+
+    // ---- pregled ----
+    b += '<h2 style="font-size:12pt;color:'+C.ink+';margin:0 0 6px"><span style="color:'+C.accent+'">2</span>&nbsp;&nbsp;Pregled lokacija</h2>';
+    b += '<table style="width:100%;border-collapse:collapse;margin:4px 0 18px">';
+    b += '<tr><th '+th+'>Lokacija</th><th '+th+'>Adresa</th><th '+th+'>GW '+esc(taName)+'</th><th '+th+'>GW '+esc(tbName)+'</th><th '+th+'>Opsega</th><th '+th+'>Uređaja</th></tr>';
+    nodes.forEach(n=>{ b += '<tr><td '+td+'><b>'+esc(n.name)+'</b>'+(n.type==='hq'?' <span style="font-size:7.5pt;color:#fff;background:'+C.accent+';padding:1px 5px">HQ</span>':'')+'</td><td '+td+'>'+esc(n.address||'—')+'</td><td '+tdm+'>'+esc(n.gwMpls||'—')+'</td><td '+tdm+'>'+esc(n.gwSdh||'—')+'</td><td '+td+'>'+((n.nets||[]).length)+'</td><td '+td+'>'+((n.devices||[]).length)+'</td></tr>'; });
+    b += '</table>';
+
+    // ---- po lokaciji ----
+    b += '<h2 style="font-size:12pt;color:'+C.ink+';margin:0 0 4px"><span style="color:'+C.accent+'">3</span>&nbsp;&nbsp;Detalji po lokaciji</h2>';
+    nodes.forEach((n,idx)=>{
+      b += '<div style="page-break-inside:avoid;border:1px solid '+C.line+';border-top:3px solid '+C.accent+';padding:14px 16px;margin:12px 0">';
+      b += '<div style="font-size:12pt;font-weight:bold;color:'+C.ink+'">3.'+(idx+1)+'  '+esc(n.name)+'</div>';
+      if(n.address) b += '<div style="font-size:9pt;color:'+C.muted+';margin-top:2px">'+esc(n.address)+'</div>';
+      b += '<table style="border-collapse:collapse;margin:8px 0 4px"><tr>'
+        + '<td style="padding:2px 16px 2px 0;font-size:9pt"><span style="color:'+C.label+'">'+esc(taName)+' GW</span> &nbsp;<b style="font-family:Consolas,monospace">'+esc(n.gwMpls||'—')+'</b></td>'
+        + '<td style="padding:2px 0;font-size:9pt"><span style="color:'+C.label+'">'+esc(tbName)+' GW</span> &nbsp;<b style="font-family:Consolas,monospace">'+esc(n.gwSdh||'—')+'</b></td></tr></table>';
+
+      if((n.nets||[]).length){
+        b += '<div style="font-size:8.5pt;font-weight:bold;color:'+C.accent+';text-transform:uppercase;letter-spacing:.5pt;margin:10px 0 3px">Opsezi</div>';
+        b += '<table style="width:100%;border-collapse:collapse"><tr><th '+th+'>Naziv</th><th '+th+'>CIDR</th><th '+th+'>Mreža → Broadcast</th><th '+th+'>Host.</th><th '+th+'>Gateway</th><th '+th+'>VLAN</th><th '+th+'>Primarni</th></tr>';
+        n.nets.forEach(net=>{ const c=cn(net.range); b += '<tr><td '+td+'><b>'+esc(net.name)+'</b></td><td '+tdm+'>'+esc(net.range||'—')+'</td><td '+tdm+'>'+esc(c.ok?c.network+' → '+c.broadcast:'—')+'</td><td '+td+'>'+esc(c.ok?c.hosts:'—')+'</td><td '+tdm+'>'+esc(net.gw||'—')+'</td><td '+td+'>'+esc(net.vlan||'—')+'</td><td '+td+'>'+esc(primLbl(net.primary))+'</td></tr>'; });
+        b += '</table>';
+      }
+      if((n.equipment||[]).length){
+        b += '<div style="font-size:8.5pt;font-weight:bold;color:'+C.accent+';text-transform:uppercase;letter-spacing:.5pt;margin:12px 0 3px">Oprema</div>';
+        b += '<table style="width:100%;border-collapse:collapse"><tr><th '+th+'>Tip</th><th '+th+'>Proizvođač / model</th><th '+th+'>Serijski / barkod</th><th '+th+'>IP</th><th '+th+'>Rack</th><th '+th+'>Povezan na</th></tr>';
+        n.equipment.forEach(e=>{ b += '<tr><td '+td+'>'+esc(e.etype)+'</td><td '+td+'>'+esc((e.vendor?e.vendor+' ':'')+(e.model||''))+'</td><td '+tdm+'>'+esc(e.serial||e.barcode||'—')+'</td><td '+tdm+'>'+esc(e.ip||'—')+'</td><td '+td+'>'+esc(e.rack||'—')+'</td><td '+td+'>'+esc(e.upstream||'—')+'</td></tr>'; });
+        b += '</table>';
+      }
+      if((n.devices||[]).length){
+        b += '<div style="font-size:8.5pt;font-weight:bold;color:'+C.accent+';text-transform:uppercase;letter-spacing:.5pt;margin:12px 0 3px">Uređaji ('+n.devices.length+')</div>';
+        b += '<table style="width:100%;border-collapse:collapse"><tr><th '+th+'>#</th><th '+th+'>Tip</th><th '+th+'>Naziv</th><th '+th+'>Barkod</th><th '+th+'>IP</th><th '+th+'>Opseg</th><th '+th+'>Lokacija (sprat/kanc.)</th><th '+th+'>Povezan na</th></tr>';
+        n.devices.forEach((dv,j)=>{ const net=(n.nets||[]).find(x=>x.id===dv.netId); b += '<tr><td '+td+'>'+(j+1)+'</td><td '+td+'>'+esc(dv.dtype)+'</td><td '+td+'><b>'+esc(dv.name)+'</b></td><td '+tdm+'>'+esc(dv.barcode||'—')+'</td><td '+tdm+'>'+esc(dv.ip||'—')+'</td><td '+td+'>'+esc(net?net.name:'—')+'</td><td '+td+'>'+esc([dv.floor,dv.office].filter(Boolean).join(' / ')||'—')+'</td><td '+td+'>'+esc(dv.uplink||'—')+'</td></tr>'; });
+        b += '</table>';
+      }
+      b += '</div>';
+    });
+
+    if(meta.notes){ b += '<h2 style="font-size:12pt;color:'+C.ink+';margin:14px 0 6px"><span style="color:'+C.accent+'">4</span>&nbsp;&nbsp;Napomene</h2><p style="font-size:10pt;color:'+C.ink+';line-height:1.6">'+esc(meta.notes)+'</p>'; }
+
+    // ---- potpisi ----
+    b += '<div style="page-break-inside:avoid;margin-top:34px"><table style="width:100%;border-collapse:collapse"><tr>';
+    b += '<td style="width:50%;padding:0 20px 0 0"><div style="border-top:1px solid '+C.ink+';padding-top:5px;font-size:9pt;color:'+C.muted+'">Izradio<br><b style="color:'+C.ink+'">'+esc(meta.author||meta.role||'')+'</b></div></td>';
+    b += '<td style="width:50%"><div style="border-top:1px solid '+C.ink+';padding-top:5px;font-size:9pt;color:'+C.muted+'">Odobrio</div></td>';
+    b += '</tr></table></div>';
+    b += '<div style="margin-top:20px;font-size:8pt;color:'+C.muted+'">'+esc(meta.company||'')+' · '+esc(meta.docTitle||'')+' · v'+esc(meta.version||'—')+' · '+today+'</div>';
+
+    const html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">'
+      + '<head><meta charset="utf-8"><title>'+esc(meta.docTitle||'Topologija')+'</title>'
+      + '<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml><![endif]-->'
+      + '<style>@page{size:A4 portrait;margin:1.6cm} body{font-family:"Segoe UI",Arial,sans-serif;color:'+C.ink+'}</style></head>'
+      + '<body>'+b+'</body></html>';
+    try{
+      const blob = new Blob(['\ufeff'+html], { type:'application/msword' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'topologija-mreze-izvjestaj-' + new Date().toISOString().slice(0,10) + '.doc';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url), 1000);
+      this.flash('Word (izvještaj) preuzet: ' + a.download);
+    }catch(e){ this.flash('Greška pri kreiranju dokumenta.', true); }
+  }
+  exportExcel(){
+    const d = this.state.data; if(!d){ this.flash('Nema podataka.', true); return; }
+    const be = this.be || {};
+    const meta = d.meta || {};
+    const nodes = Object.values(d.nodes||{}).sort((a,b)=> (a.type==='hq'?-1:0)-(b.type==='hq'?-1:0));
+    const xe = (s)=> String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    const netName = (n,id)=>{ const x=(n.nets||[]).find(z=>z.id===id); return x?x.name:''; };
+    const usedNames = {};
+    const safeSheet = (raw)=>{ let s=String(raw||'List').replace(/[\[\]\:\*\?\/\\]/g,' ').replace(/\s+/g,' ').trim().slice(0,28)||'List'; let base=s,i=2; while(usedNames[s.toLowerCase()]){ s=base.slice(0,28-((''+i).length+1))+' '+i; i++; } usedNames[s.toLowerCase()]=1; return s; };
+    const devCols = ['IP adresa','Naziv','Tip','Barkod','Sprat','Kancelarija','Opseg','Povezan na'];
+
+    const cell = (v)=> '<Cell ss:StyleID="txt"><Data ss:Type="String">'+xe(v==null?'':v)+'</Data></Cell>';
+    const hcell = (v)=> '<Cell ss:StyleID="hdr"><Data ss:Type="String">'+xe(v)+'</Data></Cell>';
+    const devRow = (n,dv)=> '<Row>'+[dv.ip,dv.name,dv.dtype,dv.barcode,dv.floor,dv.office,netName(n,dv.netId),dv.uplink].map(cell).join('')+'</Row>';
+
+    const sheets = [];
+    // zajednički list
+    const allCols = ['IP adresa','Naziv','Tip','Barkod','Lokacija','Sprat','Kancelarija','Opseg','Povezan na'];
+    let allRows = '<Row>'+allCols.map(hcell).join('')+'</Row>';
+    nodes.forEach(n=>(n.devices||[]).forEach(dv=>{ allRows += '<Row>'+[dv.ip,dv.name,dv.dtype,dv.barcode,n.name,dv.floor,dv.office,netName(n,dv.netId),dv.uplink].map(cell).join('')+'</Row>'; }));
+    sheets.push({ name:safeSheet('Svi uređaji'), rows:allRows, cols:allCols.length });
+    // po lokaciji
+    nodes.forEach(n=>{
+      let rows = '<Row>'+devCols.map(hcell).join('')+'</Row>';
+      (n.devices||[]).forEach(dv=>{ rows += devRow(n,dv); });
+      sheets.push({ name:safeSheet(n.name), rows:rows, cols:devCols.length });
+    });
+
+    const wsXml = sheets.map(s=>{
+      let cols=''; for(let i=0;i<s.cols;i++) cols += '<Column ss:AutoFitWidth="1" ss:Width="'+(i===0?150:110)+'"/>';
+      const rowCount = (s.rows.match(/<Row>/g)||[]).length; // uklj. zaglavlje
+      const range = 'R1C1:R'+rowCount+'C'+s.cols;
+      return '<Worksheet ss:Name="'+xe(s.name)+'">'
+        + '<Table>'+cols+s.rows+'</Table>'
+        + '<WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel"><FreezePanes/><FrozenNoSplit/><SplitHorizontal>1</SplitHorizontal><TopRowBottomPane>1</TopRowBottomPane><ActivePane>2</ActivePane></WorksheetOptions>'
+        + '<AutoFilter x:Range="'+range+'" xmlns="urn:schemas-microsoft-com:office:excel"/>'
+        + '</Worksheet>';
+    }).join('');
+
+    const xml = '<?xml version="1.0" encoding="UTF-8"?>\n<?mso-application progid="Excel.Sheet"?>\n'
+      + '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" xmlns:html="http://www.w3.org/TR/REC-html40">'
+      + '<Styles>'
+      + '<Style ss:ID="Default" ss:Name="Normal"><Alignment ss:Vertical="Bottom"/><Font ss:FontName="Calibri" ss:Size="11"/></Style>'
+      + '<Style ss:ID="hdr"><Font ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#0F6E56" ss:Pattern="Solid"/><Alignment ss:Horizontal="Left"/></Style>'
+      + '<Style ss:ID="txt"><NumberFormat ss:Format="@"/></Style>'
+      + '</Styles>'
+      + wsXml + '</Workbook>';
+    try{
+      const blob = new Blob([xml], { type:'application/vnd.ms-excel' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'topologija-mreze-' + new Date().toISOString().slice(0,10) + '.xls';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url), 1000);
+      this.flash('Excel preuzet: ' + a.download);
+    }catch(e){ this.flash('Greška pri izvozu u Excel.', true); }
+  }
+  pickImport(){
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = 'application/json,.json';
+    inp.style.position='fixed'; inp.style.left='-9999px';
+    inp.onchange = () => { const f = inp.files && inp.files[0]; this.importJson(f); inp.remove(); };
+    document.body.appendChild(inp); inp.click();
+  }
+  importJson(file){
+    if(!file) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      try{
+        let parsed = JSON.parse(rd.result);
+        if(this.be && this.be.normState) parsed = this.be.normState(parsed);
+        if(!parsed || !parsed.nodes) throw new Error('no nodes');
+        this.setState({ data: parsed, sel: Object.keys(parsed.nodes)[0], screen:'dash' });
+        try{ this.be && this.be.save(parsed); }catch(e){}
+        const n = Object.keys(parsed.nodes).length;
+        this.flash('Uvezeno · ' + n + ' čvorova');
+      }catch(e){ this.flash('Neispravan JSON fajl.', true); }
+    };
+    rd.readAsText(file);
+  }
+  flash(msg, err){
+    this.setState({ toast:{ msg, err:!!err } });
+    clearTimeout(this._tt);
+    this._tt = setTimeout(()=>this.setState({ toast:null }), 3200);
+  }
+  persist(){
+    clearTimeout(this._sv);
+    this._sv = setTimeout(()=>{ try{ this.be && this.be.save(this.state.data); }catch(e){} }, 400);
+  }
+  setNodeField(id, field, val){
+    const d = this.state.data; if(!d||!d.nodes||!d.nodes[id]) return;
+    d.nodes[id][field] = val; this.forceUpdate(); this.persist();
+  }
+  setNetField(nodeId, netId, field, val){
+    const d = this.state.data; const nd = d && d.nodes && d.nodes[nodeId]; if(!nd) return;
+    const net = (nd.nets||[]).find(n=>n.id===netId); if(!net) return;
+    net[field] = val;
+    if(field==='range' && this.be){
+      // promjena opsega -> gateway po defaultu postaje prva adresa opsega
+      const c=this.be.computeNet(val); net.gw = c.ok ? c.first : ''; net.gwAuto = true;
+      // VLAN po defaultu = treći oktet opsega (npr. 10.10.0.1 -> 0, 192.168.50.0 -> 50)
+      const m=String(val).match(/^\s*\d+\.\d+\.(\d+)\./); if(m){ net.vlan = m[1]; net.vlanAuto = true; }
+    }
+    if(field==='gw'){ net.gwAuto = false; } // ručno unesen gateway
+    if(field==='vlan'){ net.vlanAuto = false; } // ručno unesen VLAN
+    this.forceUpdate(); this.persist();
+  }
+  setMeta(key, val){
+    const d = this.state.data; if(!d) return;
+    d.meta = d.meta || {}; d.meta[key] = val; this.forceUpdate(); this.persist();
+  }
+  removeLoc(id){
+    const d = this.state.data; const nd = d && d.nodes && d.nodes[id]; if(!nd) return;
+    if(nd.type==='hq') return; // HQ se ne briše
+    delete d.nodes[id];
+    d.edges = (d.edges||[]).filter(e=>e.from!==id && e.to!==id);
+    const next = (Object.values(d.nodes)[0]||{}).id || 'hq';
+    this.setState({ sel:next, screen:'dash' });
+    this.persist();
+  }
+  addLoc(){
+    const d = this.state.data;
+    if(!d||!d.nodes||!this.be) return;
+    d.seq = (d.seq||0) + 1;
+    const id = 'l' + d.seq + Date.now().toString(36).slice(-3);
+    const n = d.seq;
+    d.nodes[id] = { id, name:'Lokacija '+n, address:'', x:360+((n%3)*300), y:440, type:'loc',
+      gwMpls:'', gwSdh:'', nets:this.be.defaultNets(), devices:[] };
+    d.edges = d.edges || [];
+    d.edges.push({ from:'hq', to:id, ipMpls:'', gwMpls:'', ipSdh:'', gwSdh:'' });
+    this.setState({ sel:id, screen:'detail' });
+    this.persist();
+  }
+  addNet(nodeId){
+    const d = this.state.data; const nd = d && d.nodes && d.nodes[nodeId]; if(!nd||!this.be) return;
+    const i = (nd.nets||[]).length;
+    const color = this.be.NETCOLORS[i % this.be.NETCOLORS.length];
+    nd.nets = nd.nets || [];
+    nd.nets.push(this.be.mkNet('Novi opseg', color));
+    this.forceUpdate(); this.persist();
+  }
+  suggestIp(node, netId){
+    const net=(node.nets||[]).find(n=>n.id===netId); if(!net||!this.be) return '';
+    const c=this.be.computeNet(net.range); if(!c.ok) return '';
+    const used=new Set((node.devices||[]).map(d=>d.ip).filter(Boolean));
+    const first=this.be.ipToInt(c.first), last=this.be.ipToInt(c.last);
+    for(let v=first; v<=last; v++){ const ip=this.be.intToIp(v); if(!used.has(ip)) return ip; }
+    return '';
+  }
+  addDevice(nodeId, netId){
+    const d=this.state.data; const nd=d&&d.nodes&&d.nodes[nodeId]; if(!nd) return;
+    const nets=nd.nets||[]; const nid=netId||(nets[0]&&nets[0].id)||'';
+    nd.devices=nd.devices||[];
+    nd.devices.push({ id:'d'+Math.random().toString(36).slice(2), dtype:'Računar', floor:'', office:'', name:'', barcode:'', ip:this.suggestIp(nd,nid), netId:nid, uplink:'' });
+    this.forceUpdate(); this.persist();
+  }
+  addDeviceN(nodeId, netId, n){ for(let i=0;i<n;i++) this.addDevice(nodeId, netId); }
+  addEquip(nodeId, etype){
+    const d=this.state.data; const nd=d&&d.nodes&&d.nodes[nodeId]; if(!nd) return;
+    nd.equipment=nd.equipment||[];
+    nd.equipment.push({ id:'eq'+Math.random().toString(36).slice(2), etype:etype||'Svič', vendor:'', model:'', serial:'', barcode:'', ip:'', firmware:'', rack:'', upstream:'', photo:'', note:'' });
+    this.forceUpdate(); this.persist();
+  }
+  setEquipField(nodeId, eqId, field, val){
+    const d=this.state.data; const nd=d&&d.nodes&&d.nodes[nodeId]; if(!nd) return;
+    const eq=(nd.equipment||[]).find(x=>x.id===eqId); if(!eq) return;
+    eq[field]=val; this.forceUpdate(); this.persist();
+  }
+  removeEquip(nodeId, eqId){
+    const d=this.state.data; const nd=d&&d.nodes&&d.nodes[nodeId]; if(!nd) return;
+    nd.equipment=(nd.equipment||[]).filter(x=>x.id!==eqId); this.forceUpdate(); this.persist();
+  }
+  setEquipPhoto(nodeId, eqId, file){
+    if(!file) return;
+    const r=new FileReader();
+    r.onload=()=>{ this.setEquipField(nodeId, eqId, 'photo', r.result); };
+    r.readAsDataURL(file);
+  }
+  setDeviceField(nodeId, devId, field, val){
+    const d=this.state.data; const nd=d&&d.nodes&&d.nodes[nodeId]; if(!nd) return;
+    const dev=(nd.devices||[]).find(x=>x.id===devId); if(!dev) return;
+    dev[field]=val;
+    if(field==='netId' && !dev.ip) dev.ip=this.suggestIp(nd, val);
+    this.forceUpdate(); this.persist();
+  }
+  removeDevice(nodeId, devId){
+    const d=this.state.data; const nd=d&&d.nodes&&d.nodes[nodeId]; if(!nd) return;
+    nd.devices=(nd.devices||[]).filter(x=>x.id!==devId);
+    this.forceUpdate(); this.persist();
+  }
+  removeNet(nodeId, netId){
+    const d = this.state.data; const nd = d && d.nodes && d.nodes[nodeId]; if(!nd) return;
+    nd.nets = (nd.nets||[]).filter(n=>n.id!==netId);
+    (nd.devices||[]).forEach(dev=>{ if(dev.netId===netId) dev.netId=''; });
+    this.forceUpdate(); this.persist();
+  }
+
+  // vrati listu čvorova redom hq -> lokacije
+  nodeList(){
+    const d = this.state.data; if(!d||!d.nodes) return [];
+    const vals = Object.values(d.nodes);
+    return vals.sort((a,b)=> (a.type==='hq'?-1:0) - (b.type==='hq'?-1:0));
+  }
+  netOf(node, netId){ return (node.nets||[]).find(n=>n.id===netId); }
+
+  renderVals(){
+    const theme = this.state.theme || this.props.theme || 'light';
+    const screen = this.state.screen;
+    const topoView = this.state.topoView || this.props.defaultTopoView || 'graf';
+    const showActivity = this.state.showActivity ?? (this.props.showActivity ?? true);
+    const zoom = this.state.zoom;
+
+    const TITLES = {
+      dash:['Pregled','Stanje mreže i lokacija'],
+      topo:['Topologija','Interaktivni dijagram · HQ + lokacije'],
+      devices:['Uređaji','Inventar · pretraga i filteri'],
+      detail:['Detalji lokacije','Opsezi i transport'],
+      docs:['Dokumentacija','Metapodaci i izvještaj'],
+      nadzor:['Nadzor','Ping / traceroute · ručni sken odabranih uređaja'],
+    };
+
+    const navBase = 'width:100%;display:flex;align-items:center;gap:11px;border:none;background:none;border-radius:9px;padding:9px 10px;margin-bottom:2px;font:600 13px "Albert Sans";cursor:pointer;text-align:left;transition:background .12s';
+    const navFor = (id) => screen===id
+      ? navBase + ';background:var(--accent-soft);color:var(--accent-ink)'
+      : navBase + ';color:var(--ink-2)';
+    const navGhost = navBase.replace('600 13px','500 12.5px') + ';color:var(--muted)';
+
+    // ===== devices (iz stvarnog state-a) =====
+    const D = this.state.data;
+    const nodes = this.nodeList();
+    const TYPEC = { 'Računar':'var(--transA)','Laptop':'var(--transA)','Printer':'#8a7', 'Telefon':'var(--vid)','Kamera':'var(--vid)','Access point':'var(--accent)','Server':'var(--hq)' };
+    const ipInRange = this.be ? this.be.ipInRange : null;
+    // spljošti sve uređaje iz svih čvorova, poveži na njihov opseg
+    let flat = [];
+    nodes.forEach(node => (node.devices||[]).forEach(d => {
+      const net = this.netOf(node, d.netId);
+      const nodeNets = (node.nets||[]).filter(n=>n.range);
+      let st;
+      if(!d.ip){ st = {l:'bez IP', c:'var(--muted)', s:'var(--surface-3)'}; }
+      else if(ipInRange && net && net.range){
+        // provjeri prema opsegu koji je dodijeljen uređaju
+        const r = ipInRange(d.ip, net.range);
+        st = r.ok ? {l:'u opsegu', c:'var(--ok)', s:'var(--ok-soft)'}
+                  : (r.reason==='reserved' ? {l:'rezervisana', c:'var(--warn)', s:'var(--warn-soft)'}
+                                           : {l:'van opsega', c:'var(--down)', s:'var(--down-soft)'});
+      }
+      else if(ipInRange && nodeNets.length){
+        // uređaj bez dodijeljenog opsega: provjeri prema svim opsezima lokacije
+        const hit = nodeNets.find(n=>ipInRange(d.ip, n.range).ok);
+        st = hit ? {l:'u opsegu', c:'var(--ok)', s:'var(--ok-soft)'}
+                 : {l:'van opsega', c:'var(--down)', s:'var(--down-soft)'};
+      }
+      else { st = {l:'nema opsega', c:'var(--muted)', s:'var(--surface-3)'}; }
+      flat.push({
+        id:d.id, nodeId:node.id, mon:!!d.mon,
+        dtype:d.dtype||'—', floor:d.floor||'—', office:d.office||'—', name:d.name||'(bez naziva)',
+        barcode:d.barcode||'—', ip:d.ip||'—', ipRaw:d.ip||'',
+        netName: net ? net.name : '—', netColor: net ? net.color : 'var(--faint)',
+        uplink: d.uplink||'—', loc: node.name, locId: node.id,
+        typeColor: TYPEC[d.dtype]||'var(--muted)', st,
+        _hay: [d.dtype,d.floor,d.office,d.name,d.barcode,d.ip,net&&net.name,node.name,d.uplink].join(' ').toLowerCase()
+      });
+    }));
+    const total = flat.length;
+    const q = (this.state.q||'').toLowerCase().trim();
+    const qs = q ? q.split(/\s+/) : [];
+    const tf = this.state.typeFilter;
+    const lf = this.state.devLoc||'';
+    const tdBase = 'padding:10px 12px;border-bottom:1px solid var(--line-2);vertical-align:middle';
+    let list = flat.filter(r => (!tf || r.dtype===tf) && (!lf || r.locId===lf));
+    if(qs.length) list = list.filter(r => qs.every(w=>r._hay.includes(w)));
+    const devices = list.map((r,i) => ({
+      n:i+1, dtype:r.dtype, floor:r.floor, office:r.office, name:r.name, barcode:r.barcode, ip:r.ip,
+      netName:r.netName, netColor:r.netColor, uplink:r.uplink, typeColor:r.typeColor, loc:r.loc,
+      stLabel:r.st.l, stColor:r.st.c, stSoft:r.st.s,
+      monOn:r.mon, monStyle:(r.mon?'width:26px;height:26px;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);border-radius:7px;display:grid;place-items:center;cursor:pointer':'width:26px;height:26px;border:1px solid var(--line);background:var(--surface);color:var(--faint);border-radius:7px;display:grid;place-items:center;cursor:pointer'),
+      onMon:()=>this.toggleMon(r.nodeId, r.id),
+      onDiag:()=>this.openDiag(r.ipRaw, r.name),
+      rowStyle:(i%2 ? 'background:var(--surface-2)' : '')
+    }));
+    const locFilterOptions = nodes.map(n=>({id:n.id,name:n.name}));
+    const types = (D && D.deviceTypes && D.deviceTypes.length) ? D.deviceTypes.filter(t=>flat.some(f=>f.dtype===t)) : [...new Set(flat.map(f=>f.dtype))];
+    const chipBase = 'height:30px;border-radius:20px;padding:0 13px;font:600 12px "Albert Sans";cursor:pointer;border:1px solid var(--line)';
+    const typeChips = types.map(t => ({
+      label:t,
+      onClick: () => this.setState({ typeFilter: this.state.typeFilter===t ? '' : t }),
+      style: tf===t ? chipBase+';background:var(--accent);border-color:var(--accent);color:#fff' : chipBase+';background:var(--surface);color:var(--ink-2)',
+    }));
+    const chipAll = (!tf) ? chipBase+';background:var(--accent);border-color:var(--accent);color:#fff' : chipBase+';background:var(--surface);color:var(--ink-2)';
+
+    // ===== topologija / detalj: iz stvarnog čvora =====
+    const derivedText = this.be ? this.be.derivedText : (n=>'');
+    const computeNet = this.be ? this.be.computeNet : (()=>({}));
+    const primInfo = (p)=> p==='sdh'
+      ? {label:'Transport B ▸ A', color:'var(--transB)', soft:'var(--transB-soft)'}
+      : {label:'Transport A ▸ B', color:'var(--transA)', soft:'var(--transA-soft)'};
+
+    const sel = this.state.sel;
+    const rawNode = (D && D.nodes) ? (D.nodes[sel] || D.nodes.l1 || nodes[0]) : null;
+
+    let insName='—', insAddr='', insDev='—', insNetList=[], insGwA='—', insGwB='—';
+    let detName='—', detSub='', detAddr='—', detGwA='—', detGwB='—', detailNets=[];
+    if(rawNode){
+      insName = rawNode.name;
+      insAddr = rawNode.address || (rawNode.type==='hq'?'Centrala':'');
+      insDev = String((rawNode.devices||[]).length);
+      insGwA = rawNode.gwMpls||'—'; insGwB = rawNode.gwSdh||'—';
+      insNetList = (rawNode.nets||[]).map(n=>({ name:n.name, color:n.color, range:n.range||'—', derived: derivedText(n) }));
+
+      detName = rawNode.name;
+      const kind = rawNode.type==='hq' ? 'firewall · centrala' : 'firewall · lokacija';
+      detSub = kind + (rawNode.address ? ' · '+rawNode.address : '');
+      detAddr = rawNode.address || '—';
+      detGwA = rawNode.gwMpls||'—'; detGwB = rawNode.gwSdh||'—';
+      const nid = rawNode.id;
+      detailNets = (rawNode.nets||[]).map(n=>{
+        const c = computeNet(n.range); const pi = primInfo(n.primary);
+        return { name:n.name, color:n.color, range:n.range||'',
+          prim:pi.label, primColor:pi.color, primSoft:pi.soft,
+          gw:n.gw||(c.ok?c.first:''), vlan:n.vlan||'', port:n.port||'',
+          hosts: c.ok?String(c.hosts):'—', derived: derivedText(n),
+          onName:(e)=>this.setNetField(nid,n.id,'name',e.target.value),
+          onRange:(e)=>this.setNetField(nid,n.id,'range',e.target.value),
+          onGw:(e)=>this.setNetField(nid,n.id,'gw',e.target.value),
+          onVlan:(e)=>this.setNetField(nid,n.id,'vlan',e.target.value),
+          onPort:(e)=>this.setNetField(nid,n.id,'port',e.target.value),
+          onRemove:()=>this.removeNet(nid,n.id) };
+      });
+    }
+    const node = { name:insName, addr:insAddr, dev:insDev, a:insGwA, b:insGwB, nets:insNetList };
+
+    // ===== graf: pozicije + linije (žive vrijednosti) =====
+    const P = this.state.pos || this.defaultPos();
+    const hqB={x:P.hq.x+130,y:P.hq.y+162}, l1T={x:P.l1.x+120,y:P.l1.y}, l2T={x:P.l2.x+120,y:P.l2.y};
+    const hqR={x:P.hq.x+260,y:P.hq.y+80}, srvL={x:P.srv.x,y:P.srv.y+55};
+    const lines = [
+      {x1:hqB.x-4,y1:hqB.y,x2:l1T.x-4,y2:l1T.y,stroke:'var(--transA)',dash:''},
+      {x1:hqB.x+4,y1:hqB.y,x2:l1T.x+4,y2:l1T.y,stroke:'var(--transB)',dash:'7 5'},
+      {x1:hqB.x-4,y1:hqB.y,x2:l2T.x-4,y2:l2T.y,stroke:'var(--transA)',dash:''},
+      {x1:hqB.x+4,y1:hqB.y,x2:l2T.x+4,y2:l2T.y,stroke:'var(--transB)',dash:'7 5'},
+      {x1:hqR.x,y1:hqR.y,x2:srvL.x,y2:srvL.y,stroke:'var(--faint)',dash:''},
+    ];
+
+    return {
+      theme, isDark: theme==='dark', isLight: theme!=='dark',
+      toggleTheme: () => this.setState({ theme: theme==='dark'?'light':'dark' }),
+      title: TITLES[screen][0], subtitle: TITLES[screen][1],
+      isDash:screen==='dash', isTopo:screen==='topo', isDevices:screen==='devices', isDetail:screen==='detail', isDocs:screen==='docs', isNadzor:screen==='nadzor',
+      goDash:this.nav('dash'), goTopo:this.nav('topo'), goDevices:this.nav('devices'), goDetail:this.nav('detail'), goDocs:this.nav('docs'), goNadzor:this.nav('nadzor'),
+      onAddLoc:()=>this.addLoc(),
+      onExportJson:()=>this.exportJson(),
+      onExportWord:()=>this.exportWord(),
+      onExportExcel:()=>this.exportExcel(),
+      onImportClick:()=>this.pickImport(),
+      toast:this.state.toast, hasToast:!!this.state.toast,
+      toastStyle:'position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:99;padding:12px 20px;border-radius:12px;font:600 13px "Albert Sans";box-shadow:var(--shadow);'+(this.state.toast&&this.state.toast.err?'background:var(--down);color:#fff':'background:var(--accent);color:#fff'),
+      toastMsg:(this.state.toast&&this.state.toast.msg)||'',
+      // dijagnostika (agent)
+      agentUrl:this.AGENT,
+      diagOpen:!!(this.state.diag&&this.state.diag.open), diagName:(this.state.diag&&this.state.diag.name)||'', diagIp:(this.state.diag&&this.state.diag.ip)||'',
+      diagOut:(this.state.diag&&this.state.diag.out)||'', diagRunning:!!(this.state.diag&&this.state.diag.running),
+      diagTabPing:(this.state.diag&&this.state.diag.tab)==='ping', diagTabTrace:(this.state.diag&&this.state.diag.tab)==='trace',
+      onCloseDiag:()=>this.closeDiag(), onRunPing:()=>this.runDiag('ping'), onRunTrace:()=>this.runDiag('trace'),
+      // nadzor
+      onRunScan:()=>this.runScan(), scanRunning:!!this.state.scanRunning, scanAt:this.state.scanAt||'',
+      watchList:(()=>{ const res=this.state.scanRes||{}; const q=(this.state.nadzorQ||'').toLowerCase().trim(); const qs=q?q.split(/\s+/):[]; return this.watchDevices().map(w=>{ const r=res[w.id]; let lbl='—',col='var(--muted)',soft='var(--surface-3)'; if(r){ if(r.state==='online'){lbl='online'+(r.rtt!=null?' · '+r.rtt+' ms':'');col='var(--ok)';soft='var(--ok-soft)';} else if(r.state==='offline'){lbl='offline';col='var(--down)';soft='var(--down-soft)';} else {lbl='agent?';col='var(--warn)';soft='var(--warn-soft)';} } return { name:w.name, ip:w.ip||'—', dtype:w.dtype, loc:w.loc, stLabel:lbl, stColor:col, stSoft:soft, _hay:[w.name,w.ip,w.dtype,w.loc,lbl].join(' ').toLowerCase(), onDiag:()=>this.openDiag(w.ip,w.name), onRemove:()=>this.toggleMon(w.nodeId,w.id) }; }).filter(x=> !qs.length || qs.every(t=>x._hay.includes(t))); })(),
+      onToggleFs:()=>this.toggleFs(), isFs:!!this.state.fs, notFs:!this.state.fs, fsLabel:this.state.fs?'Skupi':'Cijeli ekran',
+      nadzorFsStyle: (this.state.fs
+        ? 'position:fixed;inset:0;z-index:200;padding:22px 30px;overflow:auto'
+        : 'padding:22px 26px 40px;min-height:100%;overflow:auto')+';background:var(--bg);animation:fadein .2s ease',
+      nadzorQ:this.state.nadzorQ||'', setNadzorQ:(e)=>this.setState({nadzorQ:e.target.value}),
+      watchEmpty:this.watchDevices().length===0, watchCount:String(this.watchDevices().length),
+      hasWatch:this.watchDevices().length>0,
+      notScanning:!this.state.scanRunning,
+      scanBtnLabel:this.state.scanRunning?'Skeniram…':'Pokreni sken',
+      stop:(e)=>{ e && e.stopPropagation && e.stopPropagation(); },
+      pingBtnStyle:((this.state.diag&&this.state.diag.tab)==='ping'?'border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent-ink)':'border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2)')+';height:34px;border-radius:9px;padding:0 14px;font:600 12.5px "Albert Sans";cursor:pointer;display:flex;align-items:center;gap:7px',
+      traceBtnStyle:((this.state.diag&&this.state.diag.tab)==='trace'?'border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent-ink)':'border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2)')+';height:34px;border-radius:9px;padding:0 14px;font:600 12.5px "Albert Sans";cursor:pointer;display:flex;align-items:center;gap:7px',
+      navDash:navFor('dash'), navTopo:navFor('topo'), navDevices:navFor('devices'), navDetail:navFor('detail'), navDocs:navFor('docs'), navNadzor:navFor('nadzor'), navGhost,
+      q:this.state.q, setQ:(e)=>this.setState({q:e.target.value}),
+
+      // dashboard
+      devTotal: String(total), showActivity,
+      locTotal: String(nodes.length),
+      locSub: (()=>{ const hq=nodes.filter(n=>n.type==='hq').length; const loc=nodes.length-hq; return loc+' lokacij'+(loc===1?'a':(loc>=2&&loc<=4?'e':'a'))+(hq?' + HQ':''); })(),
+      netTotal: String(nodes.reduce((s,n)=>s+((n.nets||[]).length),0)),
+      locQ: this.state.locQ||'', setLocQ:(e)=>this.setState({locQ:e.target.value}),
+      locHealth: nodes.map(nd => {
+        const hasA = !!nd.gwMpls, hasB = !!nd.gwSdh;
+        const ok = hasA && hasB;
+        return {
+          name: nd.name, addr: nd.address || (nd.type==='hq'?'Centrala':'—'),
+          color: ok ? 'var(--ok)' : 'var(--warn)',
+          a: hasA?'✓':'—', b: hasB?'✓':'—',
+          stLabel: ok?'online': (hasA||hasB?'djelimično':'nedefinisano'),
+          stColor: ok?'var(--ok)':'var(--warn)', stSoft: ok?'var(--ok-soft)':'var(--warn-soft)',
+          dev: String((nd.devices||[]).length),
+          onClick: () => this.setState({ sel: nd.id, screen:'detail' })
+        };
+      }).filter(l=>{ const q=(this.state.locQ||'').toLowerCase().trim(); if(!q) return true; return q.split(/\s+/).every(w=>[l.name,l.addr,l.stLabel,'a '+l.a,'b '+l.b,l.dev].join(' ').toLowerCase().includes(w)); }),
+      locEmpty: (()=>{ const q=(this.state.locQ||'').toLowerCase().trim(); if(!q) return false; return !nodes.some(nd=>{ const hasA=!!nd.gwMpls,hasB=!!nd.gwSdh,ok=hasA&&hasB; const st=ok?'online':(hasA||hasB?'djelimično':'nedefinisano'); const hay=[nd.name,nd.address||'',st,String((nd.devices||[]).length)].join(' ').toLowerCase(); return q.split(/\s+/).every(w=>hay.includes(w)); }); })(),
+      activity:[
+        { text:'Dodat uređaj PC-KANC-21 na Lokaciju 1', when:'prije 12 min' },
+        { text:'Izmijenjen opseg LILD na Lokaciji 2', when:'danas 09:41' },
+        { text:'Generisan Word izvještaj v2.0', when:'juče' },
+      ],
+
+      // topology
+      topoView, isGraf:topoView==='graf', isSlojevi:topoView==='slojevi',
+      setGraf:()=>this.setState({topoView:'graf'}), setSlojevi:()=>this.setState({topoView:'slojevi'}),
+      segGraf: topoView==='graf' ? 'border:none;background:var(--surface);border-radius:8px;padding:6px 14px;font:600 12.5px "Albert Sans";color:var(--ink);cursor:pointer;box-shadow:var(--shadow-sm)' : 'border:none;background:none;border-radius:8px;padding:6px 14px;font:600 12.5px "Albert Sans";color:var(--muted);cursor:pointer',
+      segSlojevi: topoView==='slojevi' ? 'border:none;background:var(--surface);border-radius:8px;padding:6px 14px;font:600 12.5px "Albert Sans";color:var(--ink);cursor:pointer;box-shadow:var(--shadow-sm)' : 'border:none;background:none;border-radius:8px;padding:6px 14px;font:600 12.5px "Albert Sans";color:var(--muted);cursor:pointer',
+      zoom, zoomPct: Math.round(zoom*100)+'%',
+      zoomIn:()=>this.setState({zoom:Math.min(1.6, +(zoom+0.15).toFixed(2))}),
+      zoomOut:()=>this.setState({zoom:Math.max(0.5, +(zoom-0.15).toFixed(2))}),
+      pickHq:()=>this.pick('hq'), pickL1:()=>this.pick('l1'), pickL2:()=>this.pick('l2'), pickSrv:()=>this.pick('srv'),
+      dragHq:(e)=>this.startDrag('hq',e), dragL1:(e)=>this.startDrag('l1',e), dragL2:(e)=>this.startDrag('l2',e), dragSrv:(e)=>this.startDrag('srv',e),
+      canvasRef:this.setCanvas, onPan:(e)=>this.startPan(e), onReset:()=>this.resetView(),
+      viewX:(this.state.view||{}).x||0, viewY:(this.state.view||{}).y||0,
+      hqX:P.hq.x, hqY:P.hq.y, l1X:P.l1.x, l1Y:P.l1.y, l2X:P.l2.x, l2Y:P.l2.y, srvX:P.srv.x, srvY:P.srv.y, lines,
+      selL1:sel==='l1', selL2:sel==='l2', selSrv:sel==='srv', selHq:sel==='hq',
+      insName:node.name, insAddr:node.addr, insDev:node.dev, insNets:String(node.nets.length),
+      insNetList:node.nets, insGwA:node.a, insGwB:node.b,
+
+      // devices
+      thStyle:'text-align:left;padding:11px 12px;font:700 10px var(--mono);text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1.5px solid var(--line);background:var(--surface-2);position:sticky;top:0;z-index:2;white-space:nowrap;',
+      tdStyle:tdBase+';',
+      dthStyle:'padding:10px 11px;font:700 9.5px var(--mono);text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1px solid var(--line);background:var(--surface-3);position:sticky;top:0;z-index:2;white-space:nowrap;',
+      dtdStyle:'padding:6px 8px;border-bottom:1px solid var(--line-2);vertical-align:middle;',
+      dcell:'width:100%;border:1px solid transparent;border-radius:8px;padding:7px 9px;font:500 12.5px "Albert Sans";background:transparent;color:var(--ink);outline:none;transition:border-color .12s,box-shadow .12s,background .12s;',
+      dcellMono:'width:100%;border:1px solid transparent;border-radius:8px;padding:7px 9px;font:500 12px var(--mono);background:transparent;color:var(--ink);outline:none;transition:border-color .12s,box-shadow .12s,background .12s;',
+      dcellSel:'width:100%;border:1px solid transparent;border-radius:8px;padding:7px 8px;font:600 11.5px var(--mono);background:transparent;color:var(--ink);outline:none;cursor:pointer;transition:border-color .12s,box-shadow .12s,background .12s;',
+      devices, typeChips, chipAll, clearType:()=>this.setState({typeFilter:''}),
+      locFilterOptions, devLoc:lf, onDevLoc:(e)=>this.setState({devLoc:e.target.value}),
+      devCount: devices.length + ' od ' + total + ' uređaja', devEmpty: devices.length===0,
+
+      // detail
+      detailNets, detName, detSub, detAddr, detGwA, detGwB,
+      onDetName:(e)=>this.setNodeField(sel,'name',e.target.value),
+      onDetAddr:(e)=>this.setNodeField(sel,'address',e.target.value),
+      locPickerOptions: nodes.map(n=>({id:n.id,name:n.name})), locSel:sel,
+      onPickLoc:(e)=>this.setState({sel:e.target.value}),
+      onDetGwA:(e)=>this.setNodeField(sel,'gwMpls',e.target.value),
+      onDetGwB:(e)=>this.setNodeField(sel,'gwSdh',e.target.value),
+      taName:((D&&D.meta&&D.meta.taName)||'Transport A'), taNote:((D&&D.meta&&D.meta.taNote)||'primarni za Trust / Video'),
+      tbName:((D&&D.meta&&D.meta.tbName)||'Transport B'), tbNote:((D&&D.meta&&D.meta.tbNote)||'primarni za LILD (failover)'),
+      onTaName:(e)=>this.setMeta('taName',e.target.value), onTaNote:(e)=>this.setMeta('taNote',e.target.value),
+      onTbName:(e)=>this.setMeta('tbName',e.target.value), onTbNote:(e)=>this.setMeta('tbNote',e.target.value),
+      onAddNet:()=>this.addNet(sel),
+      detCanDelete: !!(rawNode && rawNode.type!=='hq'),
+      onDetDelete: ()=>this.removeLoc(sel),
+      ...(()=>{
+        const rn=rawNode;
+        const baseTypes=['Računar','Laptop','Štampač','Skener','Kamera','DVR/NVR snimač','Radio uređaj','Access point','Server','Ostalo'];
+        const typeOptions=[...new Set([...((D&&D.deviceTypes)||[]), ...baseTypes])];
+        const netOptions=((rn&&rn.nets)||[]).map(n=>({id:n.id,name:n.name}));
+        const equipList=(rn&&rn.equipment)||[];
+        const uplinkBase=equipList.map(eq=>{ const lbl=(eq.model||eq.etype||'oprema')+(eq.serial?(' · '+eq.serial):''); return lbl; });
+        const lq=(this.state.locQ||'').toLowerCase().trim();
+        const lnet=this.state.locNet||'';
+        const devs=(rn&&rn.devices)||[];
+        let f=devs.filter(dv=> (!lnet||dv.netId===lnet) && (!lq || [dv.dtype,dv.name,dv.barcode,dv.ip,dv.floor,dv.office,dv.uplink].join(' ').toLowerCase().includes(lq)));
+        const locDevices=f.map((dv,i)=>{
+          const net=(rn.nets||[]).find(n=>n.id===dv.netId);
+          let ipOk='var(--faint)';
+          if(dv.ip && net && net.range && this.be){ const r=this.be.ipInRange(dv.ip,net.range); ipOk=r.ok?'var(--ok)':'var(--down)'; }
+          return { n:i+1, dtype:dv.dtype, name:dv.name, barcode:dv.barcode, ip:dv.ip, netId:dv.netId||'', floor:dv.floor, office:dv.office, uplink:dv.uplink,
+            netColor:net?net.color:'var(--faint)', ipOk,
+            rowStyle:(i%2?'background:var(--surface-2)':''),
+            uplinkOpts: (dv.uplink && !uplinkBase.includes(dv.uplink)) ? [dv.uplink, ...uplinkBase] : uplinkBase,
+            onType:(e)=>this.setDeviceField(rn.id,dv.id,'dtype',e.target.value),
+            onName:(e)=>this.setDeviceField(rn.id,dv.id,'name',e.target.value),
+            onBarcode:(e)=>this.setDeviceField(rn.id,dv.id,'barcode',e.target.value),
+            onIp:(e)=>this.setDeviceField(rn.id,dv.id,'ip',e.target.value),
+            onNet:(e)=>this.setDeviceField(rn.id,dv.id,'netId',e.target.value),
+            onFloor:(e)=>this.setDeviceField(rn.id,dv.id,'floor',e.target.value),
+            onOffice:(e)=>this.setDeviceField(rn.id,dv.id,'office',e.target.value),
+            onUplink:(e)=>this.setDeviceField(rn.id,dv.id,'uplink',e.target.value),
+            onRemove:()=>this.removeDevice(rn.id,dv.id) };
+        });
+        const exp=!!this.state.devExpand;
+        const EQTYPES=['Firewall','Ruter','Master svič','Svič','Access point','DVR/NVR snimač','Server','Patch panel','UPS','Modem','Konverter (media)','Radio uređaj','Ostalo'];
+        const vendorOptions=(D&&D.vendors)||['Cisco','Fortinet','MikroTik','HP','Huawei','Ubiquiti'];
+        const equipRows=equipList.map((eq,i)=>({
+          n:i+1,
+          etype:eq.etype||'', vendor:eq.vendor||'', model:eq.model||'', serial:eq.serial||'', barcode:eq.barcode||'',
+          ip:eq.ip||'', firmware:eq.firmware||'', rack:eq.rack||'', upstream:eq.upstream||'', photo:eq.photo||'', hasPhoto:!!eq.photo,
+          photoEl: eq.photo ? React.createElement('img',{src:eq.photo,style:{width:'34px',height:'34px',objectFit:'cover',borderRadius:'6px',border:'1px solid var(--line)'}}) : null,
+          upstreamOpts: (eq.upstream && !uplinkBase.includes(eq.upstream)) ? [eq.upstream, ...uplinkBase.filter(l=>l!==(eq.model||eq.etype))] : uplinkBase.filter(l=>l!==((eq.model||eq.etype||'oprema')+(eq.serial?(' · '+eq.serial):''))),
+          rowStyle:(i%2?'background:var(--surface-2)':''),
+          onType:(e)=>this.setEquipField(rn.id,eq.id,'etype',e.target.value),
+          onVendor:(e)=>this.setEquipField(rn.id,eq.id,'vendor',e.target.value),
+          onModel:(e)=>this.setEquipField(rn.id,eq.id,'model',e.target.value),
+          onSerial:(e)=>this.setEquipField(rn.id,eq.id,'serial',e.target.value),
+          onBarcode:(e)=>this.setEquipField(rn.id,eq.id,'barcode',e.target.value),
+          onIp:(e)=>this.setEquipField(rn.id,eq.id,'ip',e.target.value),
+          onFirmware:(e)=>this.setEquipField(rn.id,eq.id,'firmware',e.target.value),
+          onRack:(e)=>this.setEquipField(rn.id,eq.id,'rack',e.target.value),
+          onUpstream:(e)=>this.setEquipField(rn.id,eq.id,'upstream',e.target.value),
+          onPhoto:(e)=>this.setEquipPhoto(rn.id,eq.id,e.target.files&&e.target.files[0]),
+          onClearPhoto:()=>this.setEquipField(rn.id,eq.id,'photo',''),
+          onRemove:()=>this.removeEquip(rn.id,eq.id),
+        }));
+        return {
+          locDevices, typeOptions, netOptions,
+          hasEquip:!!rn, isServer:!!(rn&&rn.type==='server'),
+          equipRows, equipTypeOptions:EQTYPES, vendorOptions,
+          equipTitle:(rn&&rn.type==='server')?'Oprema u server sobi':'Oprema / svičevi',
+          equipEmpty:equipList.length===0, notServer:!!(rn&&rn.type!=='server'),
+          onAddEquip:()=>this.addEquip(sel, 'Svič'),
+          equipExpand:!!this.state.equipExpand, notEquipExpand:!this.state.equipExpand,
+          onToggleEquip:()=>this.setState({equipExpand:!this.state.equipExpand}),
+          equipStyle: this.state.equipExpand
+            ? 'position:fixed;inset:18px;z-index:60;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 30px 90px -20px rgba(0,0,0,.45);overflow:hidden;display:flex;flex-direction:column'
+            : 'background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm);overflow:hidden',
+          equipMax: this.state.equipExpand ? 'calc(100vh - 96px)' : 'none',
+          locDevTotal:String(devs.length), locDevShown:String(f.length), locDevEmpty:f.length===0,
+          locQ:this.state.locQ||'', onLocQ:(e)=>this.setState({locQ:e.target.value}),
+          locNet:lnet, onLocNet:(e)=>this.setState({locNet:e.target.value}),
+          onAddDev:()=>this.addDevice(sel, this.state.locNet||''),
+          onAddDev10:()=>this.addDeviceN(sel, this.state.locNet||'', 10),
+          devExpand:exp, notExpand:!exp, onToggleExpand:()=>this.setState({devExpand:!this.state.devExpand}),
+          ...(()=>{ const CW=this.state.colW||this.defaultCols();
+            const order=[['n','#','center'],['tip','Tip','left'],['name','Naziv / oznaka','left'],['barcode','Barkod','left'],['ip','IP adresa','left'],['net','Opseg','left'],['floor','Sprat','left'],['office','Kancelarija','left'],['uplink','Povezan na','left'],['act','','center']];
+            const cols=order.map(([key,label,al])=>({ key,label, w:CW[key]||this.defaultCols()[key], align:al, onResize:(e)=>this.startColResize(key,e) }));
+            return { cols, colTotal:cols.reduce((s,c)=>s+c.w,0) };
+          })(),
+          locdevStyle: exp
+            ? 'position:fixed;inset:18px;z-index:60;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 30px 90px -20px rgba(0,0,0,.45);overflow:hidden;display:flex;flex-direction:column'
+            : 'background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm);overflow:hidden',
+          locdevMax: exp ? 'calc(100vh - 150px)' : '440px',
+          dcellFocus:'border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 3px var(--accent-ring)',
+          dcellHover:'border-color:var(--line-2);background:var(--surface-2)',
+        };
+      })(),
+
+      // docs
+      metaFields: (()=>{ const m=(D&&D.meta)||{}; const mk=(label,key)=>({label,value:m[key]||'',onInput:(e)=>this.setMeta(key,e.target.value)}); return [
+        mk('Naziv firme','company'),
+        mk('Sjedište','hq'),
+        mk('Naslov dokumenta','docTitle'),
+        mk('Izradio','author'),
+        mk('Verzija','version'),
+        mk('Datum ažuriranja','updated'),
+      ]; })(),
+      docRows: nodes.map(nd => {
+        const trust = (nd.nets||[]).find(n=>/trust|računar/i.test(n.name)) || (nd.nets||[])[0];
+        const pi = trust ? primInfo(trust.primary) : {label:'—'};
+        return { name:nd.name, range:(trust&&trust.range)||'—', prim:(pi.label||'').replace('Transport ','').replace(' ▸ ',' ▸ '), dev:String((nd.devices||[]).length) };
+      }),
+    };
+  }
+}
+</script>
+</body>
+</html>
