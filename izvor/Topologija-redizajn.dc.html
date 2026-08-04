@@ -773,33 +773,23 @@
         </sc-if>
 
         <sc-if value="{{ hasWatch }}" hint-placeholder-val="{{ true }}">
-        <div style="display:flex;flex-direction:column;gap:16px">
-          <sc-for list="{{ watchGroups }}" as="g" hint-placeholder-count="2">
-            <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);overflow:hidden">
-              <div style="display:flex;align-items:center;gap:12px;padding:13px 18px;border-bottom:1px solid var(--line);background:var(--surface-2)">
-                <span style="width:30px;height:30px;border-radius:9px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span>
-                <div style="flex:1;min-width:0">
-                  <div style="font-weight:700;font-size:14px">{{ g.name }}</div>
-                  <div style="font:500 11px var(--mono);color:var(--muted);margin-top:2px">{{ g.addr }}</div>
-                </div>
-                <span style="font:600 10.5px var(--mono);color:var(--muted);background:var(--surface-3);padding:4px 10px;border-radius:20px;flex:none">{{ g.count }} provjera</span>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;align-items:start">
+          <sc-for list="{{ watchGroups }}" as="g" hint-placeholder-count="4">
+            <div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm);overflow:hidden">
+              <div style="display:flex;align-items:center;gap:9px;padding:10px 13px;border-bottom:1px solid var(--line);background:var(--surface-2)">
+                <span style="width:8px;height:8px;border-radius:3px;background:var(--accent);flex:none"></span>
+                <div style="font-weight:700;font-size:13px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="{{ g.addr }}">{{ g.name }}</div>
+                <span style="font:600 10px var(--mono);color:var(--muted);background:var(--surface-3);padding:2px 8px;border-radius:20px;flex:none">{{ g.count }}</span>
               </div>
-              <sc-for list="{{ g.items }}" as="w" hint-placeholder-count="3">
-                <div style="display:flex;align-items:center;gap:13px;padding:12px 18px;border-bottom:1px solid var(--line-2)" style-hover="background:var(--surface-2)">
-                  <span style="width:10px;height:10px;border-radius:50%;flex:none;background:{{ w.dotColor }}"></span>
-                  <div style="flex:1;min-width:0">
-                    <div style="font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px">
-                      <span>{{ w.name }}</span>
-                      <sc-if value="{{ w.hasTag }}" hint-placeholder-val="{{ true }}"><span style="font:700 9.5px var(--mono);padding:2px 7px;border-radius:6px;background:{{ w.tagBg }};color:{{ w.tagCol }}">{{ w.tag }}</span></sc-if>
-                    </div>
-                    <div style="font:500 10.5px var(--mono);color:var(--muted);margin-top:3px">{{ w.meta }}</div>
-                  </div>
-                  <div style="font-family:var(--mono);font-size:12.5px;color:var(--ink-2);width:140px;flex:none">{{ w.ip }}</div>
-                  <span style="font:600 11px var(--mono);padding:5px 11px;border-radius:20px;background:{{ w.stSoft }};color:{{ w.stColor }};min-width:104px;text-align:center;flex:none">{{ w.stLabel }}</span>
-                  <div style="display:flex;gap:6px;flex:none">
-                    <button onClick="{{ w.onDiag }}" title="Ping / traceroute" style="width:28px;height:28px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:8px;display:grid;place-items:center;cursor:pointer" style-hover="border-color:var(--accent);color:var(--accent)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></button>
-                    <sc-if value="{{ w.isDev }}" hint-placeholder-val="{{ false }}"><button onClick="{{ w.onRemove }}" title="Ukloni iz nadzora" style="width:28px;height:28px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:8px;display:grid;place-items:center;cursor:pointer" style-hover="border-color:var(--down);color:var(--down);background:var(--down-soft)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg></button></sc-if>
-                  </div>
+              <sc-for list="{{ g.items }}" as="w" hint-placeholder-count="4">
+                <div title="{{ w.title }}" style="display:flex;align-items:center;gap:8px;padding:6px 13px;border-bottom:1px solid var(--line-2)" style-hover="background:var(--surface-2)">
+                  <span style="width:8px;height:8px;border-radius:50%;flex:none;background:{{ w.stDot }}"></span>
+                  <span style="flex:1;min-width:0;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ w.name }}</span>
+                  <sc-if value="{{ w.hasTag }}" hint-placeholder-val="{{ true }}"><span style="font:700 9px var(--mono);padding:1px 5px;border-radius:5px;background:{{ w.tagBg }};color:{{ w.tagCol }};flex:none">{{ w.tag }}</span></sc-if>
+                  <span style="font:500 10.5px var(--mono);color:var(--muted);flex:none;white-space:nowrap">{{ w.ip }}</span>
+                  <span style="font:700 10px var(--mono);color:{{ w.stColor }};min-width:26px;text-align:right;flex:none">{{ w.stShort }}</span>
+                  <button onClick="{{ w.onDiag }}" title="Ping / traceroute" style="width:23px;height:23px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:6px;display:grid;place-items:center;cursor:pointer;flex:none" style-hover="border-color:var(--accent);color:var(--accent)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></button>
+                  <sc-if value="{{ w.isDev }}" hint-placeholder-val="{{ false }}"><button onClick="{{ w.onRemove }}" title="Ukloni iz nadzora" style="width:23px;height:23px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:6px;display:grid;place-items:center;cursor:pointer;flex:none" style-hover="border-color:var(--down);color:var(--down);background:var(--down-soft)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg></button></sc-if>
                 </div>
               </sc-for>
             </div>
@@ -960,10 +950,10 @@ class Component extends DCLogic {
     const q = (this.state.nadzorQ||'').toLowerCase().trim();
     const qs = q?q.split(/\s+/):[];
     const statusOf = (r)=>{
-      if(!r) return { lbl:'—', col:'var(--muted)', soft:'var(--surface-3)', dot:'var(--faint)' };
-      if(r.state==='online') return { lbl:'online'+(r.rtt!=null?' · '+r.rtt+' ms':''), col:'var(--ok)', soft:'var(--ok-soft)', dot:'var(--ok)' };
-      if(r.state==='offline') return { lbl:'offline', col:'var(--down)', soft:'var(--down-soft)', dot:'var(--down)' };
-      return { lbl:'agent?', col:'var(--warn)', soft:'var(--warn-soft)', dot:'var(--warn)' };
+      if(!r) return { lbl:'—', short:'', col:'var(--muted)', soft:'var(--surface-3)', dot:'var(--faint)' };
+      if(r.state==='online') return { lbl:'online'+(r.rtt!=null?' · '+r.rtt+' ms':''), short:(r.rtt!=null?r.rtt+'ms':'✓'), col:'var(--ok)', soft:'var(--ok-soft)', dot:'var(--ok)' };
+      if(r.state==='offline') return { lbl:'offline', short:'×', col:'var(--down)', soft:'var(--down-soft)', dot:'var(--down)' };
+      return { lbl:'agent?', short:'?', col:'var(--warn)', soft:'var(--warn-soft)', dot:'var(--warn)' };
     };
     const byNode = {};
     this.watchDevices().forEach(w=>{ (byNode[w.nodeId]=byNode[w.nodeId]||[]).push(w); });
@@ -975,9 +965,10 @@ class Component extends DCLogic {
         const tagCol = w.tag ? (isB?'var(--transB)':'var(--transA)') : 'transparent';
         const dot = w.kind==='net' ? (w.color||'var(--muted)') : (w.kind==='transA'?'var(--transA)': w.kind==='transB'?'var(--transB)':'var(--faint)');
         const meta = [w.dtype, w.cidr, (w.vlan?('VLAN '+w.vlan):'')].filter(Boolean).join(' · ');
+        const title = [w.dtype, w.cidr, (w.vlan?('VLAN '+w.vlan):''), w.ip, s.lbl].filter(Boolean).join(' · ');
         return {
-          id:w.id, name:w.name, ip:w.ip||'—', meta, tag:w.tag, hasTag:!!w.tag, tagBg, tagCol, dotColor:dot, isDev:w.kind==='dev',
-          stLabel:s.lbl, stColor:s.col, stSoft:s.soft, stDot:s.dot,
+          id:w.id, name:w.name, ip:w.ip||'—', meta, title, tag:w.tag, hasTag:!!w.tag, tagBg, tagCol, dotColor:dot, isDev:w.kind==='dev',
+          stLabel:s.lbl, stShort:s.short, stColor:s.col, stSoft:s.soft, stDot:s.dot,
           onDiag:()=>this.openDiag(w.ip, w.name+' · '+n.name),
           onRemove:()=>this.toggleMon(n.id, w.id),
           _hay:[w.name,w.ip,w.cidr,w.dtype,n.name,w.tag,s.lbl].join(' ').toLowerCase()
