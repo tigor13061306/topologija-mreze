@@ -41,20 +41,27 @@ fonts_css = None
 if os.path.exists(os.path.join(HERE, "vendor", "fonts.css")):
     fonts_css = read("vendor", "fonts.css")
 
-# backend ide u <script type="text/plain"> pa ne smije sadržati </script
-assert "</script" not in BACKEND.lower(), "backend.js sadrži </script — treba drugačije pakovanje"
+# backend.js (ESM) -> globalni objekt window.__BE.
+# Ovako NEMA dinamičkog import()-a, pa radi pouzdano i preko file:// (dupli klik).
+_exp_fn    = re.findall(r'export\s+(?:async\s+)?function\s+([A-Za-z_$][\w$]*)', BACKEND)
+_exp_const = re.findall(r'export\s+const\s+([A-Za-z_$][\w$]*)', BACKEND)
+_exports   = _exp_fn + _exp_const
+assert _exports, "nisam našao nijedan export u backend.js"
+_backend_body = re.sub(r'\bexport\s+', '', BACKEND)   # skini 'export ' ključne riječi
+BACKEND_GLOBAL = (
+    '<script>/* backend.js (logika) kao globalni objekt window.__BE — radi i sa file:// */\n'
+    'window.__BE = (function(){\n' + _backend_body +
+    '\nreturn {' + ','.join(_exports) + '};\n})();\n</script>'
+)
 
 # --- BOOT blok koji zamjenjuje <script src="./support.js"> ---
-# Redoslijed je bitan: React -> ReactDOM -> Babel -> backend(blob) -> support(auto-boot).
+# Redoslijed je bitan: React -> ReactDOM -> Babel -> backend(global) -> support(auto-boot).
 # support.js sam preskače CDN kad su window.React/ReactDOM/Babel već prisutni.
 BOOT = (
     '<script>/* React 18.3.1 UMD (vendored, offline) */\n' + esc_script(REACT) + '\n</script>\n'
     '<script>/* ReactDOM 18.3.1 UMD (vendored, offline) */\n' + esc_script(REACTDOM) + '\n</script>\n'
     '<script>/* @babel/standalone 7.29.0 (vendored, offline) */\n' + esc_script(BABEL) + '\n</script>\n'
-    '<script id="__dc_backend" type="text/plain">' + BACKEND + '</script>\n'
-    '<script>/* offline shim: backend.js kao blob-modul (radi i sa file://) */\n'
-    'window.__BACKEND_URL = URL.createObjectURL(new Blob('
-    '[document.getElementById("__dc_backend").textContent],{type:"text/javascript"}));\n</script>\n'
+    + BACKEND_GLOBAL + '\n'
     '<script>/* dc-runtime (support.js, vendored) — auto-boot */\n' + esc_script(SUPPORT) + '\n</script>'
 )
 
@@ -64,10 +71,10 @@ out = SRC
 out, n = re.subn(r'<script\s+src="\./support\.js"\s*></script>', lambda m: BOOT, out, count=1)
 assert n == 1, "nisam našao <script src=./support.js> u izvoru"
 
-# 2) dinamički import backend.js -> blob URL (offline / file://)
+# 2) dinamički import backend.js -> globalni objekt (bez import(), radi na file://)
 n1 = out.count("import('./backend.js')") + out.count('import("./backend.js")')
-out = out.replace("import('./backend.js')", "import(window.__BACKEND_URL)")
-out = out.replace('import("./backend.js")', "import(window.__BACKEND_URL)")
+out = out.replace("import('./backend.js')", "Promise.resolve(window.__BE)")
+out = out.replace('import("./backend.js")', "Promise.resolve(window.__BE)")
 assert n1 >= 1, "nisam našao import('./backend.js') u izvoru"
 
 # 3) fontovi: inline @font-face umjesto Google Fonts (ako imamo vendor/fonts.css)

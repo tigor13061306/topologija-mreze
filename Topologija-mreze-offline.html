@@ -314,21 +314,23 @@ var e,t,r="function"==typeof Symbol?Symbol:{},a=r.iterator||"@@iterator",n=r.toS
 //# sourceMappingURL=babel.min.js.map
 
 </script>
-<script id="__dc_backend" type="text/plain">// backend.js — portovana logika iz topologija-mreze.html (repo: tigor13061306/topologija-mreze)
+<script>/* backend.js (logika) kao globalni objekt window.__BE — radi i sa file:// */
+window.__BE = (function(){
+// backend.js — portovana logika iz topologija-mreze.html (repo: tigor13061306/topologija-mreze)
 // Isti model podataka i isti storage ključ 'topo_state' -> redizajn i original dijele iste podatke.
 
 let _uid = 0;
-export function uid(){ return 'net' + Date.now().toString(36) + (_uid++); }
+function uid(){ return 'net' + Date.now().toString(36) + (_uid++); }
 
-export const NETCOLORS = ['#185fa5','#534ab7','#0f6e56','#ba7517','#b5396f','#2a6f97','#9c6b1e','#1f7a55','#7a3b8c','#444441'];
-export const EQUIP_TYPES = ['Firewall','Ruter','Master svič','Svič','Access point','DVR/NVR snimač','Server','Patch panel','UPS','Modem','Konverter (media)','Ostalo'];
+const NETCOLORS = ['#185fa5','#534ab7','#0f6e56','#ba7517','#b5396f','#2a6f97','#9c6b1e','#1f7a55','#7a3b8c','#444441'];
+const EQUIP_TYPES = ['Firewall','Ruter','Master svič','Svič','Access point','DVR/NVR snimač','Server','Patch panel','UPS','Modem','Konverter (media)','Ostalo'];
 
-export function mkNet(name,color){
+function mkNet(name,color){
   return {id:uid(),name:name||'Mreža',color:color||NETCOLORS[0],range:'',gw:'',gwAuto:true,primary:'mpls',vlan:'',vlanAuto:true,port:'',note:'',network:'',broadcast:'',hosts:''};
 }
-export function defaultNets(){ return [ mkNet('Trust','#185fa5'), mkNet('Video nadzor','#534ab7'), mkNet('LILD','#0f6e56') ]; }
+function defaultNets(){ return [ mkNet('Trust','#185fa5'), mkNet('Video nadzor','#534ab7'), mkNet('LILD','#0f6e56') ]; }
 
-export function normNet(s,i){
+function normNet(s,i){
   s=s||{};
   const nm=s.name||('Mreža '+(i+1));
   let prim=s.primary;
@@ -346,7 +348,7 @@ export function normNet(s,i){
     network:s.network||'', broadcast:s.broadcast||'', hosts:(s.hosts!==undefined?s.hosts:'')
   };
 }
-export function migrateNets(old){
+function migrateNets(old){
   if(Array.isArray(old)) return old.map((s,i)=>normNet(s,i));
   old=old||{};
   if(old.data!==undefined||old.opt!==undefined||old.video!==undefined||old.lild!==undefined||old.dhcp!==undefined){
@@ -358,7 +360,7 @@ export function migrateNets(old){
   }
   return defaultNets();
 }
-export function normEquip(e){ e=e||{};
+function normEquip(e){ e=e||{};
   return {id:e.id||('eq'+Math.random().toString(36).slice(2)),etype:e.etype||'',vendor:e.vendor||'',model:e.model||e.name||'',serial:e.serial||'',barcode:e.barcode||'',ip:e.ip||'',firmware:e.firmware||'',rack:e.rack||'',upstream:e.upstream||'',photo:e.photo||'',note:e.note||''};
 }
 function norm(n){
@@ -377,7 +379,7 @@ function norm(n){
   const ids=n.nets.map(z=>z.id); n.devices.forEach(d=>{ if(d.netId && !ids.includes(d.netId)) d.netId=''; });
   return n;
 }
-export function normState(s){
+function normState(s){
   Object.values(s.nodes).forEach(norm);
   s.edges=(s.edges||[]).map(e=>({from:e.from,to:e.to,ipMpls:e.ipMpls||'',gwMpls:e.gwMpls||'',ipSdh:e.ipSdh||'',gwSdh:e.gwSdh||''}));
   s.seq=s.seq||0;
@@ -391,15 +393,15 @@ export function normState(s){
 }
 
 // ---- CIDR / IP ----
-export function ipToInt(ip){ const p=String(ip).split('.'); if(p.length!==4)return null; let v=0; for(const o of p){ if(!/^\d{1,3}$/.test(o))return null; const x=+o; if(x>255)return null; v=v*256+x; } return v>>>0; }
-export function intToIp(v){ return [(v>>>24)&255,(v>>>16)&255,(v>>>8)&255,v&255].join('.'); }
-export function maskToPrefix(maskStr){
+function ipToInt(ip){ const p=String(ip).split('.'); if(p.length!==4)return null; let v=0; for(const o of p){ if(!/^\d{1,3}$/.test(o))return null; const x=+o; if(x>255)return null; v=v*256+x; } return v>>>0; }
+function intToIp(v){ return [(v>>>24)&255,(v>>>16)&255,(v>>>8)&255,v&255].join('.'); }
+function maskToPrefix(maskStr){
   const v=ipToInt(maskStr); if(v===null) return null;
   let bits=0, seenZero=false;
   for(let i=31;i>=0;i--){ const b=(v>>>i)&1; if(b===1){ if(seenZero) return null; bits++; } else seenZero=true; }
   return bits;
 }
-export function computeNet(cidr){
+function computeNet(cidr){
   if(!cidr) return {ok:false,empty:true};
   const str=String(cidr).trim();
   let ipStr=null, n=null;
@@ -416,13 +418,13 @@ export function computeNet(cidr){
   else { first=(network+1)>>>0; last=(broadcast-1)>>>0; hosts=broadcast-network-1; }
   return {ok:true, prefix:n, network:intToIp(network), broadcast:intToIp(broadcast), first:intToIp(first), last:intToIp(last), hosts};
 }
-export function derivedText(net){
+function derivedText(net){
   const c=computeNet(net.range);
   if(c.empty) return 'Upiši opseg u CIDR formatu (npr. 10.1.10.0/24).';
   if(!c.ok) return '⚠ Neispravan CIDR.';
   return 'Mreža '+c.network+' · Brodkast '+c.broadcast+' · '+c.hosts+' host. ('+c.first+'–'+c.last+')';
 }
-export function ipInRange(ip,cidr){
+function ipInRange(ip,cidr){
   const c=computeNet(cidr); if(!c.ok) return {ok:false,reason:'noNet'};
   const v=ipToInt(ip); if(v===null) return {ok:false,reason:'badIp'};
   const f=ipToInt(c.first), l=ipToInt(c.last);
@@ -432,7 +434,7 @@ export function ipInRange(ip,cidr){
 }
 
 // ---- seed ----
-export const seed = () => normState({
+const seed = () => normState({
   nodes:{
     hq:{id:'hq',name:'Centralni firewall (HQ)',address:'',x:660,y:70,type:'hq',nets:defaultNets(),devices:[]},
     l1:{id:'l1',name:'Lokacija 1',address:'',x:360,y:440,type:'loc',nets:defaultNets(),devices:[]},
@@ -444,18 +446,18 @@ export const seed = () => normState({
 // ---- storage: isti ključ 'topo_state' kao original; localStorage fallback za preview ----
 const KEY = 'topo_state';
 let mem = null;
-export async function load(){
+async function load(){
   try{ if(typeof window!=='undefined' && window.storage){ const r=await window.storage.get(KEY); if(r&&r.value) return normState(JSON.parse(r.value)); } }catch(e){}
   try{ const raw=localStorage.getItem(KEY); if(raw) return normState(JSON.parse(raw)); }catch(e){}
   return mem;
 }
-export async function save(state){
+async function save(state){
   const s=JSON.stringify(state); mem=state;
   try{ if(typeof window!=='undefined' && window.storage) await window.storage.set(KEY,s); }catch(e){}
   try{ localStorage.setItem(KEY,s); }catch(e){}
 }
 
-export function ensureServer(state){
+function ensureServer(state){
   if(!state||!state.nodes) return state;
   const has = Object.values(state.nodes).some(n=>n.type==='server');
   if(!has){
@@ -467,14 +469,14 @@ export function ensureServer(state){
 }
 
 // Učitaj postojeće ili posij demo podatke (bogatiji seed za pregled redizajna).
-export async function loadOrSeed(){
+async function loadOrSeed(){
   const existing = await load();
   if(existing && existing.nodes && Object.keys(existing.nodes).length) return ensureServer(existing);
   return demoState();
 }
 
 // Demo state s realnim imenima/opsezima radi prikaza (upisuje se tek na eksplicitni save).
-export function demoState(){
+function demoState(){
   const s = seed();
   const setNets = (node, defs) => {
     node.nets = defs.map((d,i)=>normNet(d,i));
@@ -535,9 +537,9 @@ export function demoState(){
   });
   return s;
 }
-</script>
-<script>/* offline shim: backend.js kao blob-modul (radi i sa file://) */
-window.__BACKEND_URL = URL.createObjectURL(new Blob([document.getElementById("__dc_backend").textContent],{type:"text/javascript"}));
+
+return {uid,mkNet,defaultNets,normNet,migrateNets,normEquip,normState,ipToInt,intToIp,maskToPrefix,computeNet,derivedText,ipInRange,load,save,ensureServer,loadOrSeed,demoState,NETCOLORS,EQUIP_TYPES,seed};
+})();
 </script>
 <script>/* dc-runtime (support.js, vendored) — auto-boot */
 // GENERATED from dc-runtime/src/*.ts — do not edit. Rebuild with `cd dc-runtime && bun run build`.
@@ -3434,7 +3436,7 @@ class Component extends DCLogic {
     try{ const rc=localStorage.getItem('topo_ui_cols'); if(rc) colW=Object.assign(colW, JSON.parse(rc)); }catch(e){}
     this.setState({ pos, colW });
     try{
-      const be = await import(window.__BACKEND_URL);
+      const be = await Promise.resolve(window.__BE);
       this.be = be;
       const data = await be.loadOrSeed();
       this.setState({ data });
