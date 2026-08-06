@@ -405,6 +405,11 @@
             <option value="">Sve lokacije</option>
             <sc-for list="{{ locFilterOptions }}" as="lo" hint-placeholder-count="3"><option value="{{ lo.id }}">{{ lo.name }}</option></sc-for>
           </select>
+          <span style="font:600 11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-right:4px">Opseg:</span>
+          <select value="{{ devNet }}" onChange="{{ onDevNet }}" style="height:30px;border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:0 10px;font:600 12px var(--mono);color:var(--ink);outline:none;cursor:pointer;margin-right:6px">
+            <option value="">Svi opsezi</option>
+            <sc-for list="{{ netFilterOptions }}" as="no" hint-placeholder-count="3"><option value="{{ no }}">{{ no }}</option></sc-for>
+          </select>
           <span style="font:600 11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-right:4px">Tip:</span>
           <button onClick="{{ clearType }}" style="{{ chipAll }}">Svi</button>
           <sc-for list="{{ typeChips }}" as="c" hint-placeholder-count="5">
@@ -627,7 +632,7 @@
           <div class="scroll" style="overflow:auto;max-height:{{ equipMax }};flex:1">
             <datalist id="eqTipLista"><sc-for list="{{ equipTypeOptions }}" as="t" hint-placeholder-count="8"><option value="{{ t }}"></option></sc-for></datalist>
             <datalist id="eqVendorLista"><sc-for list="{{ vendorOptions }}" as="v" hint-placeholder-count="5"><option value="{{ v }}"></option></sc-for></datalist>
-            <table style="border-collapse:separate;border-spacing:0;font-size:12.5px;min-width:1300px;width:100%">
+            <table style="border-collapse:separate;border-spacing:0;font-size:12.5px;min-width:1420px;width:100%">
               <thead>
                 <tr>
                   <th style="{{ dthStyle }}width:34px;text-align:center">#</th>
@@ -640,6 +645,7 @@
                   <th style="{{ dthStyle }}width:100px">Firmver</th>
                   <th style="{{ dthStyle }}width:110px">Rak pozicija</th>
                   <th style="{{ dthStyle }}width:130px">Lokacija</th>
+                  <th style="{{ dthStyle }}width:120px">Opseg</th>
                   <th style="{{ dthStyle }}width:90px">Slika</th>
                   <th style="{{ dthStyle }}width:160px">Povezan na</th>
                   <th style="{{ dthStyle }}width:40px"></th>
@@ -658,6 +664,7 @@
                     <td style="{{ dtdStyle }}"><input value="{{ e.firmware }}" onInput="{{ e.onFirmware }}" placeholder="opciono" style="{{ dcellMono }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></td>
                     <td style="{{ dtdStyle }}"><input value="{{ e.rack }}" onInput="{{ e.onRack }}" placeholder="npr. R1 U3" style="{{ dcellMono }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></td>
                     <td style="{{ dtdStyle }}"><input value="{{ e.location }}" onInput="{{ e.onLocation }}" placeholder="npr. Server soba" style="{{ dcell }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></td>
+                    <td style="{{ dtdStyle }}"><select value="{{ e.netId }}" onChange="{{ e.onNet }}" style="{{ dcellSel }}" style-focus="{{ dcellFocus }}"><option value="">—</option><sc-for list="{{ netOptions }}" as="no" hint-placeholder-count="3"><option value="{{ no.id }}">{{ no.name }}</option></sc-for></select></td>
                     <td style="{{ dtdStyle }}">
                       <div style="display:flex;align-items:center;gap:5px">
                         <sc-if value="{{ e.hasPhoto }}" hint-placeholder-val="{{ false }}">
@@ -1427,7 +1434,7 @@ class Component extends DCLogic {
   addEquip(nodeId, etype){
     const d=this.state.data; const nd=d&&d.nodes&&d.nodes[nodeId]; if(!nd) return;
     nd.equipment=nd.equipment||[];
-    nd.equipment.push({ id:'eq'+Math.random().toString(36).slice(2), etype:etype||'Svič', vendor:'', model:'', serial:'', barcode:'', ip:'', firmware:'', rack:'', location:'', upstream:'', photo:'', note:'' });
+    nd.equipment.push({ id:'eq'+Math.random().toString(36).slice(2), etype:etype||'Svič', vendor:'', model:'', serial:'', barcode:'', ip:'', firmware:'', rack:'', location:'', netId:'', upstream:'', photo:'', note:'' });
     this.forceUpdate(); this.persist();
   }
   setEquipField(nodeId, eqId, field, val){
@@ -1535,8 +1542,9 @@ class Component extends DCLogic {
     const qs = q ? q.split(/\s+/) : [];
     const tf = this.state.typeFilter;
     const lf = this.state.devLoc||'';
+    const nf = this.state.devNet||'';
     const tdBase = 'padding:10px 12px;border-bottom:1px solid var(--line-2);vertical-align:middle';
-    let list = flat.filter(r => (!tf || r.dtype===tf) && (!lf || r.locId===lf));
+    let list = flat.filter(r => (!tf || r.dtype===tf) && (!lf || r.locId===lf) && (!nf || r.netName===nf));
     if(qs.length) list = list.filter(r => qs.every(w=>r._hay.includes(w)));
     const devices = list.map((r,i) => ({
       n:i+1, dtype:r.dtype, floor:r.floor, office:r.office, name:r.name, barcode:r.barcode, ip:r.ip,
@@ -1548,6 +1556,7 @@ class Component extends DCLogic {
       rowStyle:(i%2 ? 'background:var(--surface-2)' : '')
     }));
     const locFilterOptions = nodes.map(n=>({id:n.id,name:n.name}));
+    const netFilterOptions = [...new Set(nodes.flatMap(n=>(n.nets||[]).map(x=>x.name)).filter(Boolean))];
     const types = (D && D.deviceTypes && D.deviceTypes.length) ? D.deviceTypes.filter(t=>flat.some(f=>f.dtype===t)) : [...new Set(flat.map(f=>f.dtype))];
     const chipBase = 'height:30px;border-radius:20px;padding:0 13px;font:600 12px "Albert Sans";cursor:pointer;border:1px solid var(--line)';
     const typeChips = types.map(t => ({
@@ -1705,6 +1714,7 @@ class Component extends DCLogic {
       dcellSel:'width:100%;border:1px solid transparent;border-radius:8px;padding:7px 8px;font:600 11.5px var(--mono);background:transparent;color:var(--ink);outline:none;cursor:pointer;transition:border-color .12s,box-shadow .12s,background .12s;',
       devices, typeChips, chipAll, clearType:()=>this.setState({typeFilter:''}),
       locFilterOptions, devLoc:lf, onDevLoc:(e)=>this.setState({devLoc:e.target.value}),
+      netFilterOptions, devNet:nf, onDevNet:(e)=>this.setState({devNet:e.target.value}),
       devCount: devices.length + ' od ' + total + ' uređaja', devEmpty: devices.length===0,
 
       // detail
@@ -1758,13 +1768,14 @@ class Component extends DCLogic {
         const equipRows=equipList.map((eq,i)=>({
           n:i+1,
           etype:eq.etype||'', vendor:eq.vendor||'', model:eq.model||'', serial:eq.serial||'', barcode:eq.barcode||'',
-          ip:eq.ip||'', firmware:eq.firmware||'', rack:eq.rack||'', location:eq.location||'', upstream:eq.upstream||'', photo:eq.photo||'', hasPhoto:!!eq.photo,
+          ip:eq.ip||'', firmware:eq.firmware||'', rack:eq.rack||'', location:eq.location||'', netId:eq.netId||'', upstream:eq.upstream||'', photo:eq.photo||'', hasPhoto:!!eq.photo,
           photoEl: eq.photo ? React.createElement('img',{src:eq.photo,style:{width:'34px',height:'34px',objectFit:'cover',borderRadius:'6px',border:'1px solid var(--line)'}}) : null,
           upstreamOpts: (()=>{ const opts=uplinkBase.filter((l,idx)=>idx!==i); return (eq.upstream && !uplinkBase.includes(eq.upstream)) ? [eq.upstream, ...opts] : opts; })(),
           rowStyle:(i%2?'background:var(--surface-2)':''),
           onType:(e)=>this.setEquipField(rn.id,eq.id,'etype',e.target.value),
           onVendor:(e)=>this.setEquipField(rn.id,eq.id,'vendor',e.target.value),
           onLocation:(e)=>this.setEquipField(rn.id,eq.id,'location',e.target.value),
+          onNet:(e)=>this.setEquipField(rn.id,eq.id,'netId',e.target.value),
           onModel:(e)=>this.setEquipField(rn.id,eq.id,'model',e.target.value),
           onSerial:(e)=>this.setEquipField(rn.id,eq.id,'serial',e.target.value),
           onBarcode:(e)=>this.setEquipField(rn.id,eq.id,'barcode',e.target.value),
