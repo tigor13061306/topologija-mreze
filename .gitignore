@@ -21,3 +21,9 @@ __pycache__/
 
 # folder za prenos (kopije, ne verzionisati)
 za-prenos/
+
+# agent.exe (binarni artefakt) + pyinstaller build
+agent.exe
+*.spec
+/build/
+/dist/

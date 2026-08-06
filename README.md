@@ -18,14 +18,14 @@ Aplikacija je React „dashboard", ali se isporučuje kao **jedan HTML fajl** ko
 
 Modul **Nadzor** po lokaciji provjerava Transport A/B i sve opsege (ping na gateway). Pošto pregledač sam ne može da pinga, koristi se mali lokalni **agent** (`agent.py`).
 
-**Agenta pokreni na računaru koji je na istoj mreži kao uređaji** (tamo gdje otvaraš aplikaciju):
+**Agenta pokreni na računaru koji je na istoj mreži kao uređaji** (tamo gdje otvaraš aplikaciju). Sluša na `http://localhost:8765`.
 
-1. Dupli klik na **`pokreni-agent.bat`** (prvi put instalira pakete — treba internet jednom).
-   - Alternativa: `python agent.py`
-2. Ostavi prozor otvoren (agent sluša na `http://localhost:8765`).
-3. U aplikaciji, ekran **Nadzor** → **Pokreni sken**. Statusi postaju zeleni (online + ms) / crveni (offline).
+- **Offline računar (bez Pythona i bez interneta):** dupli klik na **`agent.exe`** (samostalan, sve upakovano; ostavi prozor otvoren). Ako Windows upozori — „More info" → „Run anyway".
+- **Računar sa Pythonom:** dupli klik na **`pokreni-agent.bat`** (prvi put instalira pakete — treba internet jednom), ili `python agent.py`.
 
-Zahtjevi: instaliran **Python 3**; paketi `fastapi uvicorn icmplib` (instalira ih `.bat`). Radi i bez administratorskih prava (fallback na sistemski `ping`). Agent ništa ne šalje na internet.
+Zatim u aplikaciji: ekran **Nadzor** → **Pokreni sken**. Statusi postaju zeleni (online + ms) / crveni (offline). Radi i bez administratorskih prava (fallback na sistemski `ping`). Agent ništa ne šalje na internet.
+
+> `agent.exe` se pravi iz `agent.py` skriptom `build-agent-exe.bat` (na računaru sa Pythonom + internetom). Sam exe je binarni artefakt i nije u gitu.
 
 ## Razvoj (uređivanje aplikacije)
 
