@@ -14,3 +14,7 @@ dokumentacija-*.doc
 
 # napomena: Topologija-mreze-offline.html se NE ignoriše —
 # generisani offline fajl namjerno ide u git da ga offline računar preuzme.
+
+# python
+__pycache__/
+*.pyc
