@@ -43,7 +43,7 @@ export function migrateNets(old){
   return defaultNets();
 }
 export function normEquip(e){ e=e||{};
-  return {id:e.id||('eq'+Math.random().toString(36).slice(2)),etype:e.etype||'',vendor:e.vendor||'',model:e.model||e.name||'',serial:e.serial||'',barcode:e.barcode||'',ip:e.ip||'',firmware:e.firmware||'',rack:e.rack||'',upstream:e.upstream||'',photo:e.photo||'',note:e.note||''};
+  return {id:e.id||('eq'+Math.random().toString(36).slice(2)),etype:e.etype||'',vendor:e.vendor||'',model:e.model||e.name||'',serial:e.serial||'',barcode:e.barcode||'',ip:e.ip||'',firmware:e.firmware||'',rack:e.rack||'',location:e.location||'',upstream:e.upstream||'',photo:e.photo||'',note:e.note||''};
 }
 function norm(n){
   n.address=n.address||'';

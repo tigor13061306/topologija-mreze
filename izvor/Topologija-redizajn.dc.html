@@ -220,19 +220,19 @@
               <div style="border:1px solid var(--line);border-radius:12px;padding:13px 14px;background:var(--surface-2)">
                 <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px">
                   <span style="width:22px;height:3px;border-radius:2px;background:var(--transA);flex:none"></span>
-                  <span style="font-weight:700;font-size:13px">Transport A</span>
+                  <span style="font-weight:700;font-size:13px">{{ taName }}</span>
                   <span style="margin-left:auto;font:600 10px var(--mono);color:var(--ok);background:var(--ok-soft);padding:3px 8px;border-radius:20px">AKTIVAN</span>
                 </div>
-                <div style="font:500 11px var(--mono);color:var(--muted)">Primarni: Trust · Video</div>
+                <div style="font:500 11px var(--mono);color:var(--muted)">{{ taNote }}</div>
                 <div style="height:6px;border-radius:4px;background:var(--line-2);margin-top:10px;overflow:hidden"><div style="height:100%;width:100%;background:var(--transA)"></div></div>
               </div>
               <div style="border:1px solid var(--line);border-radius:12px;padding:13px 14px;background:var(--surface-2)">
                 <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px">
                   <span style="width:22px;height:0;border-top:3px dashed var(--transB);flex:none"></span>
-                  <span style="font-weight:700;font-size:13px">Transport B</span>
+                  <span style="font-weight:700;font-size:13px">{{ tbName }}</span>
                   <span style="margin-left:auto;font:600 10px var(--mono);color:var(--warn);background:var(--warn-soft);padding:3px 8px;border-radius:20px">BACKUP</span>
                 </div>
-                <div style="font:500 11px var(--mono);color:var(--muted)">Primarni: LILD</div>
+                <div style="font:500 11px var(--mono);color:var(--muted)">{{ tbNote }}</div>
                 <div style="height:6px;border-radius:4px;background:var(--line-2);margin-top:10px;overflow:hidden"><div style="height:100%;width:64%;background:var(--transB)"></div></div>
               </div>
             </div>
@@ -264,8 +264,8 @@
               <button onClick="{{ setSlojevi }}" style="{{ segSlojevi }}">Slojevi</button>
             </div>
             <div style="display:flex;align-items:center;gap:16px;margin-left:8px;font:500 11.5px var(--mono);color:var(--muted)">
-              <span style="display:flex;align-items:center;gap:7px"><span style="width:20px;height:3px;border-radius:2px;background:var(--transA)"></span>Transport A</span>
-              <span style="display:flex;align-items:center;gap:7px"><span style="width:20px;height:0;border-top:3px dashed var(--transB)"></span>Transport B</span>
+              <span style="display:flex;align-items:center;gap:7px"><span style="width:20px;height:3px;border-radius:2px;background:var(--transA)"></span>{{ taName }}</span>
+              <span style="display:flex;align-items:center;gap:7px"><span style="width:20px;height:0;border-top:3px dashed var(--transB)"></span>{{ tbName }}</span>
             </div>
             <div style="flex:1"></div>
             <span style="font:500 10.5px var(--mono);color:var(--faint);margin-right:4px">povuci čvor · točkić = zoom · povuci pozadinu = pomak</span>
@@ -388,8 +388,8 @@
           </div>
           <div style="font:700 10px var(--mono);letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin:18px 0 9px">Transport</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <div style="display:flex;align-items:center;gap:8px;font:500 11.5px var(--mono);border:1px solid var(--line);border-radius:9px;padding:8px 10px"><span style="width:16px;height:3px;border-radius:2px;background:var(--transA)"></span>Transport A<span style="margin-left:auto;color:var(--transA);font-weight:600">{{ insGwA }}</span></div>
-            <div style="display:flex;align-items:center;gap:8px;font:500 11.5px var(--mono);border:1px solid var(--line);border-radius:9px;padding:8px 10px"><span style="width:16px;height:0;border-top:3px dashed var(--transB)"></span>Transport B<span style="margin-left:auto;color:var(--transB);font-weight:600">{{ insGwB }}</span></div>
+            <div style="display:flex;align-items:center;gap:8px;font:500 11.5px var(--mono);border:1px solid var(--line);border-radius:9px;padding:8px 10px"><span style="width:16px;height:3px;border-radius:2px;background:var(--transA)"></span>{{ taName }}<span style="margin-left:auto;color:var(--transA);font-weight:600">{{ insGwA }}</span></div>
+            <div style="display:flex;align-items:center;gap:8px;font:500 11.5px var(--mono);border:1px solid var(--line);border-radius:9px;padding:8px 10px"><span style="width:16px;height:0;border-top:3px dashed var(--transB)"></span>{{ tbName }}<span style="margin-left:auto;color:var(--transB);font-weight:600">{{ insGwB }}</span></div>
           </div>
           <button onClick="{{ goDetail }}" style="width:100%;margin-top:18px;height:38px;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;font:600 12.5px 'Albert Sans';color:var(--ink);cursor:pointer">Otvori puni detalj →</button>
         </aside>
@@ -625,7 +625,9 @@
             </div>
           </sc-if>
           <div class="scroll" style="overflow:auto;max-height:{{ equipMax }};flex:1">
-            <table style="border-collapse:separate;border-spacing:0;font-size:12.5px;min-width:1180px;width:100%">
+            <datalist id="eqTipLista"><sc-for list="{{ equipTypeOptions }}" as="t" hint-placeholder-count="8"><option value="{{ t }}"></option></sc-for></datalist>
+            <datalist id="eqVendorLista"><sc-for list="{{ vendorOptions }}" as="v" hint-placeholder-count="5"><option value="{{ v }}"></option></sc-for></datalist>
+            <table style="border-collapse:separate;border-spacing:0;font-size:12.5px;min-width:1300px;width:100%">
               <thead>
                 <tr>
                   <th style="{{ dthStyle }}width:34px;text-align:center">#</th>
@@ -637,6 +639,7 @@
                   <th style="{{ dthStyle }}width:120px">IP adresa</th>
                   <th style="{{ dthStyle }}width:100px">Firmver</th>
                   <th style="{{ dthStyle }}width:110px">Rak pozicija</th>
+                  <th style="{{ dthStyle }}width:130px">Lokacija</th>
                   <th style="{{ dthStyle }}width:90px">Slika</th>
                   <th style="{{ dthStyle }}width:160px">Povezan na</th>
                   <th style="{{ dthStyle }}width:40px"></th>
@@ -646,14 +649,15 @@
                 <sc-for list="{{ equipRows }}" as="e" hint-placeholder-count="4">
                   <tr style="{{ e.rowStyle }}">
                     <td style="{{ dtdStyle }}text-align:center;color:var(--faint);font:600 11px var(--mono)">{{ e.n }}</td>
-                    <td style="{{ dtdStyle }}"><select value="{{ e.etype }}" onChange="{{ e.onType }}" style="{{ dcellSel }}" style-focus="{{ dcellFocus }}"><sc-for list="{{ equipTypeOptions }}" as="t" hint-placeholder-count="8"><option value="{{ t }}">{{ t }}</option></sc-for></select></td>
-                    <td style="{{ dtdStyle }}"><select value="{{ e.vendor }}" onChange="{{ e.onVendor }}" style="{{ dcellSel }}" style-focus="{{ dcellFocus }}"><option value="">—</option><sc-for list="{{ vendorOptions }}" as="v" hint-placeholder-count="5"><option value="{{ v }}">{{ v }}</option></sc-for></select></td>
+                    <td style="{{ dtdStyle }}"><input list="eqTipLista" value="{{ e.etype }}" onInput="{{ e.onType }}" placeholder="npr. Svič" style="{{ dcell }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></td>
+                    <td style="{{ dtdStyle }}"><input list="eqVendorLista" value="{{ e.vendor }}" onInput="{{ e.onVendor }}" placeholder="npr. Cisco" style="{{ dcell }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></td>
                     <td style="{{ dtdStyle }}"><input value="{{ e.model }}" onInput="{{ e.onModel }}" placeholder="npr. Catalyst 2960" style="{{ dcell }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></td>
                     <td style="{{ dtdStyle }}"><input value="{{ e.serial }}" onInput="{{ e.onSerial }}" placeholder="—" style="{{ dcellMono }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></td>
                     <td style="{{ dtdStyle }}"><input value="{{ e.barcode }}" onInput="{{ e.onBarcode }}" placeholder="—" style="{{ dcellMono }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></td>
                     <td style="{{ dtdStyle }}"><input value="{{ e.ip }}" onInput="{{ e.onIp }}" placeholder="opciono" style="{{ dcellMono }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></td>
                     <td style="{{ dtdStyle }}"><input value="{{ e.firmware }}" onInput="{{ e.onFirmware }}" placeholder="opciono" style="{{ dcellMono }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></td>
                     <td style="{{ dtdStyle }}"><input value="{{ e.rack }}" onInput="{{ e.onRack }}" placeholder="npr. R1 U3" style="{{ dcellMono }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></td>
+                    <td style="{{ dtdStyle }}"><input value="{{ e.location }}" onInput="{{ e.onLocation }}" placeholder="npr. Server soba" style="{{ dcell }}" style-hover="{{ dcellHover }}" style-focus="{{ dcellFocus }}"></td>
                     <td style="{{ dtdStyle }}">
                       <div style="display:flex;align-items:center;gap:5px">
                         <sc-if value="{{ e.hasPhoto }}" hint-placeholder-val="{{ false }}">
@@ -745,7 +749,7 @@
         <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap">
           <div style="flex:1;min-width:220px">
             <div style="font-size:14px;font-weight:700">Nadzor lokacija <span style="font:600 11px var(--mono);color:var(--muted);background:var(--surface-3);padding:2px 8px;border-radius:20px;margin-left:6px">{{ watchCount }} provjera</span></div>
-            <div style="font-size:11.5px;color:var(--muted);margin-top:3px">Po lokaciji se provjeravaju <b>Transport A i B</b> i <b>svi opsezi</b> (gateway svakog opsega). Pokreni ručni sken (offline agent). Ostale uređaje dodaješ okom u modulu <b>Uređaji</b>.</div>
+            <div style="font-size:11.5px;color:var(--muted);margin-top:3px">Po lokaciji se provjeravaju <b>{{ taName }}</b> i <b>{{ tbName }}</b> te <b>svi opsezi</b> (gateway svakog opsega). Pokreni ručni sken (offline agent). Ostale uređaje dodaješ okom u modulu <b>Uređaji</b>.</div>
           </div>
           <div style="font:500 11px var(--mono);color:var(--faint)">agent: {{ agentUrl }}</div>
           <sc-if value="{{ scanAt }}" hint-placeholder-val="{{ false }}"><div style="font:500 11px var(--mono);color:var(--muted)">zadnji sken {{ scanAt }}</div></sc-if>
@@ -935,10 +939,12 @@ class Component extends DCLogic {
   }
   watchDevices(){
     // Sve tačke nadzora, po lokaciji: Transport A, Transport B, svaki opseg (gateway opsega), pa ručno označeni uređaji.
+    const meta = (this.state.data && this.state.data.meta) || {};
+    const taName = meta.taName || 'Transport A', tbName = meta.tbName || 'Transport B';
     const out = [];
     this.nodeList().forEach(n=>{
-      if(n.gwMpls) out.push({ id:'ta:'+n.id, nodeId:n.id, name:'Transport A', ip:n.gwMpls, kind:'transA', tag:'A', cidr:'', vlan:'', dtype:'Transport A', loc:n.name });
-      if(n.gwSdh)  out.push({ id:'tb:'+n.id, nodeId:n.id, name:'Transport B', ip:n.gwSdh, kind:'transB', tag:'B', cidr:'', vlan:'', dtype:'Transport B', loc:n.name });
+      if(n.gwMpls) out.push({ id:'ta:'+n.id, nodeId:n.id, name:taName, ip:n.gwMpls, kind:'transA', tag:'A', cidr:'', vlan:'', dtype:taName, loc:n.name });
+      if(n.gwSdh)  out.push({ id:'tb:'+n.id, nodeId:n.id, name:tbName, ip:n.gwSdh, kind:'transB', tag:'B', cidr:'', vlan:'', dtype:tbName, loc:n.name });
       (n.nets||[]).forEach(net=> out.push({ id:'net:'+n.id+':'+net.id, nodeId:n.id, name:net.name||'Opseg', ip:net.gw||'', kind:'net', tag:(net.primary==='sdh'?'B':'A'), color:net.color||'var(--muted)', cidr:net.range||'', vlan:net.vlan||'', dtype:'Opseg', loc:n.name }));
       (n.devices||[]).forEach(dv=>{ if(dv.mon) out.push({ id:dv.id, nodeId:n.id, name:dv.name||'(bez naziva)', ip:dv.ip||'', kind:'dev', tag:'', cidr:'', vlan:'', dtype:dv.dtype||'—', loc:n.name, mon:true }); });
     });
@@ -1421,7 +1427,7 @@ class Component extends DCLogic {
   addEquip(nodeId, etype){
     const d=this.state.data; const nd=d&&d.nodes&&d.nodes[nodeId]; if(!nd) return;
     nd.equipment=nd.equipment||[];
-    nd.equipment.push({ id:'eq'+Math.random().toString(36).slice(2), etype:etype||'Svič', vendor:'', model:'', serial:'', barcode:'', ip:'', firmware:'', rack:'', upstream:'', photo:'', note:'' });
+    nd.equipment.push({ id:'eq'+Math.random().toString(36).slice(2), etype:etype||'Svič', vendor:'', model:'', serial:'', barcode:'', ip:'', firmware:'', rack:'', location:'', upstream:'', photo:'', note:'' });
     this.forceUpdate(); this.persist();
   }
   setEquipField(nodeId, eqId, field, val){
@@ -1722,7 +1728,8 @@ class Component extends DCLogic {
         const typeOptions=[...new Set([...((D&&D.deviceTypes)||[]), ...baseTypes])];
         const netOptions=((rn&&rn.nets)||[]).map(n=>({id:n.id,name:n.name}));
         const equipList=(rn&&rn.equipment)||[];
-        const uplinkBase=equipList.map(eq=>{ const lbl=(eq.model||eq.etype||'oprema')+(eq.serial?(' · '+eq.serial):''); return lbl; });
+        const eqLabel=(eq)=>{ const vm=[eq.vendor, eq.model].filter(Boolean).join(' '); return [eq.etype||'oprema', vm, eq.location].filter(Boolean).join(' · '); };
+        const uplinkBase=equipList.map(eqLabel);
         const lq=(this.state.locQ||'').toLowerCase().trim();
         const lnet=this.state.locNet||'';
         const devs=(rn&&rn.devices)||[];
@@ -1751,12 +1758,13 @@ class Component extends DCLogic {
         const equipRows=equipList.map((eq,i)=>({
           n:i+1,
           etype:eq.etype||'', vendor:eq.vendor||'', model:eq.model||'', serial:eq.serial||'', barcode:eq.barcode||'',
-          ip:eq.ip||'', firmware:eq.firmware||'', rack:eq.rack||'', upstream:eq.upstream||'', photo:eq.photo||'', hasPhoto:!!eq.photo,
+          ip:eq.ip||'', firmware:eq.firmware||'', rack:eq.rack||'', location:eq.location||'', upstream:eq.upstream||'', photo:eq.photo||'', hasPhoto:!!eq.photo,
           photoEl: eq.photo ? React.createElement('img',{src:eq.photo,style:{width:'34px',height:'34px',objectFit:'cover',borderRadius:'6px',border:'1px solid var(--line)'}}) : null,
-          upstreamOpts: (eq.upstream && !uplinkBase.includes(eq.upstream)) ? [eq.upstream, ...uplinkBase.filter(l=>l!==(eq.model||eq.etype))] : uplinkBase.filter(l=>l!==((eq.model||eq.etype||'oprema')+(eq.serial?(' · '+eq.serial):''))),
+          upstreamOpts: (()=>{ const opts=uplinkBase.filter((l,idx)=>idx!==i); return (eq.upstream && !uplinkBase.includes(eq.upstream)) ? [eq.upstream, ...opts] : opts; })(),
           rowStyle:(i%2?'background:var(--surface-2)':''),
           onType:(e)=>this.setEquipField(rn.id,eq.id,'etype',e.target.value),
           onVendor:(e)=>this.setEquipField(rn.id,eq.id,'vendor',e.target.value),
+          onLocation:(e)=>this.setEquipField(rn.id,eq.id,'location',e.target.value),
           onModel:(e)=>this.setEquipField(rn.id,eq.id,'model',e.target.value),
           onSerial:(e)=>this.setEquipField(rn.id,eq.id,'serial',e.target.value),
           onBarcode:(e)=>this.setEquipField(rn.id,eq.id,'barcode',e.target.value),
