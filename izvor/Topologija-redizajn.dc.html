@@ -281,11 +281,7 @@
             <!-- GRAF -->
             <sc-if value="{{ isGraf }}" hint-placeholder-val="{{ true }}">
             <div style="transform:translate({{ viewX }}px,{{ viewY }}px) scale({{ zoom }});transform-origin:0 0;width:900px;height:560px;position:relative">
-              <svg style="position:absolute;inset:0;width:900px;height:560px;pointer-events:none;z-index:1;overflow:visible">
-                <sc-for list="{{ lines }}" as="ln" hint-placeholder-count="5">
-                  <line x1="{{ ln.x1 }}" y1="{{ ln.y1 }}" x2="{{ ln.x2 }}" y2="{{ ln.y2 }}" stroke="{{ ln.stroke }}" stroke-width="2.4" stroke-dasharray="{{ ln.dash }}"></line>
-                </sc-for>
-              </svg>
+              {{ graphLinesSvg }}
 
               <!-- HQ -->
               <div data-node="hq" onMouseDown="{{ dragHq }}" onClick="{{ pickHq }}" style="position:absolute;left:{{ hqX }}px;top:{{ hqY }}px;width:260px;z-index:5;background:var(--hq);border-radius:15px;box-shadow:var(--shadow);cursor:grab;overflow:hidden">
@@ -1618,6 +1614,11 @@ class Component extends DCLogic {
       {x1:hqB.x+4,y1:hqB.y,x2:l2T.x+4,y2:l2T.y,stroke:'var(--transB)',dash:'7 5'},
       {x1:hqR.x,y1:hqR.y,x2:srvL.x,y2:srvL.y,stroke:'var(--faint)',dash:''},
     ];
+    // Veze grafa preko React.createElement (dc-runtime ne interpolira SVG atribute u templejtu).
+    const graphLinesSvg = React.createElement('svg',
+      { style:{position:'absolute',inset:0,width:'900px',height:'560px',pointerEvents:'none',zIndex:1,overflow:'visible'} },
+      lines.map((ln,i)=> React.createElement('line', { key:i, x1:ln.x1, y1:ln.y1, x2:ln.x2, y2:ln.y2, stroke:ln.stroke, strokeWidth:2.4, strokeDasharray:ln.dash||undefined }))
+    );
 
     // ===== nadzor: grupe po lokaciji (transporti + opsezi + ručni uređaji) =====
     const watchGroups = this.buildWatchGroups();
@@ -1699,7 +1700,7 @@ class Component extends DCLogic {
       dragHq:(e)=>this.startDrag('hq',e), dragL1:(e)=>this.startDrag('l1',e), dragL2:(e)=>this.startDrag('l2',e), dragSrv:(e)=>this.startDrag('srv',e),
       canvasRef:this.setCanvas, onPan:(e)=>this.startPan(e), onReset:()=>this.resetView(),
       viewX:(this.state.view||{}).x||0, viewY:(this.state.view||{}).y||0,
-      hqX:P.hq.x, hqY:P.hq.y, l1X:P.l1.x, l1Y:P.l1.y, l2X:P.l2.x, l2Y:P.l2.y, srvX:P.srv.x, srvY:P.srv.y, lines,
+      hqX:P.hq.x, hqY:P.hq.y, l1X:P.l1.x, l1Y:P.l1.y, l2X:P.l2.x, l2Y:P.l2.y, srvX:P.srv.x, srvY:P.srv.y, lines, graphLinesSvg,
       selL1:sel==='l1', selL2:sel==='l2', selSrv:sel==='srv', selHq:sel==='hq',
       insName:node.name, insAddr:node.addr, insDev:node.dev, insNets:String(node.nets.length),
       insNetList:node.nets, insGwA:node.a, insGwB:node.b,
