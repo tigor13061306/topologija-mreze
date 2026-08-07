@@ -1740,6 +1740,8 @@ class Component extends DCLogic {
         const equipList=(rn&&rn.equipment)||[];
         const eqLabel=(eq)=>{ const vm=[eq.vendor, eq.model].filter(Boolean).join(' '); return [eq.etype||'oprema', vm, eq.location].filter(Boolean).join(' · '); };
         const uplinkBase=equipList.map(eqLabel);
+        // "Povezan na" za uređaj: samo oprema iz istog opsega (+ oprema bez opsega). Uređaj bez opsega vidi svu opremu.
+        const uplinkForNet=(netId)=> netId ? equipList.filter(eq=> (eq.netId||'')===netId || !(eq.netId||'')).map(eqLabel) : uplinkBase;
         const lq=(this.state.locQ||'').toLowerCase().trim();
         const lnet=this.state.locNet||'';
         const devs=(rn&&rn.devices)||[];
@@ -1751,7 +1753,7 @@ class Component extends DCLogic {
           return { n:i+1, dtype:dv.dtype, name:dv.name, barcode:dv.barcode, ip:dv.ip, netId:dv.netId||'', floor:dv.floor, office:dv.office, uplink:dv.uplink,
             netColor:net?net.color:'var(--faint)', ipOk,
             rowStyle:(i%2?'background:var(--surface-2)':''),
-            uplinkOpts: (dv.uplink && !uplinkBase.includes(dv.uplink)) ? [dv.uplink, ...uplinkBase] : uplinkBase,
+            uplinkOpts: (()=>{ const base=uplinkForNet(dv.netId); return (dv.uplink && !base.includes(dv.uplink)) ? [dv.uplink, ...base] : base; })(),
             onType:(e)=>this.setDeviceField(rn.id,dv.id,'dtype',e.target.value),
             onName:(e)=>this.setDeviceField(rn.id,dv.id,'name',e.target.value),
             onBarcode:(e)=>this.setDeviceField(rn.id,dv.id,'barcode',e.target.value),
