@@ -150,11 +150,11 @@ export function ensureServer(state){
   return state;
 }
 
-// Učitaj postojeće ili posij demo podatke (bogatiji seed za pregled redizajna).
+// Učitaj postojeće ili počni od čistog skeleta (HQ + prazne lokacije, bez demo uređaja/opreme).
 export async function loadOrSeed(){
   const existing = await load();
   if(existing && existing.nodes && Object.keys(existing.nodes).length) return ensureServer(existing);
-  return demoState();
+  return ensureServer(seed());
 }
 
 // Demo state s realnim imenima/opsezima radi prikaza (upisuje se tek na eksplicitni save).
