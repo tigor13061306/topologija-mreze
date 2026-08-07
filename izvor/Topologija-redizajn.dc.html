@@ -57,6 +57,8 @@
   .scroll::-webkit-scrollbar-track{background:transparent}
   .scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;border:2px solid var(--surface)}
   .scroll::-webkit-scrollbar-thumb:hover{background:var(--faint)}
+  .noscroll{scrollbar-width:none;-ms-overflow-style:none}
+  .noscroll::-webkit-scrollbar{display:none;width:0;height:0}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
   @keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   @keyframes spin{to{transform:rotate(360deg)}}
@@ -157,8 +159,8 @@
 
       <!-- ===== DASHBOARD ===== -->
       <sc-if value="{{ isDash }}" hint-placeholder-val="{{ true }}">
-      <div style="padding:24px 26px 40px;animation:fadein .25s ease">
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px">
+      <div style="padding:24px 26px 24px;animation:fadein .25s ease;height:100%;display:flex;flex-direction:column;box-sizing:border-box">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px;flex:none">
           <div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 17px;box-shadow:var(--shadow-sm)">
             <div style="display:flex;align-items:center;gap:9px;color:var(--muted)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span style="font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.8px">Lokacije</span></div>
             <div style="font:700 32px/1 var(--mono);margin-top:12px;letter-spacing:-1px">{{ locTotal }}</div>
@@ -176,13 +178,13 @@
           </div>
           <div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 17px;box-shadow:var(--shadow-sm)">
             <div style="display:flex;align-items:center;gap:9px;color:var(--muted)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="7" rx="1.5"/><rect x="4" y="13" width="16" height="7" rx="1.5"/><path d="M8 7.5h.01M8 16.5h.01"/></svg><span style="font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.8px">Oprema</span></div>
-            <div style="font:700 32px/1 var(--mono);margin-top:12px;letter-spacing:-1px">14</div>
+            <div style="font:700 32px/1 var(--mono);margin-top:12px;letter-spacing:-1px">{{ equipTotal }}</div>
             <div style="font-size:11.5px;color:var(--muted);margin-top:6px">firewall · svič · AP</div>
           </div>
         </div>
 
-        <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-bottom:16px">
-          <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);max-height:420px;display:flex;flex-direction:column;overflow:hidden">
+        <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:16px;flex:1;min-height:0">
+          <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);min-height:0;display:flex;flex-direction:column;overflow:hidden">
             <div style="padding:15px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:3;background:var(--surface);flex:none">
               <span style="font-weight:700;font-size:14px;flex:none">Stanje lokacija</span>
               <div style="position:relative;display:flex;align-items:center;flex:1;min-width:0">
@@ -191,7 +193,7 @@
               </div>
               <span style="font:600 10.5px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.8px;flex:none">uživo</span>
             </div>
-            <div class="scroll" style="overflow:auto;flex:1">
+            <div class="noscroll" style="overflow:auto;flex:1;min-height:0">
               <sc-if value="{{ locEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:24px 18px;text-align:center;font-size:12.5px;color:var(--muted)">Nema lokacija za filter.</div></sc-if>
               <sc-for list="{{ locHealth }}" as="loc" hint-placeholder-count="3">
                 <div onClick="{{ loc.onClick }}" style="display:flex;align-items:center;gap:13px;padding:13px 18px;border-bottom:1px solid var(--line-2);cursor:pointer" style-hover="background:var(--surface-2)">
@@ -213,44 +215,23 @@
             </div>
           </div>
 
-          <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);padding:15px 18px">
-            <div style="font-weight:700;font-size:14px;margin-bottom:4px">Transport (WAN)</div>
-            <div style="font-size:11.5px;color:var(--muted);margin-bottom:16px">Auto-failover po opsegu</div>
-            <div style="display:flex;flex-direction:column;gap:12px">
-              <div style="border:1px solid var(--line);border-radius:12px;padding:13px 14px;background:var(--surface-2)">
-                <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px">
-                  <span style="width:22px;height:3px;border-radius:2px;background:var(--transA);flex:none"></span>
-                  <span style="font-weight:700;font-size:13px">{{ taName }}</span>
-                  <span style="margin-left:auto;font:600 10px var(--mono);color:var(--ok);background:var(--ok-soft);padding:3px 8px;border-radius:20px">AKTIVAN</span>
+          <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;overflow:hidden;min-height:0">
+            <div style="padding:15px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;flex:none">
+              <span style="font-weight:700;font-size:14px">Nedavne izmjene</span>
+              <span style="margin-left:auto;font:600 10.5px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.8px">dnevnik</span>
+            </div>
+            <div class="noscroll" style="overflow:auto;flex:1;min-height:0;padding:2px 18px 12px">
+              <sc-if value="{{ activityEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:30px 6px;text-align:center;font-size:12.5px;color:var(--muted);line-height:1.5">Još nema zabilježenih izmjena.<br>Dodavanje i brisanje lokacija, opsega, uređaja i opreme se ovdje automatski bilježi.</div></sc-if>
+              <sc-for list="{{ activity }}" as="a" hint-placeholder-count="6">
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line-2)">
+                  <span style="width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none"></span>
+                  <span style="font-size:13px;flex:1;min-width:0">{{ a.text }}</span>
+                  <span style="font:500 11px var(--mono);color:var(--muted);flex:none;white-space:nowrap">{{ a.when }}</span>
                 </div>
-                <div style="font:500 11px var(--mono);color:var(--muted)">{{ taNote }}</div>
-                <div style="height:6px;border-radius:4px;background:var(--line-2);margin-top:10px;overflow:hidden"><div style="height:100%;width:100%;background:var(--transA)"></div></div>
-              </div>
-              <div style="border:1px solid var(--line);border-radius:12px;padding:13px 14px;background:var(--surface-2)">
-                <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px">
-                  <span style="width:22px;height:0;border-top:3px dashed var(--transB);flex:none"></span>
-                  <span style="font-weight:700;font-size:13px">{{ tbName }}</span>
-                  <span style="margin-left:auto;font:600 10px var(--mono);color:var(--warn);background:var(--warn-soft);padding:3px 8px;border-radius:20px">BACKUP</span>
-                </div>
-                <div style="font:500 11px var(--mono);color:var(--muted)">{{ tbNote }}</div>
-                <div style="height:6px;border-radius:4px;background:var(--line-2);margin-top:10px;overflow:hidden"><div style="height:100%;width:64%;background:var(--transB)"></div></div>
-              </div>
+              </sc-for>
             </div>
           </div>
         </div>
-
-        <sc-if value="{{ showActivity }}" hint-placeholder-val="{{ true }}">
-        <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);padding:15px 18px">
-          <div style="font-weight:700;font-size:14px;margin-bottom:14px">Nedavne izmjene</div>
-          <sc-for list="{{ activity }}" as="a" hint-placeholder-count="3">
-            <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--line-2)">
-              <span style="width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none"></span>
-              <span style="font-size:13px;flex:1">{{ a.text }}</span>
-              <span style="font:500 11px var(--mono);color:var(--muted)">{{ a.when }}</span>
-            </div>
-          </sc-for>
-        </div>
-        </sc-if>
       </div>
       </sc-if>
 
@@ -1341,9 +1322,17 @@ class Component extends DCLogic {
     const d = this.state.data; if(!d) return;
     d.meta = d.meta || {}; d.meta[key] = val; this.forceUpdate(); this.persist();
   }
+  // dnevnik izmjena (putuje sa podacima, prikazuje se u Pregledu)
+  logChange(text){
+    const d = this.state.data; if(!d||!text) return;
+    d.log = d.log || [];
+    d.log.unshift({ text, ts: Date.now() });
+    if(d.log.length > 80) d.log.length = 80;
+  }
   removeLoc(id){
     const d = this.state.data; const nd = d && d.nodes && d.nodes[id]; if(!nd) return;
     if(nd.type==='hq') return; // HQ se ne briše
+    this.logChange('Obrisana lokacija: '+(nd.name||'—'));
     delete d.nodes[id];
     d.edges = (d.edges||[]).filter(e=>e.from!==id && e.to!==id);
     const next = (Object.values(d.nodes)[0]||{}).id || 'hq';
@@ -1360,6 +1349,7 @@ class Component extends DCLogic {
       gwMpls:'', gwSdh:'', nets:this.be.defaultNets(), devices:[] };
     d.edges = d.edges || [];
     d.edges.push({ from:'hq', to:id, ipMpls:'', gwMpls:'', ipSdh:'', gwSdh:'' });
+    this.logChange('Dodata lokacija: '+d.nodes[id].name);
     this.setState({ sel:id, screen:'detail' });
     this.persist();
   }
@@ -1369,6 +1359,7 @@ class Component extends DCLogic {
     const color = this.be.NETCOLORS[i % this.be.NETCOLORS.length];
     nd.nets = nd.nets || [];
     nd.nets.push(this.be.mkNet('Novi opseg', color));
+    this.logChange('Dodat opseg na: '+(nd.name||'—'));
     this.forceUpdate(); this.persist();
   }
   suggestIp(node, netId){
@@ -1384,6 +1375,7 @@ class Component extends DCLogic {
     const nets=nd.nets||[]; const nid=netId||(nets[0]&&nets[0].id)||'';
     nd.devices=nd.devices||[];
     nd.devices.push({ id:'d'+Math.random().toString(36).slice(2), dtype:'Računar', floor:'', office:'', name:'', barcode:'', ip:this.suggestIp(nd,nid), netId:nid, uplink:'' });
+    this.logChange('Dodat uređaj na: '+(nd.name||'—'));
     this.forceUpdate(); this.persist();
   }
   addDeviceN(nodeId, netId, n){ for(let i=0;i<n;i++) this.addDevice(nodeId, netId); }
@@ -1391,6 +1383,7 @@ class Component extends DCLogic {
     const d=this.state.data; const nd=d&&d.nodes&&d.nodes[nodeId]; if(!nd) return;
     nd.equipment=nd.equipment||[];
     nd.equipment.push({ id:'eq'+Math.random().toString(36).slice(2), etype:etype||'Svič', vendor:'', model:'', serial:'', barcode:'', ip:'', firmware:'', rack:'', location:'', netId:'', upstream:'', photo:'', note:'' });
+    this.logChange('Dodata oprema na: '+(nd.name||'—'));
     this.forceUpdate(); this.persist();
   }
   setEquipField(nodeId, eqId, field, val){
@@ -1400,7 +1393,9 @@ class Component extends DCLogic {
   }
   removeEquip(nodeId, eqId){
     const d=this.state.data; const nd=d&&d.nodes&&d.nodes[nodeId]; if(!nd) return;
-    nd.equipment=(nd.equipment||[]).filter(x=>x.id!==eqId); this.forceUpdate(); this.persist();
+    nd.equipment=(nd.equipment||[]).filter(x=>x.id!==eqId);
+    this.logChange('Obrisana oprema na: '+(nd.name||'—'));
+    this.forceUpdate(); this.persist();
   }
   setEquipPhoto(nodeId, eqId, file){
     if(!file) return;
@@ -1418,12 +1413,14 @@ class Component extends DCLogic {
   removeDevice(nodeId, devId){
     const d=this.state.data; const nd=d&&d.nodes&&d.nodes[nodeId]; if(!nd) return;
     nd.devices=(nd.devices||[]).filter(x=>x.id!==devId);
+    this.logChange('Obrisan uređaj na: '+(nd.name||'—'));
     this.forceUpdate(); this.persist();
   }
   removeNet(nodeId, netId){
     const d = this.state.data; const nd = d && d.nodes && d.nodes[nodeId]; if(!nd) return;
     nd.nets = (nd.nets||[]).filter(n=>n.id!==netId);
     (nd.devices||[]).forEach(dev=>{ if(dev.netId===netId) dev.netId=''; });
+    this.logChange('Obrisan opseg na: '+(nd.name||'—'));
     this.forceUpdate(); this.persist();
   }
 
@@ -1658,6 +1655,7 @@ class Component extends DCLogic {
       locTotal: String(nodes.length),
       locSub: (()=>{ const hq=nodes.filter(n=>n.type==='hq').length; const loc=nodes.length-hq; return loc+' lokacij'+(loc===1?'a':(loc>=2&&loc<=4?'e':'a'))+(hq?' + HQ':''); })(),
       netTotal: String(nodes.reduce((s,n)=>s+((n.nets||[]).length),0)),
+      equipTotal: String(nodes.reduce((s,n)=>s+((n.equipment||[]).length),0)),
       locQ: this.state.locQ||'', setLocQ:(e)=>this.setState({locQ:e.target.value}),
       locHealth: nodes.map(nd => {
         const hasA = !!nd.gwMpls, hasB = !!nd.gwSdh;
@@ -1673,11 +1671,8 @@ class Component extends DCLogic {
         };
       }).filter(l=>{ const q=(this.state.locQ||'').toLowerCase().trim(); if(!q) return true; return q.split(/\s+/).every(w=>[l.name,l.addr,l.stLabel,'a '+l.a,'b '+l.b,l.dev].join(' ').toLowerCase().includes(w)); }),
       locEmpty: (()=>{ const q=(this.state.locQ||'').toLowerCase().trim(); if(!q) return false; return !nodes.some(nd=>{ const hasA=!!nd.gwMpls,hasB=!!nd.gwSdh,ok=hasA&&hasB; const st=ok?'online':(hasA||hasB?'djelimično':'nedefinisano'); const hay=[nd.name,nd.address||'',st,String((nd.devices||[]).length)].join(' ').toLowerCase(); return q.split(/\s+/).every(w=>hay.includes(w)); }); })(),
-      activity:[
-        { text:'Dodat uređaj PC-KANC-21 na Lokaciju 1', when:'prije 12 min' },
-        { text:'Izmijenjen opseg LILD na Lokaciji 2', when:'danas 09:41' },
-        { text:'Generisan Word izvještaj v2.0', when:'juče' },
-      ],
+      activity: (()=>{ const log=(D&&D.log)||[]; const rel=(ts)=>{ const s=Math.max(0,Math.floor((Date.now()-ts)/1000)); if(s<60)return 'upravo'; const m=Math.floor(s/60); if(m<60)return 'prije '+m+' min'; const h=Math.floor(m/60); if(h<24)return 'prije '+h+' h'; const dd=Math.floor(h/24); return 'prije '+dd+' d'; }; return log.map(e=>({ text:e.text, when:rel(e.ts) })); })(),
+      activityEmpty: !((D&&D.log)||[]).length,
 
       // topology
       topoView, isGraf:topoView==='graf', isSlojevi:topoView==='slojevi',

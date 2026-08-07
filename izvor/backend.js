@@ -66,6 +66,7 @@ export function normState(s){
   s.edges=(s.edges||[]).map(e=>({from:e.from,to:e.to,ipMpls:e.ipMpls||'',gwMpls:e.gwMpls||'',ipSdh:e.ipSdh||'',gwSdh:e.gwSdh||''}));
   s.seq=s.seq||0;
   s.meta=Object.assign({company:'',hq:'',docTitle:'',author:'',role:'',contact:'',updated:'',version:'',notes:''}, s.meta||{});
+  s.log=Array.isArray(s.log)?s.log:[];
   s.deviceTypes=Array.isArray(s.deviceTypes)&&s.deviceTypes.length?s.deviceTypes:['Računar','Laptop','Printer','Telefon','Kamera','Access point','Server','Ostalo'];
   s.floors=Array.isArray(s.floors)&&s.floors.length?s.floors:['Prizemlje','Prvi sprat','Drugi sprat'];
   s.vendors=Array.isArray(s.vendors)?s.vendors:['Cisco','Fortinet','MikroTik','HP','Huawei','Ubiquiti'];
