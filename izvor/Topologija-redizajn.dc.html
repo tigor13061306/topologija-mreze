@@ -280,64 +280,24 @@
           <div class="scroll" ref="{{ canvasRef }}" onMouseDown="{{ onPan }}" style="flex:1;overflow:hidden;background-color:var(--bg);background-image:radial-gradient(var(--line) 1.2px,transparent 1.2px);background-size:24px 24px;position:relative;cursor:grab">
             <!-- GRAF -->
             <sc-if value="{{ isGraf }}" hint-placeholder-val="{{ true }}">
-            <div style="transform:translate({{ viewX }}px,{{ viewY }}px) scale({{ zoom }});transform-origin:0 0;width:900px;height:560px;position:relative">
+            <div style="transform:translate({{ viewX }}px,{{ viewY }}px) scale({{ zoom }});transform-origin:0 0;width:1600px;height:900px;position:relative">
               {{ graphLinesSvg }}
 
-              <!-- HQ -->
-              <div data-node="hq" onMouseDown="{{ dragHq }}" onClick="{{ pickHq }}" style="position:absolute;left:{{ hqX }}px;top:{{ hqY }}px;width:260px;z-index:5;background:var(--hq);border-radius:15px;box-shadow:var(--shadow);cursor:grab;overflow:hidden">
-                <div style="padding:12px 14px;display:flex;align-items:center;gap:10px">
-                  <div style="width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.14);display:grid;place-items:center;flex:none;font:700 11px var(--mono);color:#fff">FW</div>
-                  <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14px;color:var(--hq-ink)">Centralni firewall</div><div style="font:600 9.5px var(--mono);color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:1px;margin-top:2px">HQ · centrala</div></div>
-                  <span style="font:600 10px var(--mono);color:#fff;background:rgba(255,255,255,.16);padding:3px 8px;border-radius:20px">HQ</span>
+              <sc-for list="{{ graphNodes }}" as="gn" hint-placeholder-count="3">
+                <div onMouseDown="{{ gn.onDrag }}" onClick="{{ gn.onClick }}" style="position:absolute;left:{{ gn.x }}px;top:{{ gn.y }}px;width:{{ gn.width }}px;z-index:5;background:{{ gn.cardBg }};border:{{ gn.cardBorder }};border-radius:15px;box-shadow:var(--shadow);cursor:grab;overflow:hidden">
+                  <sc-if value="{{ gn.selected }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:-2px;border:2px solid var(--accent);border-radius:16px;pointer-events:none;box-shadow:0 0 0 4px var(--accent-ring);z-index:6"></div></sc-if>
+                  <div style="padding:11px 13px;display:flex;align-items:center;gap:9px;border-bottom:{{ gn.headerBorder }}">
+                    <div style="width:28px;height:28px;border-radius:8px;background:{{ gn.iconBg }};display:grid;place-items:center;flex:none;font:700 10px var(--mono);color:{{ gn.iconColor }}">{{ gn.iconText }}</div>
+                    <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13.5px;color:{{ gn.nameColor }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ gn.name }}</div><div style="font:500 10px var(--mono);color:{{ gn.subColor }};margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ gn.sub }}</div></div>
+                    <span style="font:600 10px var(--mono);color:{{ gn.badgeColor }};background:{{ gn.badgeBg }};padding:3px 7px;border-radius:20px;flex:none">{{ gn.badge }}</span>
+                  </div>
+                  <div style="padding:10px 13px;display:flex;flex-direction:column;gap:5px;background:var(--surface)">
+                    <sc-for list="{{ gn.rows }}" as="rw" hint-placeholder-count="2">
+                      <div style="display:flex;align-items:center;gap:7px;font:500 11px var(--mono);border:1px solid var(--line);border-radius:7px;padding:5px 8px"><span style="width:8px;height:8px;border-radius:2px;background:{{ rw.dot }};flex:none"></span><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ rw.label }}</span><span style="margin-left:auto;color:var(--muted);white-space:nowrap">{{ rw.value }}</span></div>
+                    </sc-for>
+                  </div>
                 </div>
-                <div style="background:var(--surface);padding:11px 13px;display:flex;flex-direction:column;gap:6px">
-                  <div style="display:flex;align-items:center;gap:7px;font:500 11px var(--mono);border:1px solid var(--line);border-radius:7px;padding:5px 8px"><span style="width:8px;height:8px;border-radius:2px;background:var(--transA)"></span>GW A 10.255.0.1</div>
-                  <div style="display:flex;align-items:center;gap:7px;font:500 11px var(--mono);border:1px solid var(--line);border-radius:7px;padding:5px 8px"><span style="width:8px;height:8px;border-radius:2px;background:var(--transB)"></span>GW B 10.255.9.1</div>
-                </div>
-              </div>
-
-              <!-- L1 -->
-              <div data-node="l1" onMouseDown="{{ dragL1 }}" onClick="{{ pickL1 }}" style="position:absolute;left:{{ l1X }}px;top:{{ l1Y }}px;width:240px;z-index:5;background:var(--surface);border:1.5px solid var(--line);border-radius:15px;box-shadow:var(--shadow);cursor:grab;overflow:hidden">
-                <sc-if value="{{ selL1 }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:-2px;border:2px solid var(--accent);border-radius:16px;pointer-events:none;box-shadow:0 0 0 4px var(--accent-ring)"></div></sc-if>
-                <div style="padding:11px 13px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--line)">
-                  <div style="width:28px;height:28px;border-radius:8px;background:var(--surface-3);display:grid;place-items:center;flex:none;font:700 10px var(--mono);color:var(--hq)">FW</div>
-                  <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13.5px">Lokacija 1</div><div style="font:500 10px var(--mono);color:var(--muted);margin-top:1px">Vuka Karadžića 1</div></div>
-                  <span style="font:600 10px var(--mono);color:var(--accent);background:var(--accent-soft);padding:3px 7px;border-radius:20px">8 ⌨</span>
-                </div>
-                <div style="padding:10px 13px;display:flex;flex-direction:column;gap:5px">
-                  <div style="display:flex;align-items:center;gap:7px;font:500 11px var(--mono);border:1px solid var(--line);border-radius:7px;padding:5px 8px"><span style="width:8px;height:8px;border-radius:2px;background:var(--transA)"></span>Trust<span style="margin-left:auto;color:var(--muted)">10.20.1.0/24</span></div>
-                  <div style="display:flex;align-items:center;gap:7px;font:500 11px var(--mono);border:1px solid var(--line);border-radius:7px;padding:5px 8px"><span style="width:8px;height:8px;border-radius:2px;background:var(--vid)"></span>Video<span style="margin-left:auto;color:var(--muted)">10.20.9.0/24</span></div>
-                </div>
-              </div>
-
-              <!-- SRV -->
-              <div data-node="srv" onMouseDown="{{ dragSrv }}" onClick="{{ pickSrv }}" style="position:absolute;left:{{ srvX }}px;top:{{ srvY }}px;width:230px;z-index:5;background:var(--surface);border:1.5px solid var(--line);border-radius:15px;box-shadow:var(--shadow);cursor:grab;overflow:hidden">
-                <sc-if value="{{ selSrv }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:-2px;border:2px solid var(--accent);border-radius:16px;pointer-events:none;box-shadow:0 0 0 4px var(--accent-ring)"></div></sc-if>
-                <div style="padding:11px 13px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--line);background:var(--surface-3)">
-                  <div style="width:28px;height:28px;border-radius:8px;background:var(--hq);display:grid;place-items:center;flex:none;color:#fff;font-size:14px">⛁</div>
-                  <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13.5px">Server soba</div><div style="font:500 10px var(--mono);color:var(--muted);margin-top:1px">oprema i linkovi</div></div>
-                  <span style="font:600 10px var(--mono);color:var(--muted);background:var(--surface);border:1px solid var(--line);padding:3px 7px;border-radius:20px">6 ⛁</span>
-                </div>
-                <div style="padding:10px 13px;display:flex;flex-wrap:wrap;gap:5px">
-                  <span style="font:500 10.5px var(--mono);border:1px solid var(--line);border-radius:7px;padding:4px 8px;color:var(--muted)">Master svič <b style="color:var(--ink)">2</b></span>
-                  <span style="font:500 10.5px var(--mono);border:1px solid var(--line);border-radius:7px;padding:4px 8px;color:var(--muted)">Svič <b style="color:var(--ink)">3</b></span>
-                  <span style="font:500 10.5px var(--mono);border:1px solid var(--line);border-radius:7px;padding:4px 8px;color:var(--muted)">UPS <b style="color:var(--ink)">1</b></span>
-                </div>
-              </div>
-
-              <!-- L2 -->
-              <div data-node="l2" onMouseDown="{{ dragL2 }}" onClick="{{ pickL2 }}" style="position:absolute;left:{{ l2X }}px;top:{{ l2Y }}px;width:240px;z-index:5;background:var(--surface);border:1.5px solid var(--line);border-radius:15px;box-shadow:var(--shadow);cursor:grab;overflow:hidden">
-                <sc-if value="{{ selL2 }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:-2px;border:2px solid var(--accent);border-radius:16px;pointer-events:none;box-shadow:0 0 0 4px var(--accent-ring)"></div></sc-if>
-                <div style="padding:11px 13px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--line)">
-                  <div style="width:28px;height:28px;border-radius:8px;background:var(--surface-3);display:grid;place-items:center;flex:none;font:700 10px var(--mono);color:var(--hq)">FW</div>
-                  <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13.5px">Lokacija 2</div><div style="font:500 10px var(--mono);color:var(--muted);margin-top:1px">Kralja Petra 12</div></div>
-                  <span style="font:600 10px var(--mono);color:var(--accent);background:var(--accent-soft);padding:3px 7px;border-radius:20px">5 ⌨</span>
-                </div>
-                <div style="padding:10px 13px;display:flex;flex-direction:column;gap:5px">
-                  <div style="display:flex;align-items:center;gap:7px;font:500 11px var(--mono);border:1px solid var(--line);border-radius:7px;padding:5px 8px"><span style="width:8px;height:8px;border-radius:2px;background:var(--transA)"></span>Trust<span style="margin-left:auto;color:var(--muted)">10.30.1.0/24</span></div>
-                  <div style="display:flex;align-items:center;gap:7px;font:500 11px var(--mono);border:1px solid var(--line);border-radius:7px;padding:5px 8px"><span style="width:8px;height:8px;border-radius:2px;background:var(--lild-c);background:#0f6e56"></span>LILD<span style="margin-left:auto;color:var(--muted)">172.16.24.0/24</span></div>
-                </div>
-              </div>
+              </sc-for>
             </div>
             </sc-if>
 
@@ -835,7 +795,7 @@ class Component extends DCLogic {
   state = { theme:null, screen:'dash', topoView:null, showActivity:null, zoom:1, sel:'l1', q:'', typeFilter:'', data:null, pos:null, view:{x:40,y:20} };
 
   async componentDidMount(){
-    let pos = this.defaultPos();
+    let pos = {};
     try{ const raw=localStorage.getItem('topo_ui_pos'); if(raw) pos=Object.assign(pos, JSON.parse(raw)); }catch(e){}
     let colW=this.defaultCols();
     try{ const rc=localStorage.getItem('topo_ui_cols'); if(rc) colW=Object.assign(colW, JSON.parse(rc)); }catch(e){}
@@ -863,10 +823,10 @@ class Component extends DCLogic {
   savePos(){ try{ localStorage.setItem('topo_ui_pos', JSON.stringify(this.state.pos)); }catch(e){} }
 
   // pomicanje čvora mišom
-  startDrag(id, e){
+  startDrag(id, e, origin){
     e.preventDefault(); e.stopPropagation();
-    const P = this.state.pos || this.defaultPos();
-    const o = { ...(P[id]||{x:0,y:0}) };
+    const P = this.state.pos || {};
+    const o = { ...(P[id]||origin||{x:0,y:0}) };
     const sx = e.clientX, sy = e.clientY;
     this._dragMoved = false;
     const mv = (ev)=>{
@@ -1604,20 +1564,51 @@ class Component extends DCLogic {
     const node = { name:insName, addr:insAddr, dev:insDev, a:insGwA, b:insGwB, nets:insNetList };
 
     // ===== graf: pozicije + linije (žive vrijednosti) =====
-    const P = this.state.pos || this.defaultPos();
-    const hqB={x:P.hq.x+130,y:P.hq.y+162}, l1T={x:P.l1.x+120,y:P.l1.y}, l2T={x:P.l2.x+120,y:P.l2.y};
-    const hqR={x:P.hq.x+260,y:P.hq.y+80}, srvL={x:P.srv.x,y:P.srv.y+55};
-    const lines = [
-      {x1:hqB.x-4,y1:hqB.y,x2:l1T.x-4,y2:l1T.y,stroke:'var(--transA)',dash:''},
-      {x1:hqB.x+4,y1:hqB.y,x2:l1T.x+4,y2:l1T.y,stroke:'var(--transB)',dash:'7 5'},
-      {x1:hqB.x-4,y1:hqB.y,x2:l2T.x-4,y2:l2T.y,stroke:'var(--transA)',dash:''},
-      {x1:hqB.x+4,y1:hqB.y,x2:l2T.x+4,y2:l2T.y,stroke:'var(--transB)',dash:'7 5'},
-      {x1:hqR.x,y1:hqR.y,x2:srvL.x,y2:srvL.y,stroke:'var(--faint)',dash:''},
-    ];
-    // Veze grafa preko React.createElement (dc-runtime ne interpolira SVG atribute u templejtu).
+    // ===== graf topologije (vođen podacima — sve lokacije, ne fiksni čvorovi) =====
+    const taNameG = (D&&D.meta&&D.meta.taName)||'Transport A';
+    const tbNameG = (D&&D.meta&&D.meta.tbName)||'Transport B';
+    const savedPos = this.state.pos || {};
+    const hqNode = nodes.find(n=>n.type==='hq');
+    const srvNodes = nodes.filter(n=>n.type==='server');
+    const locNodes = nodes.filter(n=>n.type!=='hq' && n.type!=='server');
+    const autoPos = {};
+    if(hqNode) autoPos[hqNode.id] = {x:340,y:24};
+    srvNodes.forEach((n,j)=>{ autoPos[n.id]={x:700+j*250,y:24}; });
+    locNodes.forEach((n,i)=>{ autoPos[n.id]={x:20+i*265,y:360}; });
+    const posOf = (n)=> savedPos[n.id] || autoPos[n.id] || {x:20,y:20};
+    const graphNodes = nodes.map(n=>{
+      const p=posOf(n); const isHq=n.type==='hq', isSrv=n.type==='server';
+      const nn=(n.nets||[]).filter(x=>x.name);
+      let rows;
+      if(isSrv){ const by={}; (n.equipment||[]).forEach(e=>{const t=e.etype||'Oprema'; by[t]=(by[t]||0)+1;}); rows=Object.keys(by).slice(0,4).map(t=>({label:t, value:String(by[t]), dot:'var(--muted)'})); }
+      else if(isHq){ rows=[{label:taNameG+' GW', value:n.gwMpls||'—', dot:'var(--transA)'},{label:tbNameG+' GW', value:n.gwSdh||'—', dot:'var(--transB)'}]; }
+      else { rows=nn.slice(0,3).map(net=>({label:net.name, value:net.range||'—', dot:net.color||'var(--muted)'})); }
+      return {
+        id:n.id, name:n.name||'(bez naziva)',
+        sub:n.address||(isHq?'HQ · centrala':isSrv?'oprema i linkovi':'lokacija'),
+        x:p.x, y:p.y, width:isHq?260:isSrv?230:240, isHq, isSrv, selected:sel===n.id,
+        badge:isHq?'HQ':isSrv?(String((n.equipment||[]).length)+' ⛁'):(String((n.devices||[]).length)+' ⌨'),
+        cardBg:isHq?'var(--hq)':'var(--surface)', cardBorder:isHq?'1.5px solid var(--hq)':'1.5px solid var(--line)',
+        nameColor:isHq?'var(--hq-ink)':'var(--ink)', subColor:isHq?'rgba(255,255,255,.55)':'var(--muted)',
+        iconBg:isHq?'rgba(255,255,255,.14)':isSrv?'var(--hq)':'var(--surface-3)', iconColor:(isHq||isSrv)?'#fff':'var(--hq)', iconText:isSrv?'⛁':'FW',
+        badgeBg:isHq?'rgba(255,255,255,.16)':isSrv?'var(--surface)':'var(--accent-soft)', badgeColor:isHq?'#fff':isSrv?'var(--muted)':'var(--accent)',
+        headerBorder:isHq?'none':'1px solid var(--line)',
+        rows,
+        onDrag:(e)=>this.startDrag(n.id, e, {x:p.x, y:p.y}),
+        onClick:()=>this.pick(n.id)
+      };
+    });
+    const _gl=[];
+    if(hqNode){ const hp=posOf(hqNode); const hb={x:hp.x+130,y:hp.y+150}, hr={x:hp.x+260,y:hp.y+70};
+      locNodes.forEach(n=>{ const p=posOf(n); const t={x:p.x+120,y:p.y};
+        _gl.push({x1:hb.x-4,y1:hb.y,x2:t.x-4,y2:t.y,stroke:'var(--transA)',dash:''});
+        _gl.push({x1:hb.x+4,y1:hb.y,x2:t.x+4,y2:t.y,stroke:'var(--transB)',dash:'7 5'});
+      });
+      srvNodes.forEach(n=>{ const p=posOf(n); _gl.push({x1:hr.x,y1:hr.y,x2:p.x,y2:p.y+55,stroke:'var(--faint)',dash:''}); });
+    }
     const graphLinesSvg = React.createElement('svg',
-      { style:{position:'absolute',inset:0,width:'900px',height:'560px',pointerEvents:'none',zIndex:1,overflow:'visible'} },
-      lines.map((ln,i)=> React.createElement('line', { key:i, x1:ln.x1, y1:ln.y1, x2:ln.x2, y2:ln.y2, stroke:ln.stroke, strokeWidth:2.4, strokeDasharray:ln.dash||undefined }))
+      { style:{position:'absolute',inset:0,width:'1600px',height:'900px',pointerEvents:'none',zIndex:1,overflow:'visible'} },
+      _gl.map((ln,i)=> React.createElement('line', { key:i, x1:ln.x1, y1:ln.y1, x2:ln.x2, y2:ln.y2, stroke:ln.stroke, strokeWidth:2.4, strokeDasharray:ln.dash||undefined }))
     );
 
     // ===== nadzor: grupe po lokaciji (transporti + opsezi + ručni uređaji) =====
@@ -1700,7 +1691,7 @@ class Component extends DCLogic {
       dragHq:(e)=>this.startDrag('hq',e), dragL1:(e)=>this.startDrag('l1',e), dragL2:(e)=>this.startDrag('l2',e), dragSrv:(e)=>this.startDrag('srv',e),
       canvasRef:this.setCanvas, onPan:(e)=>this.startPan(e), onReset:()=>this.resetView(),
       viewX:(this.state.view||{}).x||0, viewY:(this.state.view||{}).y||0,
-      hqX:P.hq.x, hqY:P.hq.y, l1X:P.l1.x, l1Y:P.l1.y, l2X:P.l2.x, l2Y:P.l2.y, srvX:P.srv.x, srvY:P.srv.y, lines, graphLinesSvg,
+      graphNodes, graphLinesSvg,
       selL1:sel==='l1', selL2:sel==='l2', selSrv:sel==='srv', selHq:sel==='hq',
       insName:node.name, insAddr:node.addr, insDev:node.dev, insNets:String(node.nets.length),
       insNetList:node.nets, insGwA:node.a, insGwB:node.b,
